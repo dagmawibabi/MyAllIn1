@@ -21,7 +21,7 @@ class _ChatsState extends State<Chats> {
       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
       margin: EdgeInsets.only(bottom: 5.0),
       decoration: BoxDecoration(
-        color: Colors.grey[900],
+        color: Colors.grey[900]!.withOpacity(0.5),
         // border: Border.all(
         //   color: Colors.black,
         // ),

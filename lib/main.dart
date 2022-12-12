@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myallin1/pages/homepage/homepage.dart';
+import 'package:myallin1/pages/notificationpage/notificationpage.dart';
 import 'package:myallin1/pages/signuppage/loginpage.dart';
 import 'package:myallin1/pages/signuppage/loginsignup.dart';
 import 'package:myallin1/pages/signuppage/signuppage.dart';
@@ -32,10 +33,11 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: "loginSignup",
+      initialRoute: "home",
       routes: {
         "home": (context) => HomePage(),
         "loginSignup": (context) => LoginSignup(),
+        "notification": (context) => NotificationPage(),
       },
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(
@@ -44,7 +46,7 @@ class _MyAppState extends State<MyApp> {
         ),
         scaffoldBackgroundColor: primaryColor,
         floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: Colors.grey[800],
+          backgroundColor: Colors.grey[900],
         ),
         iconTheme: IconThemeData(
           color: Colors.white,

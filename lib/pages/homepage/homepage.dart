@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/pages/chatpage/chats.dart';
+import 'package:myallin1/pages/components/roundedSearchInputBox.dart';
 import 'package:myallin1/pages/components/smallPFP.dart';
 import 'package:myallin1/pages/homepage/posts.dart';
 
@@ -45,7 +46,9 @@ class _HomePageState extends State<HomePage>
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, "notification");
+            },
             icon: Icon(
               Icons.notifications_outlined,
             ),
@@ -75,42 +78,13 @@ class _HomePageState extends State<HomePage>
         children: [
           ListView(
             children: [
-              Container(
-                padding: EdgeInsets.only(top: 0.0, right: 5.0),
-                margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey[900],
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(20.0),
-                  ),
-                ),
-                child: TextField(
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    prefixIcon: Icon(
-                      Ionicons.search_outline,
-                      color: Colors.white,
-                    ),
-                    suffixIcon: Icon(
-                      Ionicons.paper_plane_outline,
-                      color: Colors.white,
-                    ),
-                    hintText: "Search",
-                    hintStyle: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+              RoundedSearchInputBox(),
               // Search Results
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
                 padding: EdgeInsets.symmetric(vertical: 8.0),
                 decoration: BoxDecoration(
-                  color: Colors.grey[850],
+                  color: Colors.grey[900]!.withOpacity(0.4),
                   borderRadius: BorderRadius.all(
                     Radius.circular(10.0),
                   ),
@@ -170,7 +144,7 @@ class _HomePageState extends State<HomePage>
                 margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
                 padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
                 decoration: BoxDecoration(
-                  color: Colors.grey[850],
+                  color: Colors.grey[900]!.withOpacity(0.4),
                   borderRadius: BorderRadius.all(
                     Radius.circular(10.0),
                   ),
@@ -199,7 +173,7 @@ class _HomePageState extends State<HomePage>
                 margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
                 padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
                 decoration: BoxDecoration(
-                  color: Colors.grey[850],
+                  color: Colors.grey[900]!.withOpacity(0.4),
                   borderRadius: BorderRadius.all(
                     Radius.circular(10.0),
                   ),
@@ -231,6 +205,9 @@ class _HomePageState extends State<HomePage>
           ),
           ListView(
             children: [
+              // Start of Page
+              SizedBox(height: 10.0),
+
               Posts(
                 showPic: true,
               ),
@@ -255,6 +232,10 @@ class _HomePageState extends State<HomePage>
           ),
           ListView(
             children: [
+              // Start of Page
+              SizedBox(height: 8.0),
+              RoundedSearchInputBox(),
+
               Chats(),
               Chats(),
               Chats(),
@@ -270,17 +251,12 @@ class _HomePageState extends State<HomePage>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: IconButton(
-          icon: Icon(
-            pageIndex == 0
-                ? Ionicons.search_outline
-                : pageIndex == 1
-                    ? Ionicons.pencil_outline
-                    : Ionicons.chatbox_outline,
-          ),
-          onPressed: () {
-            print(tabController.index);
-          },
+        child: Icon(
+          pageIndex == 0
+              ? Ionicons.search_outline
+              : pageIndex == 1
+                  ? Ionicons.pencil_outline
+                  : Ionicons.chatbox_outline,
         ),
       ),
     );
