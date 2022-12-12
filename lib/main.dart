@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myallin1/pages/homepage/homepage.dart';
 import 'package:myallin1/pages/notificationpage/notificationpage.dart';
+import 'package:myallin1/pages/profilepage/profilepage.dart';
 import 'package:myallin1/pages/signuppage/loginpage.dart';
 import 'package:myallin1/pages/signuppage/loginsignup.dart';
 import 'package:myallin1/pages/signuppage/signuppage.dart';
@@ -38,6 +39,7 @@ class _MyAppState extends State<MyApp> {
         "home": (context) => HomePage(),
         "loginSignup": (context) => LoginSignup(),
         "notification": (context) => NotificationPage(),
+        "profile": (context) => ProfilePage(),
       },
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(

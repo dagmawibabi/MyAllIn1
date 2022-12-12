@@ -39,7 +39,21 @@ class _HomePageState extends State<HomePage>
         automaticallyImplyLeading: false,
         title: Row(
           children: [
-            SmallPFP(size: 35.0),
+            GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(context, "profile");
+              },
+              child: Container(
+                padding: EdgeInsets.all(1.0),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(100.0),
+                  ),
+                ),
+                child: SmallPFP(size: 35.0),
+              ),
+            ),
             SizedBox(width: 10.0),
             Text("Philomena"),
           ],
