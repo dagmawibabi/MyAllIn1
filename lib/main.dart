@@ -3,6 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myallin1/pages/homepage/homepage.dart';
+import 'package:myallin1/pages/signuppage/loginpage.dart';
+import 'package:myallin1/pages/signuppage/loginsignup.dart';
+import 'package:myallin1/pages/signuppage/signuppage.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,9 +32,10 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: "/",
+      initialRoute: "loginSignup",
       routes: {
-        "/": (context) => HomePage(),
+        "home": (context) => HomePage(),
+        "loginSignup": (context) => LoginSignup(),
       },
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(

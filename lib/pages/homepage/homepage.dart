@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:myallin1/pages/chatpage.dart/chats.dart';
+import 'package:myallin1/pages/chatpage/chats.dart';
 import 'package:myallin1/pages/components/smallPFP.dart';
 import 'package:myallin1/pages/homepage/posts.dart';
 
@@ -35,11 +35,12 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Row(
           children: [
             SmallPFP(size: 35.0),
             SizedBox(width: 10.0),
-            Text("AppName"),
+            Text("Philomena"),
           ],
         ),
         actions: [
