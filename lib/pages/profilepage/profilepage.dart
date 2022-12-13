@@ -5,7 +5,9 @@ import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/pages/profilepage/profile_details.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({super.key, required this.profile});
+
+  final Map profile;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -55,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 child: Image.asset(
-                  "assets/images/me.jpg",
+                  widget.profile["profilepic"],
                 ),
               ),
             ),
@@ -104,14 +106,16 @@ class _ProfilePageState extends State<ProfilePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Dagmawi Babi",
+                                  widget.profile["fullname"].toString(),
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16.0,
                                   ),
                                 ),
                                 Text(
-                                  "@DagmawiBabi",
+                                  widget.profile["username"]
+                                      .toString()
+                                      .toLowerCase(),
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 14.0,
@@ -154,7 +158,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Column(
                           children: [
                             Text(
-                              "96",
+                              widget.profile["posts"].toString(),
                               style: TextStyle(
                                 fontSize: 18.0,
                                 color: Colors.white,
@@ -173,7 +177,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Column(
                           children: [
                             Text(
-                              "13.5k",
+                              widget.profile["followers"].toString(),
                               style: TextStyle(
                                 fontSize: 18.0,
                                 color: Colors.white,
@@ -192,7 +196,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Column(
                           children: [
                             Text(
-                              "465",
+                              widget.profile["following"].toString(),
                               style: TextStyle(
                                 fontSize: 18.0,
                                 color: Colors.white,
@@ -215,17 +219,17 @@ class _ProfilePageState extends State<ProfilePage> {
                   ProfileDetails(
                     icon: Icons.phone_outlined,
                     label: "phone number",
-                    content: "+251975124687",
+                    content: widget.profile["phone"],
                   ),
                   ProfileDetails(
                     icon: Icons.alternate_email_outlined,
                     label: "email",
-                    content: "1babidagi@gmail.com",
+                    content: widget.profile["email"],
                   ),
                   ProfileDetails(
                     icon: Icons.format_quote_rounded,
                     label: "bio",
-                    content: "Build, Break and Rebuild!",
+                    content: widget.profile["bio"],
                   ),
                 ],
               ),

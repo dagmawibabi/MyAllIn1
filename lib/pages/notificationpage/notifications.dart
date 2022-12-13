@@ -35,7 +35,9 @@ class _NotificationsState extends State<Notifications> {
           children: [
             Row(
               children: [
-                SmallPFP(),
+                SmallPFP(
+                  pic: "assets/images/me.jpg",
+                ),
                 SizedBox(width: 10.0),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

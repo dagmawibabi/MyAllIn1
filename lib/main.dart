@@ -35,12 +35,12 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: "loginSignup",
+      initialRoute: "home",
       routes: {
         "loginSignup": (context) => LoginSignup(),
         "home": (context) => HomePage(),
         "notification": (context) => NotificationPage(),
-        "profile": (context) => ProfilePage(),
+        // "profile": (context) => ProfilePage(),
         "comments": (context) => CommentsPage(),
         "likeslist": (context) => LikesListPage(),
         "repostslist": (context) => RepostListPage(),

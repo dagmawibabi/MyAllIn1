@@ -3,9 +3,10 @@
 import 'package:flutter/material.dart';
 
 class SmallPFP extends StatefulWidget {
-  const SmallPFP({super.key, this.size = 40.0});
+  const SmallPFP({super.key, this.size = 40.0, required this.pic});
 
   final double size;
+  final String pic;
 
   @override
   State<SmallPFP> createState() => _SmallPFPState();
@@ -27,7 +28,7 @@ class _SmallPFPState extends State<SmallPFP> {
         ),
       ),
       child: Image.asset(
-        "assets/images/me.jpg",
+        widget.pic,
         width: widget.size,
         height: widget.size,
         fit: BoxFit.cover,

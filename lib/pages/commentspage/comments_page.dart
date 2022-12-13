@@ -2,11 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:myallin1/pages/commentspage/comments.dart';
-import 'package:myallin1/pages/components/small_pfp.dart';
 import 'package:myallin1/pages/postspage/posts.dart';
 
 class CommentsPage extends StatefulWidget {
-  const CommentsPage({super.key});
+  const CommentsPage({
+    super.key,
+    this.post,
+  });
+
+  final dynamic post;
 
   @override
   State<CommentsPage> createState() => _CommentsPageState();
@@ -24,9 +28,10 @@ class _CommentsPageState extends State<CommentsPage> {
       body: ListView(
         children: [
           Posts(
-            showPic: true,
-            interactions: false,
+            interactions: true,
+            post: widget.post,
           ),
+
           Comments(),
           Comments(),
           Comments(),

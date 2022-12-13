@@ -2,18 +2,23 @@
 
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:myallin1/pages/commentspage/comments_page.dart';
+import 'package:myallin1/pages/components/profile_bar.dart';
 import 'package:myallin1/pages/components/small_pfp.dart';
 
 class Posts extends StatefulWidget {
-  const Posts(
-      {super.key,
-      this.borderRadius = 2.0,
-      this.showPic = false,
-      this.interactions = true});
+  const Posts({
+    super.key,
+    this.borderRadius = 2.0,
+    this.showPic = false,
+    this.interactions = true,
+    required this.post,
+  });
 
   final double borderRadius;
   final bool showPic;
   final bool interactions;
+  final Map post;
 
   @override
   State<Posts> createState() => _PostsState();
@@ -37,60 +42,36 @@ class _PostsState extends State<Posts> {
       ),
       child: Column(
         children: [
-          // PFP , Name , Username
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  // Profile Pic
-                  SmallPFP(),
-                  SizedBox(width: 10.0),
-                  // Name and Username
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Dagmawi Babi",
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        "@DagmawiBabi",
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.white70,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.more_vert_outlined,
-                  color: Colors.grey,
-                ),
-              ),
-            ],
+          // PFP Name Username
+          ProfileBar(
+            profile: {
+              "profilepic": widget.post["profilepic"],
+              "fullname": widget.post["fullname"],
+              "username": widget.post["username"],
+            },
           ),
           SizedBox(height: 10.0),
           // Content
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, "comments");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CommentsPage(
+                        post: widget.post,
+                      ),
+                    ),
+                  );
                 },
                 child: Container(
                   padding:
                       EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
                   child: Text(
-                    "This is the first post in this new amazing social media that will take off. Trust me this is amazing. So gorgeous too.",
+                    widget.post["content"].toString().trim(),
+                    textAlign: TextAlign.start,
                     style: TextStyle(
                       fontSize: 16.0,
                       color: Colors.white,
@@ -102,7 +83,14 @@ class _PostsState extends State<Posts> {
                   ? Container()
                   : GestureDetector(
                       onTap: () {
-                        Navigator.pushNamed(context, "comments");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CommentsPage(
+                              post: widget.post,
+                            ),
+                          ),
+                        );
                       },
                       child: Container(
                         clipBehavior: Clip.hardEdge,
@@ -113,7 +101,7 @@ class _PostsState extends State<Posts> {
                           ),
                         ),
                         child: Image.asset(
-                          "assets/images/me.jpg",
+                          widget.post["profilepic"],
                         ),
                       ),
                     ),
@@ -148,7 +136,7 @@ class _PostsState extends State<Posts> {
                                   ),
                                 ),
                                 Text(
-                                  "1.2k",
+                                  widget.post["likes"].toString(),
                                   style: TextStyle(
                                     fontSize: 12.0,
                                     color: Colors.white,
@@ -160,13 +148,27 @@ class _PostsState extends State<Posts> {
                           // Comments
                           GestureDetector(
                             onTap: () {
-                              Navigator.pushNamed(context, "comments");
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => CommentsPage(
+                                    post: widget.post,
+                                  ),
+                                ),
+                              );
                             },
                             child: Row(
                               children: [
                                 IconButton(
                                   onPressed: () {
-                                    Navigator.pushNamed(context, "comments");
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CommentsPage(
+                                          post: widget.post,
+                                        ),
+                                      ),
+                                    );
                                   },
                                   icon: Icon(
                                     Ionicons.chatbubble_outline,
@@ -174,7 +176,7 @@ class _PostsState extends State<Posts> {
                                   ),
                                 ),
                                 Text(
-                                  "864",
+                                  widget.post["comments"].toString(),
                                   style: TextStyle(
                                     fontSize: 12.0,
                                     color: Colors.white,
@@ -200,7 +202,7 @@ class _PostsState extends State<Posts> {
                                   ),
                                 ),
                                 Text(
-                                  "256",
+                                  widget.post["reposts"].toString(),
                                   style: TextStyle(
                                     fontSize: 12.0,
                                     color: Colors.white,

@@ -36,7 +36,9 @@ class _ChatsState extends State<Chats> {
           Row(
             children: [
               // Profile Pic
-              SmallPFP(),
+              SmallPFP(
+                pic: "assets/images/me.jpg",
+              ),
               SizedBox(width: 10.0),
               // Name and Username
               Column(

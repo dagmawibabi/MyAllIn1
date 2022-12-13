@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:myallin1/pages/postspage/posts.dart';
 
 class PostsPage extends StatefulWidget {
-  const PostsPage({super.key});
+  const PostsPage({
+    super.key,
+    required this.feed,
+  });
+
+  final List feed;
 
   @override
   State<PostsPage> createState() => _PostsPageState();
@@ -18,24 +23,13 @@ class _PostsPageState extends State<PostsPage> {
         // Start of Page
         SizedBox(height: 10.0),
 
-        Posts(
-          showPic: true,
-        ),
-        Posts(),
-        Posts(),
-        Posts(),
-        Posts(),
-        Posts(
-          showPic: true,
-        ),
-        Posts(),
-        Posts(),
-        Posts(
-          showPic: true,
-        ),
-        Posts(),
-        Posts(),
-        Posts(),
+        // widget.feed.map((item) => new Text(item)).toList());
+
+        for (var eachPost in widget.feed)
+          Posts(
+            post: eachPost,
+          ),
+
         // End of Page
         SizedBox(height: 200.0),
       ],
