@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
 
 class RoundedInputBox extends StatefulWidget {
   const RoundedInputBox({

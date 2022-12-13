@@ -2,12 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myallin1/pages/commentspage/comments_page.dart';
 import 'package:myallin1/pages/homepage/homepage.dart';
+import 'package:myallin1/pages/likeslistpage/likes_list_page.dart';
 import 'package:myallin1/pages/notificationpage/notificationpage.dart';
 import 'package:myallin1/pages/profilepage/profilepage.dart';
-import 'package:myallin1/pages/signuppage/loginpage.dart';
+import 'package:myallin1/pages/repostslistpage/reposts_list_page.dart';
 import 'package:myallin1/pages/signuppage/loginsignup.dart';
-import 'package:myallin1/pages/signuppage/signuppage.dart';
 
 void main() {
   runApp(MyApp());
@@ -34,12 +35,15 @@ class _MyAppState extends State<MyApp> {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: "home",
+      initialRoute: "loginSignup",
       routes: {
-        "home": (context) => HomePage(),
         "loginSignup": (context) => LoginSignup(),
+        "home": (context) => HomePage(),
         "notification": (context) => NotificationPage(),
         "profile": (context) => ProfilePage(),
+        "comments": (context) => CommentsPage(),
+        "likeslist": (context) => LikesListPage(),
+        "repostslist": (context) => RepostListPage(),
       },
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData(

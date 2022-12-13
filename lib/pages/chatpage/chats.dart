@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:myallin1/pages/components/smallPFP.dart';
+import 'package:myallin1/pages/components/small_pfp.dart';
 
 class Chats extends StatefulWidget {
   const Chats({super.key, this.borderRadius = 2.0});

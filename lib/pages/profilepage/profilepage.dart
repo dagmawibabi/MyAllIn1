@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:myallin1/pages/profilepage/profiledetails.dart';
+import 'package:myallin1/pages/profilepage/profile_details.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -44,16 +44,19 @@ class _ProfilePageState extends State<ProfilePage> {
         margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
         child: Column(
           children: [
-            Container(
-              clipBehavior: Clip.hardEdge,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.0),
-                  topRight: Radius.circular(20.0),
+            Hero(
+              tag: "profilepic",
+              child: Container(
+                clipBehavior: Clip.hardEdge,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20.0),
+                    topRight: Radius.circular(20.0),
+                  ),
                 ),
-              ),
-              child: Image.asset(
-                "assets/images/me.jpg",
+                child: Image.asset(
+                  "assets/images/me.jpg",
+                ),
               ),
             ),
             Container(

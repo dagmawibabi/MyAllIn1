@@ -1,8 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers
 
 import 'package:flutter/material.dart';
-import 'package:ionicons/ionicons.dart';
-import 'package:myallin1/pages/components/smallPFP.dart';
 import 'package:myallin1/pages/notificationpage/notifications.dart';
 
 class NotificationPage extends StatefulWidget {

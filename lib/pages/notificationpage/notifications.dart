@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../components/smallPFP.dart';
+import '../components/small_pfp.dart';
 
 class Notifications extends StatefulWidget {
   const Notifications({super.key, required this.type});

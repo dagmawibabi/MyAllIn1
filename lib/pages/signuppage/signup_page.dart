@@ -1,26 +1,25 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers
+// ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:myallin1/pages/components/roundedButton.dart';
+import 'package:myallin1/pages/components/rounded_button.dart';
+import 'package:myallin1/pages/components/rounded_input_box.dart';
 
-import '../components/roundedInputBox.dart';
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({
+class SignUpPage extends StatefulWidget {
+  const SignUpPage({
     super.key,
     this.switchPage,
-    this.loginAccount,
+    this.signupAccount,
   });
 
   final dynamic switchPage;
-  final dynamic loginAccount;
+  final dynamic signupAccount;
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
         children: [
           Spacer(),
           Text(
-            "Login",
+            "Sign Up",
             style: TextStyle(
               color: Colors.white,
               fontSize: 25.0,
@@ -38,6 +37,12 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           SizedBox(height: 10.0),
+          RoundedInputBox(
+            hintText: "Fullname",
+            hintTextColor: Colors.grey,
+            suffixIcon: Ionicons.person_outline,
+            suffixIconColor: Colors.grey[400],
+          ),
           RoundedInputBox(
             hintText: "Username",
             hintTextColor: Colors.grey,
@@ -50,33 +55,23 @@ class _LoginPageState extends State<LoginPage> {
             suffixIcon: Icons.lock_open_outlined,
             suffixIconColor: Colors.grey[400],
           ),
-          RoundedButton(
-            text: "Login",
-            clickFunction: widget.loginAccount,
+          RoundedInputBox(
+            hintText: "Confirm",
+            hintTextColor: Colors.grey,
+            suffixIcon: Icons.lock_outline,
+            suffixIconColor: Colors.grey[400],
           ),
-          SizedBox(height: 0.0),
-          TextButton(
-            onPressed: () {},
-            child: Text(
-              "Browse Anonymously",
-              style: TextStyle(
-                color: Colors.orange,
-              ),
-            ),
+          RoundedButton(
+            text: "Sign Up",
+            clickFunction: widget.signupAccount,
           ),
           SizedBox(height: 25.0),
           TextButton(
             onPressed: () {
               widget.switchPage();
             },
-            child: Text("Don't have an account? Sign up."),
+            child: Text("Already have an account? Login."),
           ),
-          // SizedBox(height: 25.0),
-          // Spacer(),
-          // RoundedButton(
-          //   text: "Browse Anonymous",
-          //   backgroundColor: Colors.lightBlueAccent,
-          // ),
           Spacer(),
           Spacer(),
         ],
