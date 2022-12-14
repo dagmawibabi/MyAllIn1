@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/pages/components/profile_bar.dart';
 
 class NewPostPage extends StatefulWidget {
@@ -21,11 +22,26 @@ class _NewPostPageState extends State<NewPostPage> {
           "New Post",
         ),
         actions: [
-          TextButton(
-            onPressed: () {},
-            child: Text(
-              "Post",
-              style: TextStyle(),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            decoration: BoxDecoration(
+              color: Colors.grey[900],
+              border: Border.all(
+                color: Colors.grey[800]!,
+              ),
+              borderRadius: BorderRadius.all(
+                Radius.circular(20.0),
+              ),
+            ),
+            child: TextButton(
+              onPressed: () {},
+              child: Text(
+                "Post",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
         ],
@@ -51,6 +67,9 @@ class _NewPostPageState extends State<NewPostPage> {
               ),
             ),
             child: TextField(
+              style: TextStyle(
+                color: Colors.white,
+              ),
               decoration: InputDecoration(
                 hintStyle: TextStyle(
                   color: Colors.grey,
@@ -60,6 +79,58 @@ class _NewPostPageState extends State<NewPostPage> {
               ),
             ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 10.0),
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                decoration: BoxDecoration(
+                  color: Colors.grey[900]!.withOpacity(0.5),
+                  border: Border.all(
+                    color: Colors.grey[800]!,
+                  ),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(100.0),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Ionicons.camera_outline,
+                      ),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Ionicons.image_outline,
+                      ),
+                      onPressed: () {},
+                    ),
+                    // IconButton(
+                    //   icon: Icon(
+                    //     Ionicons.attach_outline,
+                    //   ),
+                    //   onPressed: () {},
+                    // ),
+                    IconButton(
+                      icon: Icon(
+                        Ionicons.eye_off_outline,
+                      ),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Ionicons.warning_outline,
+                      ),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );
