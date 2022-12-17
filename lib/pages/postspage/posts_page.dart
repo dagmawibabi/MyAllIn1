@@ -7,9 +7,11 @@ class PostsPage extends StatefulWidget {
   const PostsPage({
     super.key,
     required this.feed,
+    required this.currentUser,
   });
 
   final List feed;
+  final Map currentUser;
 
   @override
   State<PostsPage> createState() => _PostsPageState();
@@ -28,6 +30,7 @@ class _PostsPageState extends State<PostsPage> {
         for (var eachPost in widget.feed)
           Posts(
             post: eachPost,
+            currentUser: widget.currentUser,
           ),
 
         // End of Page

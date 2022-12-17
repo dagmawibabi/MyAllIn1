@@ -1,5 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/pages/chatpage/chat_page.dart';
@@ -8,6 +11,7 @@ import 'package:myallin1/pages/postspage/new_post_page.dart';
 import 'package:myallin1/pages/postspage/posts_page.dart';
 import 'package:myallin1/pages/profilepage/profilepage.dart';
 import 'package:myallin1/pages/searchpage/search_page.dart';
+import 'package:http/http.dart' as http;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,8 +23,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   // Globals
+  String baseURL = "http://test.dagmawibabi.com/philomena";
   late TabController tabController;
   int pageIndex = 0;
+  bool feedLoading = true;
 
   // Sample Data
   Map currentUser = {
@@ -149,6 +155,41 @@ class _HomePageState extends State<HomePage>
     },
   ];
 
+  // Get Feed
+  void getFeed() async {
+    var route = "$baseURL/posts/getAllPosts";
+    var url = Uri.parse(route);
+    dynamic results = await http.get(url);
+    dynamic resultJSON = jsonDecode(results.body);
+    feed = resultJSON;
+    feedLoading = false;
+    setState(() {});
+    // print(resultJSON);
+  }
+
+  // Get Feed Polling
+  void getFeedPolling() async {
+    Timer.periodic(Duration(seconds: 1), (time) {
+      getFeed();
+    });
+  }
+
+  // New Post
+  void newPost(newPostObject) async {
+    var route = "$baseURL/posts/newPost";
+    var url = Uri.parse(route);
+    // print(newPostObject);
+    // print(jsonEncode(newPostObject));
+    var jsonFormat = jsonEncode(newPostObject);
+    await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonFormat,
+    );
+    // dynamic resultJSON = jsonDecode(results.body);
+    // print(results.body);
+  }
+
   // initState
   @override
   void initState() {
@@ -158,6 +199,8 @@ class _HomePageState extends State<HomePage>
       pageIndex = tabController.index;
       setState(() {});
     });
+
+    getFeedPolling();
     super.initState();
   }
 
@@ -235,11 +278,39 @@ class _HomePageState extends State<HomePage>
         controller: tabController,
         children: [
           // Search
-          SearchPage(),
-          // Posts
-          PostsPage(
-            feed: feed,
+          SearchPage(
+            currentUser: currentUser,
           ),
+          // Posts
+          feedLoading
+              ? Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Spacer(),
+                    Column(
+                      children: [
+                        CircularProgressIndicator(
+                          color: Colors.grey[500],
+                          strokeWidth: 2.0,
+                        ),
+                        SizedBox(height: 25.0),
+                        Text(
+                          "Fetching Posts",
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    Spacer(),
+                    Spacer(),
+                  ],
+                )
+              : PostsPage(
+                  feed: feed,
+                  currentUser: currentUser,
+                ),
           // Chats
           ChatPage(),
         ],
@@ -259,6 +330,7 @@ class _HomePageState extends State<HomePage>
             MaterialPageRoute(
               builder: (context) => NewPostPage(
                 currentUser: currentUser,
+                newPostFunction: newPost,
               ),
             ),
           );

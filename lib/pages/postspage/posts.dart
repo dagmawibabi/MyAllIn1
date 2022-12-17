@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/pages/commentspage/comments_page.dart';
 import 'package:myallin1/pages/components/profile_bar.dart';
-import 'package:myallin1/pages/components/small_pfp.dart';
+import 'package:myallin1/pages/likeslistpage/likes_list_page.dart';
 
 class Posts extends StatefulWidget {
   const Posts({
@@ -13,12 +13,14 @@ class Posts extends StatefulWidget {
     this.showPic = false,
     this.interactions = true,
     required this.post,
+    required this.currentUser,
   });
 
   final double borderRadius;
   final bool showPic;
   final bool interactions;
   final Map post;
+  final Map currentUser;
 
   @override
   State<Posts> createState() => _PostsState();
@@ -45,7 +47,8 @@ class _PostsState extends State<Posts> {
           // PFP Name Username
           ProfileBar(
             profile: {
-              "profilepic": widget.post["profilepic"],
+              "profilepic":
+                  "assets/images/me.jpg", // widget.post["profilepic"],
               "fullname": widget.post["fullname"],
               "username": widget.post["username"],
             },
@@ -61,6 +64,7 @@ class _PostsState extends State<Posts> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => CommentsPage(
+                        currentUser: widget.currentUser,
                         post: widget.post,
                       ),
                     ),
@@ -87,6 +91,7 @@ class _PostsState extends State<Posts> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => CommentsPage(
+                              currentUser: widget.currentUser,
                               post: widget.post,
                             ),
                           ),
@@ -128,11 +133,24 @@ class _PostsState extends State<Posts> {
                               children: [
                                 IconButton(
                                   onPressed: () {
-                                    Navigator.pushNamed(context, "likeslist");
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => LikesListPage(
+                                          likers: widget.post["likers"],
+                                        ),
+                                      ),
+                                    );
                                   },
                                   icon: Icon(
-                                    Ionicons.heart_outline,
-                                    color: Colors.white,
+                                    widget.post["likers"].contains(
+                                            widget.currentUser["username"])
+                                        ? Ionicons.heart
+                                        : Ionicons.heart_outline,
+                                    color: widget.post["likers"].contains(
+                                            widget.currentUser["username"])
+                                        ? Colors.pinkAccent
+                                        : Colors.white,
                                   ),
                                 ),
                                 Text(
@@ -152,6 +170,7 @@ class _PostsState extends State<Posts> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => CommentsPage(
+                                    currentUser: widget.currentUser,
                                     post: widget.post,
                                   ),
                                 ),
@@ -165,6 +184,7 @@ class _PostsState extends State<Posts> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => CommentsPage(
+                                          currentUser: widget.currentUser,
                                           post: widget.post,
                                         ),
                                       ),

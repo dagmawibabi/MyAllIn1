@@ -1,19 +1,26 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/pages/components/profile_bar.dart';
 
 class NewPostPage extends StatefulWidget {
-  const NewPostPage({super.key, required this.currentUser});
+  const NewPostPage({
+    super.key,
+    required this.currentUser,
+    required this.newPostFunction,
+  });
 
   final Map currentUser;
+  final Function newPostFunction;
 
   @override
   State<NewPostPage> createState() => _NewPostPageState();
 }
 
 class _NewPostPageState extends State<NewPostPage> {
+  TextEditingController postContentController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +42,16 @@ class _NewPostPageState extends State<NewPostPage> {
               ),
             ),
             child: TextButton(
-              onPressed: () {},
+              onPressed: () async {
+                Map newPostObject = {
+                  "fullname": widget.currentUser["fullname"],
+                  "username": widget.currentUser["username"],
+                  "content": postContentController.text.trim(),
+                  "hidden": false,
+                };
+                await widget.newPostFunction(newPostObject);
+                Navigator.pop(context);
+              },
               child: Text(
                 "Post",
                 style: TextStyle(
@@ -67,6 +83,7 @@ class _NewPostPageState extends State<NewPostPage> {
               ),
             ),
             child: TextField(
+              controller: postContentController,
               style: TextStyle(
                 color: Colors.white,
               ),

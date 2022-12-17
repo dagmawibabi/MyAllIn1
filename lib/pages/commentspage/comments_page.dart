@@ -8,9 +8,11 @@ class CommentsPage extends StatefulWidget {
   const CommentsPage({
     super.key,
     this.post,
+    required this.currentUser,
   });
 
   final dynamic post;
+  final Map currentUser;
 
   @override
   State<CommentsPage> createState() => _CommentsPageState();
@@ -28,6 +30,7 @@ class _CommentsPageState extends State<CommentsPage> {
       body: ListView(
         children: [
           Posts(
+            currentUser: widget.currentUser,
             interactions: true,
             post: widget.post,
           ),

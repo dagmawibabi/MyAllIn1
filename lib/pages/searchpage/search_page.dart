@@ -7,8 +7,12 @@ import '../components/rounded_search_input_box.dart';
 import '../postspage/posts.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+  const SearchPage({
+    super.key,
+    required this.currentUser,
+  });
 
+  final Map currentUser;
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
@@ -105,6 +109,7 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ),
               Posts(
+                currentUser: widget.currentUser,
                 borderRadius: 20.0,
                 post: {
                   "username": "DagmawiBabi",
@@ -136,6 +141,7 @@ class _SearchPageState extends State<SearchPage> {
                 },
               ),
               Posts(
+                currentUser: widget.currentUser,
                 borderRadius: 20.0,
                 post: {
                   "profilepic": "assets/images/me.jpg",
