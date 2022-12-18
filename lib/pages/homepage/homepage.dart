@@ -23,7 +23,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   // Globals
-  String baseURL = "http://test.dagmawibabi.com/philomena";
+  String baseURL = "http://dagmawibabi.com/philomena";
   late TabController tabController;
   int pageIndex = 0;
   bool feedLoading = true;
@@ -178,8 +178,6 @@ class _HomePageState extends State<HomePage>
   void newPost(newPostObject) async {
     var route = "$baseURL/posts/newPost";
     var url = Uri.parse(route);
-    // print(newPostObject);
-    // print(jsonEncode(newPostObject));
     var jsonFormat = jsonEncode(newPostObject);
     await http.post(
       url,

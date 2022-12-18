@@ -1,10 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/pages/commentspage/comments_page.dart';
 import 'package:myallin1/pages/components/profile_bar.dart';
 import 'package:myallin1/pages/likeslistpage/likes_list_page.dart';
+import 'package:http/http.dart' as http;
 
 class Posts extends StatefulWidget {
   const Posts({
@@ -27,6 +30,23 @@ class Posts extends StatefulWidget {
 }
 
 class _PostsState extends State<Posts> {
+  String baseURL = "https://dagmawibabi.com/philomena";
+  // Like Displie Posts
+  void likeDislikePosts(String postID) async {
+    var postReq = {
+      "postID": postID,
+      "likedBy": widget.currentUser["username"],
+    };
+    var route = "$baseURL/interactions/likeDislikePosts";
+    var url = Uri.parse(route);
+    var jsonFormat = jsonEncode(postReq);
+    await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonFormat,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -125,43 +145,43 @@ class _PostsState extends State<Posts> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           // Like Dislike
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(context, "likeslist");
-                            },
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => LikesListPage(
-                                          likers: widget.post["likers"],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  icon: Icon(
-                                    widget.post["likers"].contains(
-                                            widget.currentUser["username"])
-                                        ? Ionicons.heart
-                                        : Ionicons.heart_outline,
-                                    color: widget.post["likers"].contains(
-                                            widget.currentUser["username"])
-                                        ? Colors.pinkAccent
-                                        : Colors.white,
-                                  ),
+                          Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  likeDislikePosts(widget.post["_id"]);
+                                },
+                                icon: Icon(
+                                  widget.post["likers"].contains(
+                                          widget.currentUser["username"])
+                                      ? Ionicons.heart
+                                      : Ionicons.heart_outline,
+                                  color: widget.post["likers"].contains(
+                                          widget.currentUser["username"])
+                                      ? Colors.pinkAccent
+                                      : Colors.white,
                                 ),
-                                Text(
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => LikesListPage(
+                                        likers: widget.post["likers"],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Text(
                                   widget.post["likes"].toString(),
                                   style: TextStyle(
                                     fontSize: 12.0,
                                     color: Colors.white,
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                           // Comments
                           GestureDetector(
