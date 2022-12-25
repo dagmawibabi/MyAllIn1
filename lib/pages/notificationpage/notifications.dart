@@ -5,9 +5,14 @@ import 'package:flutter/material.dart';
 import '../components/small_pfp.dart';
 
 class Notifications extends StatefulWidget {
-  const Notifications({super.key, required this.type});
+  const Notifications({
+    super.key,
+    required this.type,
+    this.notificationObject,
+  });
 
   final int type;
+  final dynamic notificationObject;
 
   @override
   State<Notifications> createState() => _NotificationsState();
@@ -21,7 +26,9 @@ class _NotificationsState extends State<Notifications> {
         margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 3.0),
         padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
         decoration: BoxDecoration(
-          color: Colors.grey[900]!.withOpacity(0.5),
+          color: widget.notificationObject["isRead"]
+              ? Colors.grey[900]!.withOpacity(0.2)
+              : Colors.grey[900]!.withOpacity(0.5),
           // border: Border.all(color: Colors.black),
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(20.0),
@@ -45,19 +52,21 @@ class _NotificationsState extends State<Notifications> {
                     Row(
                       children: [
                         Text(
-                          "Babi Dagmawi",
+                          widget.notificationObject["source"],
                           style: TextStyle(
-                            color: Colors.white,
+                            color: widget.notificationObject["isRead"]
+                                ? Colors.white.withOpacity(0.6)
+                                : Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         SizedBox(width: 3.0),
                         Text(
-                          widget.type == 1
-                              ? "started following you."
-                              : "likes your post.",
+                          widget.notificationObject["message"],
                           style: TextStyle(
-                            color: Colors.white,
+                            color: widget.notificationObject["isRead"]
+                                ? Colors.white.withOpacity(0.6)
+                                : Colors.white,
                             // fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -65,9 +74,13 @@ class _NotificationsState extends State<Notifications> {
                     ),
                     SizedBox(height: 3.0),
                     Text(
-                      "2m ago",
+                      DateTime.fromMillisecondsSinceEpoch(
+                        widget.notificationObject["time"],
+                      ).toString(),
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: widget.notificationObject["isRead"]
+                            ? Colors.grey.withOpacity(0.6)
+                            : Colors.grey,
                         fontSize: 12.0,
                       ),
                     ),
@@ -85,24 +98,26 @@ class _NotificationsState extends State<Notifications> {
                       ),
                     ),
                   )
-                : Container(
-                    clipBehavior: Clip.hardEdge,
-                    width: 40.0,
-                    height: 40.0,
-                    margin: EdgeInsets.only(right: 2.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[900],
-                      // border: Border.all(color: Colors.black),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(5.0),
-                      ),
-                    ),
-                    child: Image.asset(
-                      "assets/images/me.jpg",
-                      // width: 32.0,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                : widget.type == 2
+                    ? Container(
+                        clipBehavior: Clip.hardEdge,
+                        width: 40.0,
+                        height: 40.0,
+                        margin: EdgeInsets.only(right: 2.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[900],
+                          // border: Border.all(color: Colors.black),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5.0),
+                          ),
+                        ),
+                        child: Image.asset(
+                          "assets/images/me.jpg",
+                          // width: 32.0,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Container(),
           ],
         ),
       ),

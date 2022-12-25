@@ -11,6 +11,7 @@ class RoundedInputBox extends StatefulWidget {
     this.suffixIconColor,
     this.hintText,
     this.hintTextColor,
+    this.controller,
   });
 
   final dynamic prefixIcon;
@@ -19,6 +20,7 @@ class RoundedInputBox extends StatefulWidget {
   final dynamic suffixIconColor;
   final dynamic hintText;
   final dynamic hintTextColor;
+  final dynamic controller;
 
   @override
   State<RoundedInputBox> createState() => _RoundedInputBoxState();
@@ -37,6 +39,7 @@ class _RoundedInputBoxState extends State<RoundedInputBox> {
         ),
       ),
       child: TextField(
+        controller: widget.controller,
         decoration: InputDecoration(
           border: InputBorder.none,
           // prefixIcon: widget.prefixIcon != null

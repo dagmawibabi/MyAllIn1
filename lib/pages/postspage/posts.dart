@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:myallin1/config/config.dart';
 import 'package:myallin1/pages/commentspage/comments_page.dart';
 import 'package:myallin1/pages/components/profile_bar.dart';
 import 'package:myallin1/pages/likeslistpage/likes_list_page.dart';
@@ -30,7 +31,7 @@ class Posts extends StatefulWidget {
 }
 
 class _PostsState extends State<Posts> {
-  String baseURL = "https://dagmawibabi.com/philomena";
+  String baseURL = Config.baseUrl;
   // Like Displie Posts
   void likeDislikePosts(String postID) async {
     var postReq = {

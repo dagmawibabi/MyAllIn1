@@ -11,16 +11,22 @@ class LoginPage extends StatefulWidget {
     super.key,
     this.switchPage,
     this.loginAccount,
+    this.usernameError,
+    this.passwordError,
   });
 
   final dynamic switchPage;
   final dynamic loginAccount;
+  final dynamic usernameError;
+  final dynamic passwordError;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,16 +49,49 @@ class _LoginPageState extends State<LoginPage> {
             hintTextColor: Colors.grey,
             suffixIcon: Ionicons.link_outline,
             suffixIconColor: Colors.grey[400],
+            controller: usernameController,
           ),
+          widget.usernameError
+              ? Container(
+                  width: double.infinity,
+                  padding:
+                      EdgeInsets.symmetric(vertical: 8.0, horizontal: 25.0),
+                  child: Text(
+                    "Username Not Found",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
+                  ),
+                )
+              : Container(),
           RoundedInputBox(
             hintText: "Password",
             hintTextColor: Colors.grey,
             suffixIcon: Icons.lock_open_outlined,
             suffixIconColor: Colors.grey[400],
+            controller: passwordController,
           ),
+          widget.passwordError
+              ? Container(
+                  width: double.infinity,
+                  padding:
+                      EdgeInsets.symmetric(vertical: 8.0, horizontal: 25.0),
+                  child: Text(
+                    "Wrong Password",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
+                  ),
+                )
+              : Container(),
           RoundedButton(
             text: "Login",
-            clickFunction: widget.loginAccount,
+            clickFunction: () => {
+              widget.loginAccount(usernameController.text.toString().trim(),
+                  passwordController.text.toString()),
+            },
           ),
           SizedBox(height: 0.0),
           TextButton(

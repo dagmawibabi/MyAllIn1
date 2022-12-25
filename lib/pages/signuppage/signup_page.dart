@@ -10,16 +10,26 @@ class SignUpPage extends StatefulWidget {
     super.key,
     this.switchPage,
     this.signupAccount,
+    this.fullnameError,
+    this.usernameError,
+    this.passwordError,
   });
 
   final dynamic switchPage;
   final dynamic signupAccount;
+  final dynamic fullnameError;
+  final dynamic usernameError;
+  final dynamic passwordError;
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  TextEditingController fullnameController = TextEditingController();
+  TextEditingController usernameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -42,28 +52,94 @@ class _SignUpPageState extends State<SignUpPage> {
             hintTextColor: Colors.grey,
             suffixIcon: Ionicons.person_outline,
             suffixIconColor: Colors.grey[400],
+            controller: fullnameController,
           ),
+          widget.fullnameError
+              ? Container(
+                  width: double.infinity,
+                  padding:
+                      EdgeInsets.symmetric(vertical: 8.0, horizontal: 25.0),
+                  child: Text(
+                    "Fullname Error",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
+                  ),
+                )
+              : Container(),
           RoundedInputBox(
             hintText: "Username",
             hintTextColor: Colors.grey,
             suffixIcon: Ionicons.link_outline,
             suffixIconColor: Colors.grey[400],
+            controller: usernameController,
           ),
+          widget.usernameError
+              ? Container(
+                  width: double.infinity,
+                  padding:
+                      EdgeInsets.symmetric(vertical: 8.0, horizontal: 25.0),
+                  child: Text(
+                    "Username Already Exists",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
+                  ),
+                )
+              : Container(),
           RoundedInputBox(
             hintText: "Password",
             hintTextColor: Colors.grey,
             suffixIcon: Icons.lock_open_outlined,
             suffixIconColor: Colors.grey[400],
+            controller: passwordController,
           ),
+          widget.passwordError
+              ? Container(
+                  width: double.infinity,
+                  padding:
+                      EdgeInsets.symmetric(vertical: 8.0, horizontal: 25.0),
+                  child: Text(
+                    "Password Error",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
+                  ),
+                )
+              : Container(),
           RoundedInputBox(
             hintText: "Confirm",
             hintTextColor: Colors.grey,
             suffixIcon: Icons.lock_outline,
             suffixIconColor: Colors.grey[400],
+            controller: confirmPasswordController,
           ),
+          widget.passwordError
+              ? Container(
+                  width: double.infinity,
+                  padding:
+                      EdgeInsets.symmetric(vertical: 8.0, horizontal: 25.0),
+                  child: Text(
+                    "Passwords did not match",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
+                  ),
+                )
+              : Container(),
           RoundedButton(
             text: "Sign Up",
-            clickFunction: widget.signupAccount,
+            clickFunction: () => {
+              widget.signupAccount(
+                fullnameController.text.toString().trim(),
+                usernameController.text.toString().trim(),
+                passwordController.text.toString().trim(),
+              ),
+            },
           ),
           SizedBox(height: 25.0),
           TextButton(

@@ -7,14 +7,22 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/pages/chatpage/chat_page.dart';
 import 'package:myallin1/pages/components/small_pfp.dart';
+import 'package:myallin1/pages/notificationpage/notificationpage.dart';
 import 'package:myallin1/pages/postspage/new_post_page.dart';
 import 'package:myallin1/pages/postspage/posts_page.dart';
 import 'package:myallin1/pages/profilepage/profilepage.dart';
 import 'package:myallin1/pages/searchpage/search_page.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:myallin1/config/config.dart';
+
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({
+    super.key,
+    this.currentUser,
+  });
+
+  final dynamic currentUser;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -23,7 +31,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   // Globals
-  String baseURL = "http://dagmawibabi.com/philomena";
+  String baseURL = Config.baseUrl;
   late TabController tabController;
   int pageIndex = 0;
   bool feedLoading = true;
@@ -161,7 +169,7 @@ class _HomePageState extends State<HomePage>
     var url = Uri.parse(route);
     dynamic results = await http.get(url);
     dynamic resultJSON = jsonDecode(results.body);
-    feed = resultJSON;
+    feed = resultJSON.reversed.toList();
     feedLoading = false;
     setState(() {});
     // print(resultJSON);
@@ -184,8 +192,6 @@ class _HomePageState extends State<HomePage>
       headers: {"Content-Type": "application/json"},
       body: jsonFormat,
     );
-    // dynamic resultJSON = jsonDecode(results.body);
-    // print(results.body);
   }
 
   // initState
@@ -204,6 +210,7 @@ class _HomePageState extends State<HomePage>
 
   @override
   Widget build(BuildContext context) {
+    currentUser = widget.currentUser;
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -245,7 +252,14 @@ class _HomePageState extends State<HomePage>
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.pushNamed(context, "notification");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotificationPage(
+                    currentUser: currentUser,
+                  ),
+                ),
+              );
             },
             icon: Icon(
               Icons.notifications_outlined,
