@@ -35,6 +35,7 @@ class _HomePageState extends State<HomePage>
   late TabController tabController;
   int pageIndex = 0;
   bool feedLoading = true;
+  bool isMusicPlaying = false;
 
   // Sample Data
   Map currentUser = {
@@ -246,7 +247,15 @@ class _HomePageState extends State<HomePage>
               ),
             ),
             SizedBox(width: 10.0),
-            Text("Philomena"),
+            GestureDetector(
+              onTap: () {
+                isMusicPlaying = !isMusicPlaying;
+                setState(() {});
+              },
+              child: Text(
+                "Philomena",
+              ),
+            ),
           ],
         ),
         actions: [
@@ -327,32 +336,145 @@ class _HomePageState extends State<HomePage>
           ChatPage(),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // ProfileBar(
-          //   profile: {
-          //     "profilepic": widget.post["profilepic"],
-          //     "fullname": widget.post["fullname"],
-          //     "username": widget.post["username"],
-          //   },
-          // ),
+      floatingActionButton: Container(
+        clipBehavior: Clip.hardEdge,
+        decoration: BoxDecoration(
+          // color: Colors.grey[900],
+          borderRadius: BorderRadius.all(
+            Radius.circular(
+              100.0,
+            ),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            isMusicPlaying == false
+                ? Container(
+                    color: Colors.transparent,
+                    height: 0.0,
+                    width: 0.0,
+                  )
+                : Container(
+                    // width: 300.0,
+                    // height: 60.0,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[900],
+                      border: Border.all(
+                        color: Colors.grey[850]!,
+                      ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(
+                          100.0,
+                        ),
+                      ),
+                      image: DecorationImage(
+                        image: AssetImage("assets/images/me.jpg"),
+                        fit: BoxFit.cover,
+                        opacity: 0.05,
+                      ),
+                    ),
+                    margin: EdgeInsets.only(left: 30.0),
+                    // padding: EdgeInsets.symmetric(vertical: 2.0),
+                    child: Row(
+                      children: [
+                        SizedBox(width: 10.0),
+                        SmallPFP(
+                          pic: "assets/images/me.jpg",
+                          size: 40.0,
+                        ),
+                        SizedBox(width: 10.0),
+                        Container(
+                          height: 50.0,
+                          width: 100.0,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "My Soul I Soul Soul",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(height: 5.0),
+                              Text(
+                                "Anne Leone",
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 5.0),
+                        Container(
+                          padding: EdgeInsets.symmetric(vertical: 2.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[900],
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(
+                                100.0,
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.fast_rewind,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.play_arrow,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.fast_forward,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+            FloatingActionButton(
+              onPressed: () {
+                // ProfileBar(
+                //   profile: {
+                //     "profilepic": widget.post["profilepic"],
+                //     "fullname": widget.post["fullname"],
+                //     "username": widget.post["username"],
+                //   },
+                // ),
 
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NewPostPage(
-                currentUser: currentUser,
-                newPostFunction: newPost,
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NewPostPage(
+                      currentUser: currentUser,
+                      newPostFunction: newPost,
+                    ),
+                  ),
+                );
+              },
+              child: Icon(
+                pageIndex == 0
+                    ? Ionicons.search_outline
+                    : pageIndex == 1
+                        ? Ionicons.pencil_outline
+                        : Ionicons.chatbox_outline,
               ),
             ),
-          );
-        },
-        child: Icon(
-          pageIndex == 0
-              ? Ionicons.search_outline
-              : pageIndex == 1
-                  ? Ionicons.pencil_outline
-                  : Ionicons.chatbox_outline,
+          ],
         ),
       ),
     );
