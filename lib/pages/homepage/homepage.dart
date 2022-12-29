@@ -7,12 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/pages/chatpage/chat_page.dart';
 import 'package:myallin1/pages/components/small_pfp.dart';
+import 'package:myallin1/pages/musicplayerpage/music_player_page.dart';
 import 'package:myallin1/pages/notificationpage/notificationpage.dart';
 import 'package:myallin1/pages/postspage/new_post_page.dart';
 import 'package:myallin1/pages/postspage/posts_page.dart';
 import 'package:myallin1/pages/profilepage/profilepage.dart';
 import 'package:myallin1/pages/searchpage/search_page.dart';
 import 'package:http/http.dart' as http;
+
+import 'package:assets_audio_player/assets_audio_player.dart';
 
 import 'package:myallin1/config/config.dart';
 
@@ -195,6 +198,9 @@ class _HomePageState extends State<HomePage>
     );
   }
 
+  // Music Player
+  AssetsAudioPlayer audioPlayer = AssetsAudioPlayer();
+
   // initState
   @override
   void initState() {
@@ -232,7 +238,7 @@ class _HomePageState extends State<HomePage>
               child: Hero(
                 tag: "profilepic",
                 child: Container(
-                  padding: EdgeInsets.all(1.0),
+                  padding: EdgeInsets.all(0.0),
                   decoration: BoxDecoration(
                     color: Colors.red,
                     borderRadius: BorderRadius.all(
@@ -369,7 +375,7 @@ class _HomePageState extends State<HomePage>
                         ),
                       ),
                       image: DecorationImage(
-                        image: AssetImage("assets/images/me.jpg"),
+                        image: AssetImage("assets/images/INR.jpg"),
                         fit: BoxFit.cover,
                         opacity: 0.05,
                       ),
@@ -379,9 +385,24 @@ class _HomePageState extends State<HomePage>
                     child: Row(
                       children: [
                         SizedBox(width: 10.0),
-                        SmallPFP(
-                          pic: "assets/images/me.jpg",
-                          size: 40.0,
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MusicPlayerPage(
+                                  audioPlayer: audioPlayer,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Hero(
+                            tag: "musicAlbumArt",
+                            child: SmallPFP(
+                              pic: "assets/images/INR.jpg",
+                              size: 40.0,
+                            ),
+                          ),
                         ),
                         SizedBox(width: 10.0),
                         Container(
@@ -423,19 +444,33 @@ class _HomePageState extends State<HomePage>
                           child: Row(
                             children: [
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  audioPlayer.open(
+                                    Audio("assets/audios/INR.mp3"),
+                                    // autoPlay: true,
+                                    showNotification: false,
+                                  );
+                                },
                                 icon: Icon(
                                   Icons.fast_rewind,
                                 ),
                               ),
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  audioPlayer.isPlaying.value
+                                      ? audioPlayer.pause()
+                                      : audioPlayer.play();
+                                },
                                 icon: Icon(
-                                  Icons.play_arrow,
+                                  audioPlayer.isPlaying.value
+                                      ? Icons.pause
+                                      : Icons.play_arrow,
                                 ),
                               ),
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  // audioPlayer.play();
+                                },
                                 icon: Icon(
                                   Icons.fast_forward,
                                 ),
