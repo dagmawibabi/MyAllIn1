@@ -57,7 +57,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 child: Image.asset(
-                  widget.profile["profilepic"],
+                  // widget.profile["profilepic"],
+                  "assets/images/me2.jpg",
                 ),
               ),
             ),

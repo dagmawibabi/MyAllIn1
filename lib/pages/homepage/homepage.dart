@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
@@ -18,6 +19,8 @@ import 'package:http/http.dart' as http;
 import 'package:assets_audio_player/assets_audio_player.dart';
 
 import 'package:myallin1/config/config.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:marquee/marquee.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
@@ -39,6 +42,8 @@ class _HomePageState extends State<HomePage>
   int pageIndex = 0;
   bool feedLoading = true;
   bool isMusicPlaying = false;
+  List deviceMusicList = [];
+  String currentSong = "";
 
   // Sample Data
   Map currentUser = {
@@ -201,9 +206,53 @@ class _HomePageState extends State<HomePage>
   // Music Player
   AssetsAudioPlayer audioPlayer = AssetsAudioPlayer();
 
+  // Get All Device Audio Files
+  void getDeviceAudioFiles() async {
+    deviceMusicList = [];
+    dynamic files =
+        Directory('/storage/emulated/0/Music').listSync(recursive: false);
+    for (dynamic file in files) {
+      if (file.path.endsWith(".mp3") == true) {
+        deviceMusicList.add(file.path);
+      }
+    }
+  }
+
+  // Load Music FIle
+  void loadDeviceMusicFile(String path) async {
+    await audioPlayer.stop();
+    await audioPlayer.open(
+      Audio.file(path),
+      autoStart: true,
+      showNotification: false,
+      loopMode: LoopMode.single,
+    );
+  }
+
+  // Change the title of the current playing music
+  void changeMusicTitle(String title) {
+    currentSong = title;
+    setState(() {});
+  }
+
+  void nextDeviceMusic() async {}
+
+  // Ask For Permission
+  void askPermission() async {
+    // Ask Storage Permissions
+    PermissionStatus storagePermissionStatus = await Permission.storage.status;
+    if (storagePermissionStatus.isGranted == false) {
+      await Permission.storage.request();
+    } else {
+      getDeviceAudioFiles();
+    }
+  }
+
   // initState
   @override
   void initState() {
+    askPermission();
+
     tabController = TabController(length: 3, vsync: this);
     tabController.index = 1;
     tabController.addListener(() {
@@ -247,7 +296,7 @@ class _HomePageState extends State<HomePage>
                   ),
                   child: SmallPFP(
                     size: 35.0,
-                    pic: "assets/images/me.jpg",
+                    pic: "assets/images/me2.jpg",
                   ),
                 ),
               ),
@@ -392,6 +441,11 @@ class _HomePageState extends State<HomePage>
                               MaterialPageRoute(
                                 builder: (context) => MusicPlayerPage(
                                   audioPlayer: audioPlayer,
+                                  deviceMusicList: deviceMusicList,
+                                  loadDeviceMusicFile: loadDeviceMusicFile,
+                                  getDeviceAudioFiles: getDeviceAudioFiles,
+                                  changeMusicTitle: changeMusicTitle,
+                                  currentSong: currentSong,
                                 ),
                               ),
                             );
@@ -412,21 +466,27 @@ class _HomePageState extends State<HomePage>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                "My Soul I Soul Soul",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.white,
+                              Container(
+                                width: 120.0,
+                                height: 30.0,
+                                child: Marquee(
+                                  text: currentSong,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                  blankSpace: 80.0,
+                                  velocity: 30.0,
+                                  numberOfRounds: 3,
                                 ),
                               ),
                               SizedBox(height: 5.0),
-                              Text(
-                                "Anne Leone",
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                ),
-                              ),
+                              //   Text(
+                              //     "Anne Leone",
+                              //     overflow: TextOverflow.ellipsis,
+                              //     style: TextStyle(
+                              //       color: Colors.grey[600],
+                              //     ),
+                              //   ),
                             ],
                           ),
                         ),
@@ -444,13 +504,7 @@ class _HomePageState extends State<HomePage>
                           child: Row(
                             children: [
                               IconButton(
-                                onPressed: () {
-                                  audioPlayer.open(
-                                    Audio("assets/audios/INR.mp3"),
-                                    // autoPlay: true,
-                                    showNotification: false,
-                                  );
-                                },
+                                onPressed: () {},
                                 icon: Icon(
                                   Icons.fast_rewind,
                                 ),

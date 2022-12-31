@@ -1,14 +1,27 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:marquee/marquee.dart';
+import 'package:myallin1/pages/components/music_list_bottom_sheet.dart';
+import 'package:path/path.dart' as p;
 
 class MusicPlayerPage extends StatefulWidget {
   const MusicPlayerPage({
     super.key,
     required this.audioPlayer,
+    required this.deviceMusicList,
+    required this.loadDeviceMusicFile,
+    required this.getDeviceAudioFiles,
+    required this.changeMusicTitle,
+    required this.currentSong,
   });
 
   final AssetsAudioPlayer audioPlayer;
+  final List deviceMusicList;
+  final Function loadDeviceMusicFile;
+  final Function getDeviceAudioFiles;
+  final Function changeMusicTitle;
+  final String currentSong;
 
   @override
   State<MusicPlayerPage> createState() => _MusicPlayerPageState();
@@ -16,14 +29,40 @@ class MusicPlayerPage extends StatefulWidget {
 
 class _MusicPlayerPageState extends State<MusicPlayerPage> {
   bool isMusicPlaying = false;
+  bool isFullScreen = true;
+  String currentSong = "";
+
   ScrollController listViewController = ScrollController(
     initialScrollOffset: 50.0,
   );
+
+  void localChangedMusicTitle(String title) {
+    currentSong = title;
+    setState(() {});
+  }
+
+  void deviceMusicListBottomSheet() async {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.black,
+      builder: (context) {
+        return MusicListBottomSheet(
+          deviceMusicList: widget.deviceMusicList,
+          loadDeviceMusicFile: widget.loadDeviceMusicFile,
+          getDeviceAudioFiles: widget.getDeviceAudioFiles,
+          changeMusicTitle: widget.changeMusicTitle,
+          localChangedMusicTitle: localChangedMusicTitle,
+          currentSong: currentSong,
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    localChangedMusicTitle(widget.currentSong);
   }
 
   @override
@@ -36,32 +75,48 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
           Container(
             width: double.infinity,
             height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-              color: Colors.black,
-              image: DecorationImage(
-                image: AssetImage("assets/images/INR.jpg"),
-                fit: BoxFit.cover,
-                opacity: 0.15,
-              ),
-            ),
+            decoration: isFullScreen == true
+                ? BoxDecoration(
+                    color: Colors.black,
+                    image: DecorationImage(
+                      image: AssetImage("assets/images/INR.jpg"),
+                      fit: BoxFit.cover,
+                      opacity: 0.15,
+                    ),
+                  )
+                : BoxDecoration(
+                    // color: Colors.grey[900]!,
+                    ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(height: 50.0),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 10.0,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(
-                        Icons.arrow_back_outlined,
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(
+                          Icons.arrow_back_outlined,
+                        ),
                       ),
-                    ),
-                  ],
+                      IconButton(
+                        onPressed: () {
+                          isFullScreen = !isFullScreen;
+                          setState(() {});
+                        },
+                        icon: Icon(
+                          isFullScreen == true
+                              ? Icons.fullscreen_exit
+                              : Icons.fullscreen,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 50.0),
 
@@ -69,42 +124,65 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                   tag: "musicAlbumArt",
                   child: Image.asset(
                     "assets/images/INR.jpg",
-                    width: 360.0,
+                    width: isFullScreen == true ? 360.0 : 310.0,
                   ),
                 ),
-                // SizedBox(height: 30.0),
-                Spacer(),
-                Padding(
-                  padding: EdgeInsets.only(left: 25.0, right: 15.0),
+
+                isFullScreen == true ? Spacer() : SizedBox(height: 30.0),
+                Container(
+                  padding: isFullScreen == true
+                      ? EdgeInsets.only(left: 25.0, right: 15.0)
+                      : EdgeInsets.only(left: 55.0, right: 45.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(
-                            "My Soul I",
-                            style: TextStyle(
-                              fontSize: 20.0,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                          Container(
+                            height: 30.0,
+                            width: isFullScreen == true ? 240.0 : 200.0,
+                            child: Marquee(
+                              text: currentSong,
+                              style: TextStyle(
+                                fontSize: isFullScreen == true ? 20.0 : 18.0,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              blankSpace: 80.0,
+                              velocity: 30.0,
+                              numberOfRounds: 3,
                             ),
                           ),
                           SizedBox(height: 5.0),
-                          Text(
-                            "Anne Leone",
-                            style: TextStyle(
-                              color: Colors.grey[500]!,
+                          //   Text(
+                          //     "Anne Leone",
+                          //     style: TextStyle(
+                          //       color: Colors.grey[500]!,
+                          //       fontSize: isFullScreen == true ? 16.0 : 14.0,
+                          //     ),
+                          //   ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Ionicons.heart_outline,
+                              size: 26.0,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              deviceMusicListBottomSheet();
+                            },
+                            icon: Icon(
+                              Icons.playlist_play_rounded,
+                              size: 30.0,
                             ),
                           ),
                         ],
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(
-                          Ionicons.heart_outline,
-                          size: 26.0,
-                        ),
                       ),
                     ],
                   ),
@@ -112,7 +190,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                 SizedBox(height: 10.0),
                 // Seeker
                 Container(
-                  width: double.infinity,
+                  width: isFullScreen == true ? double.infinity : 350.0,
                   height: 32.0,
                   child: StreamBuilder(
                     stream: widget.audioPlayer.currentPosition,
@@ -127,7 +205,6 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                           min: 0,
                           max: 250,
                           activeColor: Colors.grey[300],
-                          label: "20",
                           onChanged: (change) => {
                             widget.audioPlayer.seek(
                               Duration(
@@ -142,7 +219,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                 ),
                 // Current Postion and Duration
                 Container(
-                  width: double.infinity,
+                  width: isFullScreen == true ? double.infinity : 350.0,
                   height: 20.0,
                   padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: StreamBuilder(
@@ -196,7 +273,9 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                 SizedBox(height: 10.0),
                 // Controls
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  padding: isFullScreen == true
+                      ? EdgeInsets.symmetric(horizontal: 25.0)
+                      : EdgeInsets.symmetric(horizontal: 45.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -206,7 +285,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                         },
                         icon: Icon(
                           Ionicons.shuffle,
-                          size: 30.0,
+                          size: isFullScreen == true ? 30.0 : 25.0,
                         ),
                       ),
                       Row(
@@ -218,7 +297,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                             },
                             icon: Icon(
                               Icons.skip_previous,
-                              size: 40.0,
+                              size: isFullScreen == true ? 40.0 : 35.0,
                             ),
                           ),
                           SizedBox(width: 10.0),
@@ -241,7 +320,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                               ),
                               child: Icon(
                                 isMusicPlaying ? Icons.pause : Icons.play_arrow,
-                                size: 40.0,
+                                size: isFullScreen == true ? 40.0 : 35.0,
                                 color: Colors.black,
                               ),
                             ),
@@ -254,7 +333,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                             },
                             icon: Icon(
                               Icons.skip_next,
-                              size: 40.0,
+                              size: isFullScreen == true ? 40.0 : 35.0,
                             ),
                           ),
                         ],
@@ -265,7 +344,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                         },
                         icon: Icon(
                           Icons.replay_outlined,
-                          size: 30.0,
+                          size: isFullScreen == true ? 30.0 : 25.0,
                         ),
                       ),
                     ],
