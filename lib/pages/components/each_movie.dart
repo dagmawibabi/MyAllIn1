@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class EachMovie extends StatefulWidget {
   const EachMovie({
     super.key,
-    this.movieObject,
+    required this.movieObject,
   });
 
   final dynamic movieObject;
@@ -60,7 +60,7 @@ class _EachMovieState extends State<EachMovie> {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
-                widget.movieObject["title"],
+                widget.movieObject["title"] ?? widget.movieObject["name"],
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 12.0,

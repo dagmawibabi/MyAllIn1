@@ -58,6 +58,8 @@ class _LoginSignupState extends State<LoginSignup> {
     }
   }
 
+  void quickLogin() async {}
+
   void signupAccount(String fullname, String username, String password) async {
     var route = "$baseURL/authentication/signup";
     var url = Uri.parse(route);

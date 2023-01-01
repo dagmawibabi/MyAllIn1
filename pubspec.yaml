@@ -38,6 +38,7 @@ dependencies:
   path: ^1.8.2
   permission_handler: ^10.2.0
   marquee: ^2.2.3
+  url_launcher: ^6.1.7
 
 
   # The following adds the Cupertino Icons font to your application.

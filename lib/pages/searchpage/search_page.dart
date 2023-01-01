@@ -7,6 +7,7 @@ import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/pages/components/each_crypto.dart';
 import 'package:myallin1/pages/components/each_movie.dart';
 import 'package:myallin1/pages/components/each_news.dart';
+import 'package:myallin1/pages/components/movie_detail_bottom_sheet.dart';
 
 import '../chatpage/chats.dart';
 import '../components/rounded_search_input_box.dart';
@@ -35,14 +36,75 @@ class _SearchPageState extends State<SearchPage> {
   bool newsLoading = true;
   bool moviesLoading = true;
   bool cryptoLoading = true;
+  bool isSeries = false;
+
+  void showMovieDetails(movieObject) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      anchorPoint: Offset(0, 0),
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height * 0.5,
+        maxHeight: MediaQuery.of(context).size.height * 0.96,
+      ),
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      context: context,
+      builder: (context) {
+        return MovieDetailBottomSheet(
+          movieObject: movieObject,
+          isSeries: isSeries,
+        );
+      },
+    );
+  }
 
   void getNews() async {
+    // Get Headlines
     var url =
         "https://newsapi.org/v2/top-headlines?country=us&apiKey=158f7ed38d5e42aea76930d43ecca9c8";
     var uri = Uri.parse(url);
     var result = await http.get(uri);
     dynamic resultJSON = jsonDecode(result.body);
     news = resultJSON["articles"];
+
+    // Update
+    newsLoading = false;
+    setState(() {});
+
+    // Get Tech News
+    url =
+        "https://newsapi.org/v2/top-headlines?country=us&category=technology&apiKey=158f7ed38d5e42aea76930d43ecca9c8";
+    uri = Uri.parse(url);
+    result = await http.get(uri);
+    resultJSON = jsonDecode(result.body);
+    news.addAll(resultJSON["articles"]);
+
+    // Update
+    newsLoading = false;
+    setState(() {});
+
+    // Get Entertainment News
+    url =
+        "https://newsapi.org/v2/top-headlines?country=us&category=entertainment&apiKey=158f7ed38d5e42aea76930d43ecca9c8";
+    uri = Uri.parse(url);
+    result = await http.get(uri);
+    resultJSON = jsonDecode(result.body);
+    news.addAll(resultJSON["articles"]);
+
+    // Update
+    newsLoading = false;
+    setState(() {});
+
+    // Get Business News
+    url =
+        "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=158f7ed38d5e42aea76930d43ecca9c8";
+    uri = Uri.parse(url);
+    result = await http.get(uri);
+    resultJSON = jsonDecode(result.body);
+    news.addAll(resultJSON["articles"]);
+
+    // Update
     newsLoading = false;
     setState(() {});
   }
@@ -58,25 +120,41 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {});
   }
 
-  void getMovies() async {
-    var url =
-        "https://api.themoviedb.org/3/trending/movie/week?api_key=38d6559cd7b9ccdd0dd57ccca36e49fb&page=1";
+  Future<void> getMovies() async {
+    var type = isSeries == false ? "movie" : "tv";
+    var url = "https://api.themoviedb.org/3/trending/" +
+        type +
+        "/week?api_key=38d6559cd7b9ccdd0dd57ccca36e49fb&page=1";
+    print(type);
     var uri = Uri.parse(url);
     var result = await http.get(uri);
     dynamic resultJSON = jsonDecode(result.body);
+    eachMovieWidget = [];
+    movies = [];
     movies = resultJSON["results"];
-    moviesLoading = false;
-    setState(() {});
+    // moviesLoading = false;
+    // setState(() {});
+    // displayMovies();
   }
 
   void displayMovies() async {
     for (var eachMovie in movies)
       eachMovieWidget.add(
-        EachMovie(
-          movieObject: eachMovie,
+        GestureDetector(
+          onTap: () {
+            showMovieDetails(eachMovie);
+          },
+          child: EachMovie(
+            movieObject: eachMovie,
+          ),
         ),
       );
+    Widget space = Container(
+      height: 100.0,
+    );
+    eachMovieWidget.add(space);
     currentSearchPage = 2;
+    moviesLoading = false;
     setState(() {});
   }
 
@@ -345,17 +423,51 @@ class _SearchPageState extends State<SearchPage> {
                 ],
               ),
             )
-          : Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.8,
-              child: GridView.count(
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                // crossAxisSpacing: 10.0,
-                // mainAxisSpacing: 10.0,
-                childAspectRatio: 0.7,
-                children: eachMovieWidget,
-              ),
+          : Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 20.0),
+                    Text(
+                      "Movies",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    Switch(
+                      value: isSeries,
+                      onChanged: (value) async {
+                        isSeries = value;
+                        moviesLoading = true;
+                        setState(() {});
+                        await getMovies();
+                        displayMovies();
+                      },
+                      activeColor: Colors.red,
+                      trackColor: MaterialStateProperty.all(Colors.grey[700]),
+                      thumbColor: MaterialStateProperty.all(Colors.yellow),
+                    ),
+                    Text(
+                      "Series",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  width: double.infinity,
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  child: GridView.count(
+                    primary: true,
+                    shrinkWrap: true,
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.7,
+                    children: eachMovieWidget,
+                  ),
+                ),
+              ],
             ),
       // Cryto
       cryptoLoading

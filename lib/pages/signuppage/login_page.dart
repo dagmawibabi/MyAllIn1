@@ -110,7 +110,6 @@ class _LoginPageState extends State<LoginPage> {
             },
             child: Text("Don't have an account? Sign up."),
           ),
-          // SizedBox(height: 25.0),
           // Spacer(),
           // RoundedButton(
           //   text: "Browse Anonymous",
@@ -118,6 +117,75 @@ class _LoginPageState extends State<LoginPage> {
           // ),
           Spacer(),
           Spacer(),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+            decoration: BoxDecoration(
+              color: Colors.grey[900]!.withOpacity(0.3),
+              borderRadius: BorderRadius.all(
+                Radius.circular(20.0),
+              ),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  "Saved Login",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 5.0),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    fixedSize: MaterialStateProperty.all(
+                      Size(200.0, 20.0),
+                    ),
+                    backgroundColor: MaterialStateProperty.all(
+                      Colors.grey[900]!,
+                    ),
+                  ),
+                  child: Text(
+                    "Dagmawi Babi",
+                  ),
+                  onPressed: () {
+                    widget.loginAccount("dagmawibabi", "db");
+                  },
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    fixedSize: MaterialStateProperty.all(
+                      Size(200.0, 20.0),
+                    ),
+                    backgroundColor: MaterialStateProperty.all(
+                      Colors.grey[900]!,
+                    ),
+                  ),
+                  child: Text(
+                    "John Doe",
+                  ),
+                  onPressed: () {
+                    widget.loginAccount("janedoe", "janedoe");
+                  },
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    fixedSize: MaterialStateProperty.all(
+                      Size(200.0, 20.0),
+                    ),
+                    backgroundColor: MaterialStateProperty.all(
+                      Colors.grey[900]!,
+                    ),
+                  ),
+                  child: Text(
+                    "Jane Doe",
+                  ),
+                  onPressed: () {
+                    widget.loginAccount("janedoe", "janedoe");
+                  },
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 25.0),
         ],
       ),
     );
