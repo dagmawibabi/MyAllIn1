@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage>
   bool feedLoading = true;
   bool isMusicPlaying = false;
   List deviceMusicList = [];
-  String currentSong = "";
+  String currentSong = " Sample Song ";
 
   // Sample Data
   Map currentUser = {

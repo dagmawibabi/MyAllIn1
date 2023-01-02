@@ -10,6 +10,7 @@ import 'package:myallin1/pages/components/each_news.dart';
 import 'package:myallin1/pages/components/movie_detail_bottom_sheet.dart';
 
 import '../chatpage/chats.dart';
+import '../components/crypto_detail_bottom_sheet.dart';
 import '../components/rounded_search_input_box.dart';
 import '../postspage/posts.dart';
 import 'package:http/http.dart' as http;
@@ -37,27 +38,6 @@ class _SearchPageState extends State<SearchPage> {
   bool moviesLoading = true;
   bool cryptoLoading = true;
   bool isSeries = false;
-
-  void showMovieDetails(movieObject) {
-    showModalBottomSheet(
-      backgroundColor: Colors.transparent,
-      anchorPoint: Offset(0, 0),
-      constraints: BoxConstraints(
-        minHeight: MediaQuery.of(context).size.height * 0.5,
-        maxHeight: MediaQuery.of(context).size.height * 0.96,
-      ),
-      isScrollControlled: true,
-      isDismissible: true,
-      enableDrag: true,
-      context: context,
-      builder: (context) {
-        return MovieDetailBottomSheet(
-          movieObject: movieObject,
-          isSeries: isSeries,
-        );
-      },
-    );
-  }
 
   void getNews() async {
     // Get Headlines
@@ -158,6 +138,27 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {});
   }
 
+  void showMovieDetails(movieObject) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      anchorPoint: Offset(0, 0),
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height * 0.5,
+        maxHeight: MediaQuery.of(context).size.height * 0.96,
+      ),
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      context: context,
+      builder: (context) {
+        return MovieDetailBottomSheet(
+          movieObject: movieObject,
+          isSeries: isSeries,
+        );
+      },
+    );
+  }
+
   void getCrypto() async {
     var url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd";
     var uri = Uri.parse(url);
@@ -170,12 +171,37 @@ class _SearchPageState extends State<SearchPage> {
   void displayCrypto() async {
     for (var eachCrypto in cryptos)
       eachCryptoWidget.add(
-        EachCrypto(
-          cryptoObject: eachCrypto,
+        GestureDetector(
+          onTap: () {
+            showCryptoDetails(eachCrypto);
+          },
+          child: EachCrypto(
+            cryptoObject: eachCrypto,
+          ),
         ),
       );
     currentSearchPage = 3;
     setState(() {});
+  }
+
+  void showCryptoDetails(cryptoObject) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      anchorPoint: Offset(0, 0),
+      constraints: BoxConstraints(
+        minHeight: MediaQuery.of(context).size.height * 0.5,
+        maxHeight: MediaQuery.of(context).size.height * 0.6,
+      ),
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      context: context,
+      builder: (context) {
+        return CryptoDetailBottomSheet(
+          cryptoObject: cryptoObject,
+        );
+      },
+    );
   }
 
   @override
