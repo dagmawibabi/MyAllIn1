@@ -36,19 +36,31 @@ class _EachNewsState extends State<EachNews> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "${widget.newsObject["source"]["name"]}",
-              style: TextStyle(
-                fontSize: 12.0,
-                color: Colors.white,
+            Padding(
+              padding: EdgeInsets.only(left: 5.0),
+              child: Text(
+                "${widget.newsObject["source"]["name"]}",
+                style: TextStyle(
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[200]!,
+                ),
               ),
             ),
             SizedBox(height: 10.0),
             widget.newsObject["urlToImage"] == "" ||
                     widget.newsObject["urlToImage"] == null
                 ? Container()
-                : Image.network(
-                    widget.newsObject["urlToImage"],
+                : Container(
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5.0),
+                      ),
+                    ),
+                    child: Image.network(
+                      widget.newsObject["urlToImage"],
+                    ),
                   ),
 
             SizedBox(height: 10.0),

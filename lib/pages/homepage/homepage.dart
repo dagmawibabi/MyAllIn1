@@ -388,7 +388,7 @@ class _HomePageState extends State<HomePage>
                   currentUser: currentUser,
                 ),
           // Chats
-          ChatPage(),
+          ChatPage(currentUser: currentUser),
         ],
       ),
       floatingActionButton: Container(

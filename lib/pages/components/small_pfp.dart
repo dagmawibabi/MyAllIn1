@@ -3,10 +3,16 @@
 import 'package:flutter/material.dart';
 
 class SmallPFP extends StatefulWidget {
-  const SmallPFP({super.key, this.size = 40.0, required this.pic});
+  const SmallPFP({
+    super.key,
+    this.size = 40.0,
+    this.pic = "null",
+    this.netpic = "null",
+  });
 
   final double size;
   final String pic;
+  final String netpic;
 
   @override
   State<SmallPFP> createState() => _SmallPFPState();
@@ -27,12 +33,19 @@ class _SmallPFPState extends State<SmallPFP> {
           Radius.circular(100.0),
         ),
       ),
-      child: Image.asset(
-        widget.pic,
-        width: widget.size,
-        height: widget.size,
-        fit: BoxFit.cover,
-      ),
+      child: widget.pic != "null"
+          ? Image.asset(
+              widget.pic,
+              width: widget.size,
+              height: widget.size,
+              fit: BoxFit.cover,
+            )
+          : Image.network(
+              widget.netpic,
+              width: widget.size,
+              height: widget.size,
+              fit: BoxFit.cover,
+            ),
     );
   }
 }

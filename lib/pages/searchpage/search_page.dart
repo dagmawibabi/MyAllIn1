@@ -394,8 +394,22 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                   ),
                 ),
-                Chats(borderRadius: 20.0),
-                Chats(borderRadius: 20.0),
+                Chats(
+                  borderRadius: 20.0,
+                  chatObject: {
+                    "profilePic": "assets/images/me.jpg",
+                    "fullname": "Jeff Bezos",
+                    "username": "jeffyman",
+                  },
+                ),
+                Chats(
+                  borderRadius: 20.0,
+                  chatObject: {
+                    "profilePic": "assets/images/me.jpg",
+                    "fullname": "Mark Zuckerberg",
+                    "username": "repitilian",
+                  },
+                ),
               ],
             ),
           ),
