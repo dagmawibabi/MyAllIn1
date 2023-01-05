@@ -4,7 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
 class RoundedSearchInputBox extends StatefulWidget {
-  const RoundedSearchInputBox({super.key});
+  const RoundedSearchInputBox({
+    super.key,
+    required this.textEditingController,
+    this.onChangedFunction,
+  });
+  final TextEditingController textEditingController;
+  final dynamic onChangedFunction;
 
   @override
   State<RoundedSearchInputBox> createState() => _RoundedSearchInputBoxState();
@@ -23,6 +29,12 @@ class _RoundedSearchInputBoxState extends State<RoundedSearchInputBox> {
         ),
       ),
       child: TextField(
+        onChanged: (change) => {
+          widget.onChangedFunction(
+            change,
+          ),
+          // print(change),
+        },
         decoration: InputDecoration(
           border: InputBorder.none,
           prefixIcon: Icon(

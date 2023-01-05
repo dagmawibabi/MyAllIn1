@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:myallin1/config/config.dart';
 import 'package:myallin1/pages/components/each_crypto.dart';
 import 'package:myallin1/pages/components/each_movie.dart';
 import 'package:myallin1/pages/components/each_news.dart';
@@ -30,6 +31,7 @@ class _SearchPageState extends State<SearchPage> {
   List news = [];
   List movies = [];
   List cryptos = [];
+  Map searchResults = {};
   int currentSearchPage = 0;
   List<Widget> eachNewsWidget = [];
   List<Widget> eachMovieWidget = [];
@@ -38,7 +40,10 @@ class _SearchPageState extends State<SearchPage> {
   bool moviesLoading = true;
   bool cryptoLoading = true;
   bool isSeries = false;
+  TextEditingController searchTextController = TextEditingController();
+  String curSearchTerm = "";
 
+  // News
   void getNews() async {
     // Get Headlines
     var url =
@@ -100,12 +105,12 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {});
   }
 
+  // Movies
   Future<void> getMovies() async {
     var type = isSeries == false ? "movie" : "tv";
     var url = "https://api.themoviedb.org/3/trending/" +
         type +
         "/week?api_key=38d6559cd7b9ccdd0dd57ccca36e49fb&page=1";
-    print(type);
     var uri = Uri.parse(url);
     var result = await http.get(uri);
     dynamic resultJSON = jsonDecode(result.body);
@@ -159,6 +164,7 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
+  // Crypto
   void getCrypto() async {
     var url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd";
     var uri = Uri.parse(url);
@@ -204,6 +210,21 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
+  // Search
+  void search(String searchTerm) async {
+    curSearchTerm = searchTerm;
+    if (searchTerm != "" && searchTerm != " ") {
+      var url = Config.baseUrl + "/search/" + searchTerm;
+      var uri = Uri.parse(url);
+      var result = await http.get(uri);
+      dynamic resultJSON = jsonDecode(result.body);
+      searchResults = resultJSON;
+      print(searchResults);
+      currentSearchPage = 0;
+    }
+    setState(() {});
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -218,202 +239,211 @@ class _SearchPageState extends State<SearchPage> {
     List searchScreens = [
       // Sample
       Container(
-        child: Column(children: [
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            decoration: BoxDecoration(
-              color: Colors.grey[900]!.withOpacity(0.4),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10.0),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0, vertical: 5.0),
-                  child: Text(
-                    "Trending",
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      clipBehavior: Clip.hardEdge,
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10.0),
+        child: Column(
+          children: [
+            // Post Results
+            curSearchTerm == "" || curSearchTerm == " "
+                ? Column(
+                    children: [
+                      // Trending Results
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: 4.0, vertical: 4.0),
+                        padding: EdgeInsets.symmetric(vertical: 8.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[900]!.withOpacity(0.4),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 15.0, vertical: 5.0),
+                              child: Text(
+                                "Trending",
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Container(
+                                  clipBehavior: Clip.hardEdge,
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: 4.0, vertical: 4.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10.0),
+                                    ),
+                                  ),
+                                  child: Image.asset(
+                                    "assets/images/me.jpg",
+                                    width: 180.0,
+                                  ),
+                                ),
+                                Container(
+                                  clipBehavior: Clip.hardEdge,
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: 4.0, vertical: 4.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10.0),
+                                    ),
+                                  ),
+                                  child: Image.asset(
+                                    "assets/images/me.jpg",
+                                    width: 180.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      child: Image.asset(
-                        "assets/images/me.jpg",
-                        width: 180.0,
-                      ),
-                    ),
-                    Container(
-                      clipBehavior: Clip.hardEdge,
-                      margin:
-                          EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10.0),
+
+                      // Chat Results
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: 4.0, vertical: 4.0),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 5.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[900]!.withOpacity(0.4),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 15.0, vertical: 8.0),
+                              child: Text(
+                                "Accounts",
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Chats(
+                              borderRadius: 20.0,
+                              chatObject: {
+                                "profilepic":
+                                    "https://assets.entrepreneur.com/content/3x2/2000/20150224165308-jeff-bezos-amazon.jpeg",
+                                "fullname": "Jeff Bezos",
+                                "username": "jeffyman",
+                              },
+                            ),
+                            Chats(
+                              borderRadius: 20.0,
+                              chatObject: {
+                                "profilepic":
+                                    "https://media.vanityfair.com/photos/5d41c7688df537000832361b/4:3/w_2668,h_2001,c_limit/GettyImages-945005812.jpg",
+                                "fullname": "Mark Zuckerberg",
+                                "username": "repitilian",
+                              },
+                            ),
+                          ],
                         ),
                       ),
-                      child: Image.asset(
-                        "assets/images/me.jpg",
-                        width: 180.0,
+                    ],
+                  )
+                : searchResults["postResults"].length == 0 &&
+                        searchResults["accountResults"].length == 0
+                    ? Container(
+                        padding: EdgeInsets.only(top: 50.0),
+                        child: Text(
+                          "No Results Found",
+                          style: TextStyle(
+                            color: Colors.grey[500]!,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        margin: EdgeInsets.symmetric(
+                            horizontal: 4.0, vertical: 4.0),
+                        padding: EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 5.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[900]!.withOpacity(0.4),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            searchResults["postResults"].length > 0
+                                ? Container(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 15.0, vertical: 8.0),
+                                          child: Text(
+                                            "Posts",
+                                            style: TextStyle(
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        for (var eachPostResult
+                                            in searchResults["postResults"])
+                                          Posts(
+                                            post: eachPostResult,
+                                            currentUser: widget.currentUser,
+                                          ),
+                                      ],
+                                    ),
+                                  )
+                                : Container(),
+                            searchResults["accountResults"].length > 0
+                                ? Container(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 15.0, vertical: 8.0),
+                                          child: Text(
+                                            "Accounts",
+                                            style: TextStyle(
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                        for (var eachAccountResult
+                                            in searchResults["accountResults"])
+                                          Chats(
+                                            borderRadius: 20.0,
+                                            chatObject: eachAccountResult,
+                                          ),
+                                      ],
+                                    ),
+                                  )
+                                : Container(),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
-            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
-            decoration: BoxDecoration(
-              color: Colors.grey[900]!.withOpacity(0.4),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10.0),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0, vertical: 8.0),
-                  child: Text(
-                    "Posts",
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                Posts(
-                  currentUser: widget.currentUser,
-                  borderRadius: 20.0,
-                  post: {
-                    "username": "DagmawiBabi",
-                    "fullname": "Dagmawi Babi",
-                    "profilepic": "assets/images/me.jpg",
-                    "likes": 1345,
-                    "comments": 945,
-                    "reposts": 342,
-                    "content":
-                        "Currently working on componentizing every element of this social media to make development easy and efficient.",
-                    "commentsList": [
-                      "1",
-                      "2",
-                      "3",
-                      "4",
-                      "5",
-                    ],
-                    "likers": [
-                      "11",
-                      "22",
-                      "33",
-                    ],
-                    "reposters": [
-                      "111",
-                      "222",
-                      "333",
-                      "444",
-                    ],
-                  },
-                ),
-                Posts(
-                  currentUser: widget.currentUser,
-                  borderRadius: 20.0,
-                  post: {
-                    "profilepic": "assets/images/me.jpg",
-                    "fullname": "Dagmawi Babi",
-                    "username": "DagmawiBabi",
-                    "likes": 1200,
-                    "comments": 864,
-                    "reposts": 256,
-                    "content":
-                        "This is the first  post in this new amazing social media that will take off. Trust me this is amazing. So gorgeous too.",
-                    "commentsList": [
-                      "1",
-                      "2",
-                      "3",
-                      "4",
-                      "5",
-                    ],
-                    "likers": [
-                      "11",
-                      "22",
-                      "33",
-                    ],
-                    "reposters": [
-                      "111",
-                      "222",
-                      "333",
-                      "444",
-                    ],
-                  },
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
-            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
-            decoration: BoxDecoration(
-              color: Colors.grey[900]!.withOpacity(0.4),
-              borderRadius: BorderRadius.all(
-                Radius.circular(10.0),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-                  child: Text(
-                    "Chats",
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                Chats(
-                  borderRadius: 20.0,
-                  chatObject: {
-                    "profilePic": "assets/images/me.jpg",
-                    "fullname": "Jeff Bezos",
-                    "username": "jeffyman",
-                  },
-                ),
-                Chats(
-                  borderRadius: 20.0,
-                  chatObject: {
-                    "profilePic": "assets/images/me.jpg",
-                    "fullname": "Mark Zuckerberg",
-                    "username": "repitilian",
-                  },
-                ),
-              ],
-            ),
-          ),
-        ]),
+            SizedBox(height: 300.0),
+          ],
+        ),
       ),
       // News
       newsLoading
@@ -539,7 +569,10 @@ class _SearchPageState extends State<SearchPage> {
     ];
     return ListView(
       children: [
-        RoundedSearchInputBox(),
+        RoundedSearchInputBox(
+          textEditingController: searchTextController,
+          onChangedFunction: search,
+        ),
 
         // Search Pages
         Container(

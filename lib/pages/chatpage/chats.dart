@@ -57,7 +57,7 @@ class _ChatsState extends State<Chats> {
 
                 // Profile Pic
                 SmallPFP(
-                  netpic: widget.chatObject["profilePic"],
+                  netpic: widget.chatObject["profilepic"],
                   size: 35.0,
                 ),
                 SizedBox(width: 10.0),

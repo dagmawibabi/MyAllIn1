@@ -52,7 +52,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
         title: Row(
           children: [
             SmallPFP(
-              netpic: widget.chatObject["profilePic"],
+              netpic: widget.chatObject["profilepic"],
               size: 35.0,
             ),
             SizedBox(width: 8.0),
@@ -265,7 +265,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                                           SizedBox(height: 10.0),
                                           SmallPFP(
                                             netpic:
-                                                widget.chatObject["profilePic"],
+                                                widget.chatObject["profilepic"],
                                             size: 150.0,
                                           ),
                                           SizedBox(height: 10.0),
@@ -338,7 +338,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                           margin: EdgeInsets.symmetric(
                               horizontal: 0.0, vertical: 5.0),
                           decoration: BoxDecoration(
-                            color: Colors.grey[900]!.withOpacity(0.2),
+                            color: Colors.grey[900]!.withOpacity(0.4),
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10.0)),
                           ),
@@ -350,6 +350,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                             ),
                             decoration: InputDecoration(
                               border: InputBorder.none,
+                              hintText: "Type message ...",
+                              hintStyle: TextStyle(
+                                color: Colors.grey[500]!,
+                              ),
                             ),
                           ),
                         ),
