@@ -23,6 +23,14 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         actions: [
           IconButton(
+            onPressed: () {
+              setState(() {});
+            },
+            icon: Icon(
+              Icons.dark_mode_outlined,
+            ),
+          ),
+          IconButton(
             onPressed: () {},
             icon: Icon(
               Icons.qr_code,
@@ -56,9 +64,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     topRight: Radius.circular(20.0),
                   ),
                 ),
-                child: Image.asset(
-                  // widget.profile["profilepic"],
-                  "assets/images/me2.jpg",
+                child: Image.network(
+                  widget.profile["profilepic"],
+                  // "assets/images/me2.jpg",
                 ),
               ),
             ),
@@ -106,17 +114,29 @@ class _ProfilePageState extends State<ProfilePage> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  widget.profile["fullname"].toString(),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16.0,
-                                  ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      widget.profile["fullname"].toString(),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                    SizedBox(width: 5.0),
+                                    Icon(
+                                      Icons.verified,
+                                      color: Colors.lightBlue,
+                                      size: 18.0,
+                                    ),
+                                  ],
                                 ),
+                                SizedBox(height: 2.0),
                                 Text(
-                                  widget.profile["username"]
-                                      .toString()
-                                      .toLowerCase(),
+                                  "@" +
+                                      widget.profile["username"]
+                                          .toString()
+                                          .toLowerCase(),
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 14.0,

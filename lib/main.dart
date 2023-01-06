@@ -43,10 +43,29 @@ class _MyAppState extends State<MyApp> {
         // "likeslist": (context) => LikesListPage(),
         "repostslist": (context) => RepostListPage(),
       },
-      themeMode: ThemeMode.dark,
+      // themeMode: ThemeMode.da,
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+        ),
+        scaffoldBackgroundColor: Colors.grey[200],
+        tabBarTheme: TabBarTheme(
+          labelColor: Colors.black,
+          unselectedLabelColor: Colors.grey[600]!,
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+        ),
+        iconTheme: IconThemeData(
+          color: Colors.white,
+        ),
+      ),
       darkTheme: ThemeData(
         appBarTheme: AppBarTheme(
           backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
         ),
         scaffoldBackgroundColor: primaryColor,
         floatingActionButtonTheme: FloatingActionButtonThemeData(

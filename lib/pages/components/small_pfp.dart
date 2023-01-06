@@ -25,12 +25,14 @@ class _SmallPFPState extends State<SmallPFP> {
       width: widget.size,
       height: widget.size,
       clipBehavior: Clip.hardEdge,
+      // padding: EdgeInsets.all(2.0),
       decoration: BoxDecoration(
+        // color: Colors.red,
         border: Border.all(
           color: Colors.black,
         ),
         borderRadius: BorderRadius.all(
-          Radius.circular(100.0),
+          Radius.circular(1000.0),
         ),
       ),
       child: widget.pic != "null"

@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/layout-v21/notification_template_icon_group.xml",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/5e083c06c9925c2309f02468fc66e376/transformed/core-1.7.0/res/layout-v21/notification_template_icon_group.xml"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/layout-v21/notification_action.xml",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/5e083c06c9925c2309f02468fc66e376/transformed/core-1.7.0/res/layout-v21/notification_action.xml"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/layout-v21/notification_template_custom_big.xml",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/5e083c06c9925c2309f02468fc66e376/transformed/core-1.7.0/res/layout-v21/notification_template_custom_big.xml"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/layout-v21/notification_action_tombstone.xml",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/5e083c06c9925c2309f02468fc66e376/transformed/core-1.7.0/res/layout-v21/notification_action_tombstone.xml"
+    }
+]

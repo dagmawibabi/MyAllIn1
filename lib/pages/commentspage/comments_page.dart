@@ -33,6 +33,8 @@ class _CommentsPageState extends State<CommentsPage> {
             currentUser: widget.currentUser,
             interactions: true,
             post: widget.post,
+            extended: true,
+            clickable: false,
           ),
 
           Comments(),

@@ -22,28 +22,42 @@ class _ProfileBarState extends State<ProfileBar> {
       children: [
         Row(
           children: [
+            SizedBox(width: 5.0),
             // Profile Pic
             SmallPFP(
-              pic: widget.profile["profilepic"],
+              netpic: widget.profile["profilepic"],
+              size: 40.0,
             ),
-            SizedBox(width: 10.0),
+            SizedBox(width: 7.0),
             // Name and Username
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  widget.profile["fullname"].toString(),
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.profile["fullname"].toString(),
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        color: Colors.grey[200]!,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(width: 5.0),
+                    Icon(
+                      Icons.verified,
+                      color: Colors.lightBlue,
+                      size: 18.0,
+                    ),
+                  ],
                 ),
+                SizedBox(height: 2.0),
                 Text(
-                  widget.profile["username"].toString().toLowerCase(),
+                  "@" + widget.profile["username"].toString().toLowerCase(),
                   style: TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.white70,
+                    fontSize: 13.5,
+                    color: Colors.white60,
                   ),
                 ),
               ],

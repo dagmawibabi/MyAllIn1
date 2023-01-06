@@ -18,6 +18,8 @@ class Posts extends StatefulWidget {
     this.interactions = true,
     required this.post,
     required this.currentUser,
+    this.extended = false,
+    this.clickable = true,
   });
 
   final double borderRadius;
@@ -25,6 +27,8 @@ class Posts extends StatefulWidget {
   final bool interactions;
   final Map post;
   final Map currentUser;
+  final bool extended;
+  final bool clickable;
 
   @override
   State<Posts> createState() => _PostsState();
@@ -69,37 +73,41 @@ class _PostsState extends State<Posts> {
           ProfileBar(
             profile: {
               "profilepic":
-                  "assets/images/me.jpg", // widget.post["profilepic"],
+                  "https://dagmawibabi.com/static/media/me.b4b941897136a2959e33.png", // widget.post["profilepic"],
               "fullname": widget.post["fullname"],
               "username": widget.post["username"],
             },
           ),
-          SizedBox(height: 10.0),
+          SizedBox(height: 0.0),
           // Content
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CommentsPage(
-                        currentUser: widget.currentUser,
-                        post: widget.post,
-                      ),
-                    ),
-                  );
+                  widget.clickable == true
+                      ? Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CommentsPage(
+                              currentUser: widget.currentUser,
+                              post: widget.post,
+                            ),
+                          ),
+                        )
+                      : () {};
                 },
                 child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
+                  padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
                   child: Text(
                     widget.post["content"].toString().trim(),
                     textAlign: TextAlign.start,
+                    maxLines: widget.extended == true ? 100 : 5,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.white,
+                      fontSize: 15.0,
+                      color: Colors.grey[300]!,
+                      height: 1.2,
                     ),
                   ),
                 ),

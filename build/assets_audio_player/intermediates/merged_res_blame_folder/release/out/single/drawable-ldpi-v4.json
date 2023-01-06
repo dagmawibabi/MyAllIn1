@@ -1,0 +1,138 @@
+[
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_icon_stop.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_icon_stop.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_audiotrack.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_audiotrack.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_chevron_right.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_chevron_right.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_icon_fastforward.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_icon_fastforward.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_chevron_left.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_chevron_left.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_icon_circular_play.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_icon_circular_play.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_forward.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_forward.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_icon_pause.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_icon_pause.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_fullscreen_exit.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_fullscreen_exit.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_icon_repeat_one.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_icon_repeat_one.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_fullscreen_enter.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_fullscreen_enter.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_icon_repeat_all.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_icon_repeat_all.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_subtitle_off.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_subtitle_off.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_icon_fullscreen_enter.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_icon_fullscreen_enter.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_icon_vr.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_icon_vr.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_icon_repeat_off.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_icon_repeat_off.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_skip_next.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_skip_next.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_default_album_image.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_default_album_image.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_pause_circle_filled.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_pause_circle_filled.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_icon_rewind.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_icon_rewind.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_check.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_check.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_icon_next.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_icon_next.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_icon_previous.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_icon_previous.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_icon_play.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_icon_play.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_skip_previous.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_skip_previous.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_edit_mode_logo.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_edit_mode_logo.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_speed.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_speed.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_subtitle_on.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_subtitle_on.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_icon_shuffle_off.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_icon_shuffle_off.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_icon_shuffle_on.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_icon_shuffle_on.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_icon_fullscreen_exit.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_icon_fullscreen_exit.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_play_circle_filled.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_play_circle_filled.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_rewind.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_rewind.png"
+    },
+    {
+        "merged": "/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/assets_audio_player/intermediates/merged_res/release/drawable-ldpi-v4/exo_ic_settings.png",
+        "source": "/home/dagmawibabi/.gradle/caches/transforms-3/68fe1a62f73c68db7de977adc715ed45/transformed/jetified-exoplayer-ui-2.18.1/res/drawable-ldpi-v4/exo_ic_settings.png"
+    }
+]

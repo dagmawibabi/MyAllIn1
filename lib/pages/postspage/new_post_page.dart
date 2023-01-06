@@ -20,7 +20,7 @@ class NewPostPage extends StatefulWidget {
 
 class _NewPostPageState extends State<NewPostPage> {
   TextEditingController postContentController = TextEditingController();
-
+  bool isPosting = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,37 +29,50 @@ class _NewPostPageState extends State<NewPostPage> {
           "New Post",
         ),
         actions: [
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
-            decoration: BoxDecoration(
-              color: Colors.grey[900],
-              border: Border.all(
-                color: Colors.grey[800]!,
-              ),
-              borderRadius: BorderRadius.all(
-                Radius.circular(20.0),
-              ),
-            ),
-            child: TextButton(
-              onPressed: () async {
-                Map newPostObject = {
-                  "fullname": widget.currentUser["fullname"],
-                  "username": widget.currentUser["username"],
-                  "content": postContentController.text.trim(),
-                  "hidden": false,
-                };
-                await widget.newPostFunction(newPostObject);
-                Navigator.pop(context);
-              },
-              child: Text(
-                "Post",
-                style: TextStyle(
-                  color: Colors.white,
+          isPosting == true
+              ? Container(
+                  // width: 20.0,
+                  // height: 20.0,
+                  padding:
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  child: CircularProgressIndicator(),
+                )
+              : Container(
+                  margin:
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[900],
+                    border: Border.all(
+                      color: Colors.grey[800]!,
+                    ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20.0),
+                    ),
+                  ),
+                  child: TextButton(
+                    onPressed: () async {
+                      isPosting = true;
+                      setState(() {});
+                      Map newPostObject = {
+                        "fullname": widget.currentUser["fullname"],
+                        "username": widget.currentUser["username"],
+                        "content": postContentController.text.trim(),
+                        "hidden": false,
+                      };
+                      await widget.newPostFunction(newPostObject);
+                      isPosting = false;
+                      setState(() {});
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      "Post",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          ),
         ],
       ),
       body: ListView(
@@ -75,7 +88,7 @@ class _NewPostPageState extends State<NewPostPage> {
           Container(
             height: 250.0,
             margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
-            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 0.0),
+            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
             decoration: BoxDecoration(
               color: Colors.grey[900]!.withOpacity(0.5),
               borderRadius: BorderRadius.all(
@@ -84,6 +97,8 @@ class _NewPostPageState extends State<NewPostPage> {
             ),
             child: TextField(
               controller: postContentController,
+              maxLength: 1000,
+              maxLines: 100,
               style: TextStyle(
                 color: Colors.white,
               ),
@@ -93,6 +108,9 @@ class _NewPostPageState extends State<NewPostPage> {
                 ),
                 border: InputBorder.none,
                 hintText: "What would you like to post",
+                counterStyle: TextStyle(
+                  color: Colors.grey[400],
+                ),
               ),
             ),
           ),

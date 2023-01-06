@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:myallin1/main.dart';
 import 'package:myallin1/pages/chatpage/chat_page.dart';
 import 'package:myallin1/pages/components/small_pfp.dart';
 import 'package:myallin1/pages/musicplayerpage/music_player_page.dart';
@@ -186,7 +187,7 @@ class _HomePageState extends State<HomePage>
 
   // Get Feed Polling
   void getFeedPolling() async {
-    Timer.periodic(Duration(seconds: 1), (time) {
+    Timer.periodic(Duration(seconds: 30), (time) {
       getFeed();
     });
   }
@@ -201,6 +202,7 @@ class _HomePageState extends State<HomePage>
       headers: {"Content-Type": "application/json"},
       body: jsonFormat,
     );
+    getFeed();
   }
 
   // Music Player
@@ -289,14 +291,14 @@ class _HomePageState extends State<HomePage>
                 child: Container(
                   padding: EdgeInsets.all(0.0),
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    // color: Colors.red,
                     borderRadius: BorderRadius.all(
                       Radius.circular(100.0),
                     ),
                   ),
                   child: SmallPFP(
                     size: 35.0,
-                    pic: "assets/images/me2.jpg",
+                    netpic: widget.currentUser["profilepic"],
                   ),
                 ),
               ),
@@ -329,7 +331,8 @@ class _HomePageState extends State<HomePage>
               Icons.notifications_outlined,
             ),
           ),
-          SizedBox(width: 15.0),
+          // SizedBox(width: 15.0),
+          SizedBox(width: 5.0),
         ],
         bottom: TabBar(
           controller: tabController,

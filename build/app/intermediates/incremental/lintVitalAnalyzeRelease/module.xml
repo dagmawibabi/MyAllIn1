@@ -1,0 +1,18 @@
+<lint-module
+    format="1"
+    dir="/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/android/app"
+    name=":app"
+    type="APP"
+    maven="android:app:"
+    gradle="7.1.2"
+    buildFolder="/media/dagmawibabi/Project/Coding Projects/Flutter/Philomena/MyAllIn1/build/app"
+    bootClassPath="/home/dagmawibabi/Android/Sdk/platforms/android-33/android.jar:/home/dagmawibabi/Android/Sdk/build-tools/30.0.3/core-lambda-stubs.jar"
+    javaSourceLevel="1.8"
+    compileTarget="android-33">
+  <lintOptions
+      abortOnError="true"
+      absolutePaths="true"
+      checkReleaseBuilds="true"
+      explainIssues="true"/>
+  <variant name="release"/>
+</lint-module>
