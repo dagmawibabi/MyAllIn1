@@ -69,7 +69,7 @@ class _MyAppState extends State<MyApp> {
         ),
         scaffoldBackgroundColor: primaryColor,
         floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: Colors.grey[900],
+          backgroundColor: primaryColor,
         ),
         iconTheme: IconThemeData(
           color: Colors.white,

@@ -8,9 +8,11 @@ class RoundedSearchInputBox extends StatefulWidget {
     super.key,
     required this.textEditingController,
     this.onChangedFunction,
+    this.focusNode,
   });
   final TextEditingController textEditingController;
   final dynamic onChangedFunction;
+  final dynamic focusNode;
 
   @override
   State<RoundedSearchInputBox> createState() => _RoundedSearchInputBoxState();
@@ -29,6 +31,7 @@ class _RoundedSearchInputBoxState extends State<RoundedSearchInputBox> {
         ),
       ),
       child: TextField(
+        focusNode: widget.focusNode,
         onChanged: (change) => {
           widget.onChangedFunction(
             change,

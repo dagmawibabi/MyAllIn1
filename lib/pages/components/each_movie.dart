@@ -22,7 +22,6 @@ class _EachMovieState extends State<EachMovie> {
       // padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        // color: Colors.grey[900]!.withOpacity(0.4),
         borderRadius: BorderRadius.all(
           Radius.circular(10.0),
         ),
@@ -40,6 +39,7 @@ class _EachMovieState extends State<EachMovie> {
           Container(
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
+              color: Colors.grey[900]!.withOpacity(0.4),
               borderRadius: BorderRadius.all(
                 Radius.circular(8.5),
               ),
@@ -50,12 +50,22 @@ class _EachMovieState extends State<EachMovie> {
               //   ),
               // ),
             ),
-            child: Image.network(
-              "https://image.tmdb.org/t/p/original" +
-                  widget.movieObject["poster_path"],
-              width: 200.0,
-              height: 280.0,
-              fit: BoxFit.cover,
+            child: Stack(
+              alignment: AlignmentDirectional.center,
+              children: [
+                Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.grey[700]!,
+                  ),
+                ),
+                Image.network(
+                  "https://image.tmdb.org/t/p/original" +
+                      widget.movieObject["poster_path"],
+                  width: 200.0,
+                  height: 280.0,
+                  fit: BoxFit.cover,
+                ),
+              ],
             ),
           ),
           // SizedBox(height: 4.0),

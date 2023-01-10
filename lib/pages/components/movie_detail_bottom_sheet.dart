@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_downloader/image_downloader.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -22,6 +24,8 @@ class MovieDetailBottomSheet extends StatefulWidget {
 class _MovieDetailBottomSheetState extends State<MovieDetailBottomSheet> {
   Map movieDetails = {};
   bool moviesLoading = true;
+  bool isDownloading = false;
+  bool isDownloadDone = false;
 
   void getMovieDetails() async {
     var url = "https://api.themoviedb.org/3/movie/" +
@@ -33,6 +37,32 @@ class _MovieDetailBottomSheetState extends State<MovieDetailBottomSheet> {
     movieDetails = resultJSON;
     moviesLoading = false;
     setState(() {});
+  }
+
+  void downloadMoviePoster(String url) async {
+    isDownloading = true;
+    setState(() {});
+    try {
+      // Saved with this method.
+      var imageId = await ImageDownloader.downloadImage(url);
+      if (imageId == null) {
+        return;
+      }
+
+      // Below is a method of obtaining saved image information.
+      var fileName = await ImageDownloader.findName(imageId);
+      var path = await ImageDownloader.findPath(imageId);
+      var size = await ImageDownloader.findByteSize(imageId);
+      var mimeType = await ImageDownloader.findMimeType(imageId);
+      isDownloading = false;
+      isDownloadDone = true;
+      setState(() {});
+    } on PlatformException catch (error) {
+      print("error");
+      isDownloading = false;
+      isDownloadDone = true;
+      setState(() {});
+    }
   }
 
   @override
@@ -78,22 +108,81 @@ class _MovieDetailBottomSheetState extends State<MovieDetailBottomSheet> {
                       fit: BoxFit.fitWidth,
                     ),
                     Container(
-                      padding: EdgeInsets.all(0.0),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.4),
-                        borderRadius: BorderRadius.only(
-                          // topRight: Radius.circular(100.0),
-                          // bottomLeft: Radius.circular(100.0),
-                          bottomRight: Radius.circular(30.0),
-                        ),
-                      ),
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.arrow_back,
-                        ),
+                      // padding: EdgeInsets.all(0.0),
+                      // decoration: BoxDecoration(
+                      //   color: Colors.black.withOpacity(0.4),
+                      //   borderRadius: BorderRadius.only(
+                      //     // topRight: Radius.circular(100.0),
+                      //     // bottomLeft: Radius.circular(100.0),
+                      //     bottomRight: Radius.circular(30.0),
+                      //   ),
+                      // ),
+                      child: Row(
+                        // mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(0.0),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.4),
+                              borderRadius: BorderRadius.only(
+                                // topRight: Radius.circular(100.0),
+                                // bottomLeft: Radius.circular(100.0),
+                                bottomRight: Radius.circular(30.0),
+                              ),
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: Icon(
+                                Icons.arrow_back,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            child: isDownloading == true
+                                ? Container(
+                                    width: 45.0,
+                                    height: 46.0,
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 12.0, horizontal: 12.0),
+                                    child: CircularProgressIndicator(
+                                      color: Colors.grey[400]!,
+                                      strokeWidth: 3.0,
+                                    ),
+                                  )
+                                : Container(
+                                    padding: EdgeInsets.only(left: 8.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.4),
+                                      borderRadius: BorderRadius.only(
+                                        // topRight: Radius.circular(100.0),
+                                        // bottomLeft: Radius.circular(100.0),
+                                        bottomLeft: Radius.circular(30.0),
+                                      ),
+                                    ),
+                                    child: isDownloadDone == true
+                                        ? IconButton(
+                                            onPressed: () {},
+                                            icon: Icon(
+                                              Icons.download_done_outlined,
+                                            ),
+                                          )
+                                        : IconButton(
+                                            onPressed: () {
+                                              downloadMoviePoster(
+                                                  "https://image.tmdb.org/t/p/original" +
+                                                      widget.movieObject[
+                                                          "poster_path"]);
+                                            },
+                                            icon: Icon(
+                                              Icons.download_outlined,
+                                            ),
+                                          ),
+                                  ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

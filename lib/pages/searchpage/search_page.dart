@@ -20,9 +20,12 @@ class SearchPage extends StatefulWidget {
   const SearchPage({
     super.key,
     required this.currentUser,
+    required this.searchFocusNode,
   });
 
   final Map currentUser;
+  final dynamic searchFocusNode;
+
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
@@ -40,6 +43,7 @@ class _SearchPageState extends State<SearchPage> {
   bool moviesLoading = true;
   bool cryptoLoading = true;
   bool isSeries = false;
+  bool isDaily = false;
   TextEditingController searchTextController = TextEditingController();
   String curSearchTerm = "";
 
@@ -108,9 +112,12 @@ class _SearchPageState extends State<SearchPage> {
   // Movies
   Future<void> getMovies() async {
     var type = isSeries == false ? "movie" : "tv";
+    var time = isDaily == false ? "day" : "week";
     var url = "https://api.themoviedb.org/3/trending/" +
         type +
-        "/week?api_key=38d6559cd7b9ccdd0dd57ccca36e49fb&page=1";
+        "/" +
+        time +
+        "?api_key=38d6559cd7b9ccdd0dd57ccca36e49fb&page=1";
     var uri = Uri.parse(url);
     var result = await http.get(uri);
     dynamic resultJSON = jsonDecode(result.body);
@@ -195,8 +202,8 @@ class _SearchPageState extends State<SearchPage> {
       backgroundColor: Colors.transparent,
       anchorPoint: Offset(0, 0),
       constraints: BoxConstraints(
-        minHeight: MediaQuery.of(context).size.height * 0.5,
-        maxHeight: MediaQuery.of(context).size.height * 0.6,
+        // minHeight: MediaQuery.of(context).size.height * 0.7,
+        maxHeight: MediaQuery.of(context).size.height * 0.9,
       ),
       isScrollControlled: true,
       isDismissible: true,
@@ -496,33 +503,73 @@ class _SearchPageState extends State<SearchPage> {
           : Column(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(width: 20.0),
-                    Text(
-                      "Movies",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                    // Movie or Series
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(width: 20.0),
+                        Text(
+                          "Movies",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        Switch(
+                          value: isSeries,
+                          onChanged: (value) async {
+                            isSeries = value;
+                            moviesLoading = true;
+                            setState(() {});
+                            await getMovies();
+                            displayMovies();
+                          },
+                          activeColor: Colors.red,
+                          trackColor:
+                              MaterialStateProperty.all(Colors.grey[700]),
+                          thumbColor: MaterialStateProperty.all(Colors.yellow),
+                        ),
+                        Text(
+                          "Series",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
-                    Switch(
-                      value: isSeries,
-                      onChanged: (value) async {
-                        isSeries = value;
-                        moviesLoading = true;
-                        setState(() {});
-                        await getMovies();
-                        displayMovies();
-                      },
-                      activeColor: Colors.red,
-                      trackColor: MaterialStateProperty.all(Colors.grey[700]),
-                      thumbColor: MaterialStateProperty.all(Colors.yellow),
-                    ),
-                    Text(
-                      "Series",
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+                    // Daily Weekly
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Daily",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        Switch(
+                          value: isDaily,
+                          onChanged: (value) async {
+                            isDaily = value;
+                            moviesLoading = true;
+                            setState(() {});
+                            await getMovies();
+                            displayMovies();
+                          },
+                          activeColor: Colors.red,
+                          trackColor:
+                              MaterialStateProperty.all(Colors.grey[700]),
+                          thumbColor: MaterialStateProperty.all(Colors.cyan),
+                        ),
+                        Text(
+                          "Weekly",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(width: 20.0),
+                      ],
                     ),
                   ],
                 ),
@@ -572,17 +619,18 @@ class _SearchPageState extends State<SearchPage> {
         RoundedSearchInputBox(
           textEditingController: searchTextController,
           onChangedFunction: search,
+          focusNode: widget.searchFocusNode,
         ),
 
         // Search Pages
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
-          padding: EdgeInsets.symmetric(vertical: 8.0),
+          margin: EdgeInsets.symmetric(horizontal: 12.0, vertical: 0.0),
+          padding: EdgeInsets.symmetric(vertical: 1.0),
           decoration: BoxDecoration(
-            color: Colors.grey[900]!.withOpacity(0.4),
-            border: Border.all(
-              color: Colors.grey[900]!,
-            ),
+            // color: Colors.grey[900]!.withOpacity(0.4),
+            // border: Border.all(
+            //   color: Colors.grey[900]!,
+            // ),
             borderRadius: BorderRadius.all(
               Radius.circular(10.0),
             ),
@@ -590,111 +638,239 @@ class _SearchPageState extends State<SearchPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ElevatedButton(
-                style: ButtonStyle(
-                  fixedSize: MaterialStateProperty.all(
-                    Size(120.0, 40.0),
-                  ),
-                  backgroundColor: MaterialStateProperty.all(
-                    currentSearchPage == 1
-                        ? Colors.lightBlue
-                        : Colors.grey[900],
-                  ),
-                ),
-                onPressed: () {
+              GestureDetector(
+                onTap: () {
                   displayNews();
                 },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Icon(
-                      Ionicons.newspaper_outline,
-                      size: 18.0,
-                      color:
-                          currentSearchPage == 1 ? Colors.black : Colors.white,
+                child: Container(
+                  width: 120.0,
+                  padding:
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                  decoration: BoxDecoration(
+                    color: currentSearchPage == 1
+                        ? Colors.lightBlue
+                        : Colors.grey[900],
+                    // border: Border.all(
+                    //   color: Colors.lightBlue.withOpacity(0.4),
+                    // ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20.0),
                     ),
-                    Text(
-                      "News",
-                      style: TextStyle(
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Ionicons.newspaper_outline,
+                        size: 18.0,
                         color: currentSearchPage == 1
                             ? Colors.black
                             : Colors.white,
                       ),
-                    ),
-                  ],
+                      SizedBox(width: 8.0),
+                      Text(
+                        "News",
+                        style: TextStyle(
+                          color: currentSearchPage == 1
+                              ? Colors.black
+                              : Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              ElevatedButton(
-                style: ButtonStyle(
-                  fixedSize: MaterialStateProperty.all(
-                    Size(120.0, 40.0),
-                  ),
-                  backgroundColor: MaterialStateProperty.all(
-                    currentSearchPage == 2
-                        ? Colors.amberAccent
-                        : Colors.grey[900],
-                  ),
-                ),
-                onPressed: () {
+              GestureDetector(
+                onTap: () {
                   displayMovies();
                 },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Icon(
-                      Ionicons.film_outline,
-                      size: 18.0,
-                      color:
-                          currentSearchPage == 2 ? Colors.black : Colors.white,
+                child: Container(
+                  width: 120.0,
+                  padding:
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                  decoration: BoxDecoration(
+                    color: currentSearchPage == 2
+                        ? Colors.amberAccent
+                        : Colors.grey[900],
+                    // border: Border.all(
+                    //   color: Colors.amberAccent.withOpacity(0.4),
+                    // ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20.0),
                     ),
-                    Text(
-                      "Movies",
-                      style: TextStyle(
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Ionicons.film_outline,
+                        size: 18.0,
                         color: currentSearchPage == 2
                             ? Colors.black
                             : Colors.white,
                       ),
-                    ),
-                  ],
+                      SizedBox(width: 8.0),
+                      Text(
+                        "Movies",
+                        style: TextStyle(
+                          color: currentSearchPage == 2
+                              ? Colors.black
+                              : Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              ElevatedButton(
-                style: ButtonStyle(
-                  fixedSize: MaterialStateProperty.all(
-                    Size(120.0, 40.0),
-                  ),
-                  backgroundColor: MaterialStateProperty.all(
-                    currentSearchPage == 3
-                        ? Colors.greenAccent
-                        : Colors.grey[900],
-                  ),
-                ),
-                onPressed: () {
+              GestureDetector(
+                onTap: () {
                   displayCrypto();
                 },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Icon(
-                      Ionicons.cash_outline,
-                      size: 18.0,
-                      color:
-                          currentSearchPage == 3 ? Colors.black : Colors.white,
+                child: Container(
+                  width: 120.0,
+                  padding:
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                  decoration: BoxDecoration(
+                    color: currentSearchPage == 3
+                        ? Colors.greenAccent
+                        : Colors.grey[900],
+                    // border: Border.all(
+                    //   color: Colors.greenAccent.withOpacity(0.4),
+                    // ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20.0),
                     ),
-                    Text(
-                      "Crypto",
-                      style: TextStyle(
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Ionicons.cash_outline,
+                        size: 18.0,
                         color: currentSearchPage == 3
                             ? Colors.black
                             : Colors.white,
                       ),
-                    ),
-                  ],
+                      SizedBox(width: 8.0),
+                      Text(
+                        "Crypto",
+                        style: TextStyle(
+                          color: currentSearchPage == 3
+                              ? Colors.black
+                              : Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
+              // ElevatedButton(
+              //   style: ButtonStyle(
+              //     fixedSize: MaterialStateProperty.all(
+              //       Size(120.0, 40.0),
+              //     ),
+              //     backgroundColor: MaterialStateProperty.all(
+              //       currentSearchPage == 1
+              //           ? Colors.lightBlue
+              //           : Colors.grey[900],
+              //     ),
+              //   ),
+              //   onPressed: () {
+              //     displayNews();
+              //   },
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //     children: [
+              //       Icon(
+              //         Ionicons.newspaper_outline,
+              //         size: 18.0,
+              //         color:
+              //             currentSearchPage == 1 ? Colors.black : Colors.white,
+              //       ),
+              //       Text(
+              //         "News",
+              //         style: TextStyle(
+              //           color: currentSearchPage == 1
+              //               ? Colors.black
+              //               : Colors.white,
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
+              //   ElevatedButton(
+              //     style: ButtonStyle(
+              //       fixedSize: MaterialStateProperty.all(
+              //         Size(120.0, 40.0),
+              //       ),
+              //       backgroundColor: MaterialStateProperty.all(
+              //         currentSearchPage == 2
+              //             ? Colors.amberAccent
+              //             : Colors.grey[900],
+              //       ),
+              //     ),
+              //     onPressed: () {
+              //       displayMovies();
+              //     },
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //       children: [
+              //         Icon(
+              //           Ionicons.film_outline,
+              //           size: 18.0,
+              //           color:
+              //               currentSearchPage == 2 ? Colors.black : Colors.white,
+              //         ),
+              //         Text(
+              //           "Movies",
+              //           style: TextStyle(
+              //             color: currentSearchPage == 2
+              //                 ? Colors.black
+              //                 : Colors.white,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              //   ElevatedButton(
+              //     style: ButtonStyle(
+              //       fixedSize: MaterialStateProperty.all(
+              //         Size(120.0, 40.0),
+              //       ),
+              //       backgroundColor: MaterialStateProperty.all(
+              //         currentSearchPage == 3
+              //             ? Colors.greenAccent
+              //             : Colors.grey[900],
+              //       ),
+              //     ),
+              //     onPressed: () {
+              //       displayCrypto();
+              //     },
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //       children: [
+              //         Icon(
+              //           Ionicons.cash_outline,
+              //           size: 18.0,
+              //           color:
+              //               currentSearchPage == 3 ? Colors.black : Colors.white,
+              //         ),
+              //         Text(
+              //           "Crypto",
+              //           style: TextStyle(
+              //             color: currentSearchPage == 3
+              //                 ? Colors.black
+              //                 : Colors.white,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
             ],
           ),
         ),
+
+        SizedBox(height: 10.0),
 
         // Search Results
         searchScreens[currentSearchPage],

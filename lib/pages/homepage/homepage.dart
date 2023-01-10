@@ -45,6 +45,7 @@ class _HomePageState extends State<HomePage>
   bool isMusicPlaying = false;
   List deviceMusicList = [];
   String currentSong = " Sample Song ";
+  FocusNode searchFocusNode = FocusNode();
 
   // Sample Data
   Map currentUser = {
@@ -262,6 +263,7 @@ class _HomePageState extends State<HomePage>
       setState(() {});
     });
 
+    getFeed();
     getFeedPolling();
     super.initState();
   }
@@ -359,6 +361,7 @@ class _HomePageState extends State<HomePage>
           // Search
           SearchPage(
             currentUser: currentUser,
+            searchFocusNode: searchFocusNode,
           ),
           // Posts
           feedLoading
@@ -417,7 +420,7 @@ class _HomePageState extends State<HomePage>
                     // width: 300.0,
                     // height: 60.0,
                     decoration: BoxDecoration(
-                      color: Colors.grey[900],
+                      color: Color.fromARGB(255, 18, 18, 18),
                       border: Border.all(
                         color: Colors.grey[850]!,
                       ),
@@ -497,7 +500,9 @@ class _HomePageState extends State<HomePage>
                         Container(
                           padding: EdgeInsets.symmetric(vertical: 2.0),
                           decoration: BoxDecoration(
-                            color: Colors.grey[900],
+                            // color: Colors.grey[900],
+                            color: Color.fromARGB(255, 18, 18, 18),
+
                             borderRadius: BorderRadius.all(
                               Radius.circular(
                                 100.0,
@@ -538,32 +543,45 @@ class _HomePageState extends State<HomePage>
                       ],
                     ),
                   ),
-            FloatingActionButton(
-              onPressed: () {
-                // ProfileBar(
-                //   profile: {
-                //     "profilepic": widget.post["profilepic"],
-                //     "fullname": widget.post["fullname"],
-                //     "username": widget.post["username"],
-                //   },
-                // ),
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => NewPostPage(
-                      currentUser: currentUser,
-                      newPostFunction: newPost,
-                    ),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey[850]!),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(100.0),
+                ),
+              ),
+              child: FloatingActionButton(
+                onPressed: () {
+                  // ProfileBar(
+                  //   profile: {
+                  //     "profilepic": widget.post["profilepic"],
+                  //     "fullname": widget.post["fullname"],
+                  //     "username": widget.post["username"],
+                  //   },
+                  // ),
+                  if (pageIndex == 0) {
+                    searchFocusNode.requestFocus();
+                  } else if (pageIndex == 1) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NewPostPage(
+                          currentUser: currentUser,
+                          newPostFunction: newPost,
+                        ),
+                      ),
+                    );
+                  } else if (pageIndex == 2) {}
+                },
+                child: Container(
+                  child: Icon(
+                    pageIndex == 0
+                        ? Ionicons.search_outline
+                        : pageIndex == 1
+                            ? Ionicons.pencil_outline
+                            : Ionicons.chatbox_outline,
                   ),
-                );
-              },
-              child: Icon(
-                pageIndex == 0
-                    ? Ionicons.search_outline
-                    : pageIndex == 1
-                        ? Ionicons.pencil_outline
-                        : Ionicons.chatbox_outline,
+                ),
               ),
             ),
           ],

@@ -31,11 +31,15 @@ class _NewPostPageState extends State<NewPostPage> {
         actions: [
           isPosting == true
               ? Container(
-                  // width: 20.0,
-                  // height: 20.0,
+                  width: 80.0,
+                  height: 20.0,
+                  // color: Colors.amber,
                   padding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  child: CircularProgressIndicator(),
+                      EdgeInsets.symmetric(vertical: 15.0, horizontal: 26.0),
+                  child: CircularProgressIndicator(
+                    color: Colors.grey[400]!,
+                    strokeWidth: 3.0,
+                  ),
                 )
               : Container(
                   margin:

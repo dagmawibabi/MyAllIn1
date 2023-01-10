@@ -48,7 +48,7 @@ class _ProfileBarState extends State<ProfileBar> {
                     Icon(
                       Icons.verified,
                       color: Colors.lightBlue,
-                      size: 18.0,
+                      size: 16.0,
                     ),
                   ],
                 ),
