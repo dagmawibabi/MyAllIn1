@@ -392,6 +392,7 @@ class _HomePageState extends State<HomePage>
               : PostsPage(
                   feed: feed,
                   currentUser: currentUser,
+                  getFeed: getFeed,
                 ),
           // Chats
           ChatPage(currentUser: currentUser),

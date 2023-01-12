@@ -163,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                     "John Doe",
                   ),
                   onPressed: () {
-                    widget.loginAccount("janedoe", "janedoe");
+                    widget.loginAccount("johndoe", "johndoe");
                   },
                 ),
                 ElevatedButton(

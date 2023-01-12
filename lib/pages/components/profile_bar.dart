@@ -1,14 +1,21 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
 
 import 'small_pfp.dart';
 
 class ProfileBar extends StatefulWidget {
-  const ProfileBar({super.key, required this.profile, this.widget});
+  const ProfileBar({
+    super.key,
+    required this.profile,
+    this.widget,
+    this.postOptions,
+  });
 
   final Map profile;
   final dynamic widget;
+  final dynamic postOptions;
 
   @override
   State<ProfileBar> createState() => _ProfileBarState();
@@ -65,12 +72,30 @@ class _ProfileBarState extends State<ProfileBar> {
           ],
         ),
         widget.widget ??
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.more_vert_outlined,
-                color: Colors.grey,
-              ),
+            Row(
+              children: [
+                Icon(
+                  Ionicons.bookmark_outline,
+                  size: 20.0,
+                  color: Colors.grey[400]!,
+                ),
+                IconButton(
+                  onPressed: () {
+                    var postObject = {
+                      "username":
+                          widget.profile["username"].toString().toLowerCase(),
+                      "content":
+                          widget.profile["content"].toString().toLowerCase(),
+                      "time": widget.profile["time"].toString().toLowerCase(),
+                    };
+                    widget.postOptions(postObject);
+                  },
+                  icon: Icon(
+                    Icons.more_vert_outlined,
+                    color: Colors.grey[400]!,
+                  ),
+                ),
+              ],
             ),
       ],
     );
