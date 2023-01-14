@@ -27,7 +27,7 @@ class _CryptoStatType2State extends State<CryptoStatType2> {
   Widget build(BuildContext context) {
     return Container(
       // width: 100.0,
-      margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+      margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
       decoration: BoxDecoration(
         color: Colors.grey[900]!,
         borderRadius: BorderRadius.all(

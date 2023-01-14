@@ -50,6 +50,7 @@ class _PostsState extends State<Posts> {
   bool isHidden = false;
   bool isNSFW = false;
   bool isSpoiler = false;
+  bool isBookmarked = false;
 
   // Like Displie Posts
   void likeDislikePosts(String postID) async {
@@ -101,15 +102,18 @@ class _PostsState extends State<Posts> {
         padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
         margin: EdgeInsets.only(bottom: 5.0),
         decoration: BoxDecoration(
-          color: Colors.grey[900]!.withOpacity(0.2),
+          // color: Colors.grey[900]!.withOpacity(0.1),
           // border: Border.all(
           //   color: widget.post["spoiler"] == true
           //       ? Colors.orangeAccent
           //       : Colors.black,
           // ),
-          borderRadius: BorderRadius.circular(
-            widget.borderRadius,
+          border: Border(
+            bottom: BorderSide(color: Colors.black),
           ),
+          // borderRadius: BorderRadius.circular(
+          //   widget.borderRadius,
+          // ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,10 +208,20 @@ class _PostsState extends State<Posts> {
                 // Bookmark and More Post Options
                 Row(
                   children: [
-                    Icon(
-                      Ionicons.bookmark_outline,
-                      size: 20.0,
-                      color: Colors.grey[400]!,
+                    GestureDetector(
+                      onTap: () {
+                        isBookmarked = !isBookmarked;
+                        setState(() {});
+                      },
+                      child: Icon(
+                        isBookmarked == true
+                            ? Ionicons.bookmark
+                            : Ionicons.bookmark_outline,
+                        size: 20.0,
+                        color: isBookmarked == true
+                            ? Colors.yellow
+                            : Colors.grey[400]!,
+                      ),
                     ),
                     IconButton(
                       onPressed: () async {
@@ -217,7 +231,7 @@ class _PostsState extends State<Posts> {
                           "content": widget.post["content"],
                           "time": widget.post["time"].toString().toLowerCase(),
                         };
-                        widget.postOptions(postObject);
+                        widget.postOptions(postObject, widget.post);
                       },
                       icon: Icon(
                         Icons.more_vert_outlined,
@@ -228,10 +242,19 @@ class _PostsState extends State<Posts> {
                 ),
               ],
             ),
-            SizedBox(height: 6.0),
+            SizedBox(
+              height: widget.post["hidden"] == false
+                  ? widget.post["spoiler"] == false
+                      ? widget.post["nsfw"] == false
+                          ? 0.0
+                          : 5.0
+                      : 5.0
+                  : 5.0,
+            ),
+
             // Tags
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 2.0),
+              padding: EdgeInsets.only(bottom: 4.0),
               decoration: BoxDecoration(
                 // color: Colors.grey[900]!.withOpacity(0.5),
                 borderRadius: BorderRadius.all(
@@ -313,30 +336,36 @@ class _PostsState extends State<Posts> {
                                       : widget.post["content"]
                                           .toString()
                                           .trim()
-                                          .replaceAll(RegExp(r"."), "*")
+                                          .replaceAll(RegExp(r" "), "X")
+                                          .replaceAll(RegExp(r"[^X]"), "*")
+                                          .replaceAll(RegExp(r"X"), " ")
                                   : widget.post["content"]
                                       .toString()
                                       .trim()
-                                      .replaceAll(RegExp(r"."), "*")
+                                      .replaceAll(RegExp(r" "), "X")
+                                      .replaceAll(RegExp(r"[^X]"), "*")
+                                      .replaceAll(RegExp(r"X"), " ")
                               : widget.post["content"]
                                   .toString()
                                   .trim()
-                                  .replaceAll(RegExp(r"."), "*"),
+                                  .replaceAll(RegExp(r" "), "X")
+                                  .replaceAll(RegExp(r"[^X]"), "*")
+                                  .replaceAll(RegExp(r"X"), " "),
                       textAlign: TextAlign.start,
                       maxLines: widget.extended == true ? 100 : 5,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 15.0,
+                        fontSize: widget.extended == true ? 15.5 : 15.0,
                         color: widget.extended == true
                             ? Colors.grey[300]!
                             : widget.post["hidden"] == false
                                 ? widget.post["nsfw"] == false
                                     ? widget.post["spoiler"] == false
                                         ? Colors.grey[300]!
-                                        : Colors.grey[600]!
-                                    : Colors.grey[600]!
-                                : Colors.grey[600]!,
-                        height: 1.2,
+                                        : Colors.grey[400]!
+                                    : Colors.grey[400]!
+                                : Colors.grey[400]!,
+                        height: 1.4,
                       ),
                     ),
                   ),
@@ -370,6 +399,26 @@ class _PostsState extends State<Posts> {
                       ),
               ],
             ),
+            SizedBox(height: 5.0),
+
+            // Time
+            Padding(
+              padding: EdgeInsets.only(left: 5.0),
+              child: Text(
+                DateTime.fromMillisecondsSinceEpoch(widget.post["time"])
+                        .toString()
+                        .substring(11, 16) +
+                    " • " +
+                    DateTime.fromMillisecondsSinceEpoch(widget.post["time"])
+                        .toString()
+                        .substring(0, 10),
+                style: TextStyle(
+                  fontSize: 12.0,
+                  color: Colors.grey[700]!,
+                ),
+              ),
+            ),
+
             // Interactions
             widget.interactions == false
                 ? Container()

@@ -25,7 +25,7 @@ class _RoundedSearchInputBoxState extends State<RoundedSearchInputBox> {
       padding: EdgeInsets.only(top: 0.0, right: 5.0),
       margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
       decoration: BoxDecoration(
-        color: Colors.grey[900],
+        color: Colors.grey[900]!.withOpacity(0.2),
         borderRadius: BorderRadius.all(
           Radius.circular(20.0),
         ),

@@ -259,7 +259,6 @@ class _HomePageState extends State<HomePage>
             "&aqi=yes");
     var response = await http.get(url);
     var responseJSON = jsonDecode(response.body);
-    print(responseJSON);
     weatherData = responseJSON;
     weatherLoading = false;
     setState(() {});
@@ -406,7 +405,7 @@ class _HomePageState extends State<HomePage>
             searchFocusNode: searchFocusNode,
           ),
           // Posts
-          feedLoading || weatherLoading
+          feedLoading
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -436,6 +435,7 @@ class _HomePageState extends State<HomePage>
                   currentUser: currentUser,
                   getFeed: getFeed,
                   weatherData: weatherData,
+                  weatherLoading: weatherLoading,
                 ),
           // Chats
           ChatPage(currentUser: currentUser),
@@ -588,42 +588,47 @@ class _HomePageState extends State<HomePage>
                     ),
                   ),
             Container(
+              width: 60.0,
+              height: 60.0,
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey[850]!),
                 borderRadius: BorderRadius.all(
                   Radius.circular(100.0),
                 ),
               ),
-              child: FloatingActionButton(
-                onPressed: () {
-                  // ProfileBar(
-                  //   profile: {
-                  //     "profilepic": widget.post["profilepic"],
-                  //     "fullname": widget.post["fullname"],
-                  //     "username": widget.post["username"],
-                  //   },
-                  // ),
-                  if (pageIndex == 0) {
-                    searchFocusNode.requestFocus();
-                  } else if (pageIndex == 1) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => NewPostPage(
-                          currentUser: currentUser,
-                          newPostFunction: newPost,
+              child: Center(
+                child: FloatingActionButton(
+                  onPressed: () {
+                    // ProfileBar(
+                    //   profile: {
+                    //     "profilepic": widget.post["profilepic"],
+                    //     "fullname": widget.post["fullname"],
+                    //     "username": widget.post["username"],
+                    //   },
+                    // ),
+                    if (pageIndex == 0) {
+                      searchFocusNode.requestFocus();
+                    } else if (pageIndex == 1) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NewPostPage(
+                            currentUser: currentUser,
+                            newPostFunction: newPost,
+                          ),
                         ),
-                      ),
-                    );
-                  } else if (pageIndex == 2) {}
-                },
-                child: Container(
-                  child: Icon(
-                    pageIndex == 0
-                        ? Ionicons.search_outline
-                        : pageIndex == 1
-                            ? Ionicons.pencil_outline
-                            : Ionicons.chatbox_outline,
+                      );
+                    } else if (pageIndex == 2) {}
+                  },
+                  child: Container(
+                    padding: EdgeInsets.only(bottom: 6.0),
+                    child: Icon(
+                      pageIndex == 0
+                          ? Ionicons.search_outline
+                          : pageIndex == 1
+                              ? Ionicons.pencil_outline
+                              : Ionicons.person_add_outline,
+                    ),
                   ),
                 ),
               ),

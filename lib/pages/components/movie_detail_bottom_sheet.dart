@@ -597,7 +597,7 @@ class _MovieDetailBottomSheetState extends State<MovieDetailBottomSheet> {
                                 ),
                               ],
                             ),
-                      SizedBox(height: 20.0),
+                      SizedBox(height: 0.0),
 
                       // Visit Homepage
                       moviesLoading == true
@@ -606,10 +606,10 @@ class _MovieDetailBottomSheetState extends State<MovieDetailBottomSheet> {
                               child: ElevatedButton(
                                 style: ButtonStyle(
                                   fixedSize: MaterialStateProperty.all(
-                                    Size(double.infinity, 50.0),
+                                    Size(200.0, 40.0),
                                   ),
                                   backgroundColor: MaterialStateProperty.all(
-                                    Colors.black.withOpacity(0.5),
+                                    Colors.lightBlue,
                                   ),
                                 ),
                                 child: Row(
@@ -617,13 +617,13 @@ class _MovieDetailBottomSheetState extends State<MovieDetailBottomSheet> {
                                   children: [
                                     Icon(
                                       Icons.open_in_new,
-                                      color: Colors.lightBlue,
+                                      color: Colors.black,
                                     ),
                                     SizedBox(width: 8.0),
                                     Text(
                                       "Visit Homepage",
                                       style: TextStyle(
-                                        color: Colors.lightBlue,
+                                        color: Colors.black,
                                       ),
                                     ),
                                   ],

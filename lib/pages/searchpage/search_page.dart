@@ -200,10 +200,11 @@ class _SearchPageState extends State<SearchPage> {
   void showCryptoDetails(cryptoObject) {
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
+      // barrierColor: Colors.black,
       anchorPoint: Offset(0, 0),
       constraints: BoxConstraints(
         // minHeight: MediaQuery.of(context).size.height * 0.7,
-        maxHeight: MediaQuery.of(context).size.height * 0.9,
+        maxHeight: MediaQuery.of(context).size.height * 0.8,
       ),
       isScrollControlled: true,
       isDismissible: true,
@@ -258,7 +259,7 @@ class _SearchPageState extends State<SearchPage> {
                             horizontal: 4.0, vertical: 4.0),
                         padding: EdgeInsets.symmetric(vertical: 8.0),
                         decoration: BoxDecoration(
-                          color: Colors.grey[900]!.withOpacity(0.4),
+                          color: Colors.grey[900]!.withOpacity(0.0),
                           borderRadius: BorderRadius.all(
                             Radius.circular(10.0),
                           ),
@@ -315,14 +316,19 @@ class _SearchPageState extends State<SearchPage> {
                         ),
                       ),
 
+                      Divider(
+                        // color: Colors.black,
+                        height: 20.0,
+                      ),
+
                       // Chat Results
                       Container(
                         margin: EdgeInsets.symmetric(
-                            horizontal: 4.0, vertical: 4.0),
+                            horizontal: 4.0, vertical: 0.0),
                         padding: EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 5.0),
+                            vertical: 0.0, horizontal: 5.0),
                         decoration: BoxDecoration(
-                          color: Colors.grey[900]!.withOpacity(0.4),
+                          color: Colors.grey[900]!.withOpacity(0.0),
                           borderRadius: BorderRadius.all(
                             Radius.circular(10.0),
                           ),
@@ -331,8 +337,7 @@ class _SearchPageState extends State<SearchPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 15.0, vertical: 8.0),
+                              padding: EdgeInsets.symmetric(horizontal: 15.0),
                               child: Text(
                                 "Accounts",
                                 style: TextStyle(
@@ -342,6 +347,7 @@ class _SearchPageState extends State<SearchPage> {
                                 ),
                               ),
                             ),
+                            SizedBox(height: 15.0),
                             Chats(
                               borderRadius: 20.0,
                               chatObject: {
@@ -649,7 +655,7 @@ class _SearchPageState extends State<SearchPage> {
                   decoration: BoxDecoration(
                     color: currentSearchPage == 1
                         ? Colors.lightBlue
-                        : Colors.grey[900],
+                        : Colors.grey[900]!.withOpacity(0.4),
                     // border: Border.all(
                     //   color: Colors.lightBlue.withOpacity(0.4),
                     // ),
@@ -691,7 +697,7 @@ class _SearchPageState extends State<SearchPage> {
                   decoration: BoxDecoration(
                     color: currentSearchPage == 2
                         ? Colors.amberAccent
-                        : Colors.grey[900],
+                        : Colors.grey[900]!.withOpacity(0.4),
                     // border: Border.all(
                     //   color: Colors.amberAccent.withOpacity(0.4),
                     // ),
@@ -733,7 +739,7 @@ class _SearchPageState extends State<SearchPage> {
                   decoration: BoxDecoration(
                     color: currentSearchPage == 3
                         ? Colors.greenAccent
-                        : Colors.grey[900],
+                        : Colors.grey[900]!.withOpacity(0.4),
                     // border: Border.all(
                     //   color: Colors.greenAccent.withOpacity(0.4),
                     // ),
@@ -870,7 +876,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ),
 
-        SizedBox(height: 10.0),
+        SizedBox(height: 20.0),
 
         // Search Results
         searchScreens[currentSearchPage],
