@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -95,11 +96,27 @@ class _WeatherBottomSheetState extends State<WeatherBottomSheet> {
                     height: 80.0,
                     child: Hero(
                       tag: "weatherIcon",
-                      child: Image.network(
-                        "https:" +
-                            widget.weatherData["current"]["condition"]["icon"],
+                      child: CachedNetworkImage(
                         fit: BoxFit.fill,
+                        imageUrl: "https:" +
+                            widget.weatherData["current"]["condition"]["icon"],
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) => Center(
+                          child: CircularProgressIndicator(
+                            value: downloadProgress.progress,
+                            color: Colors.grey[800]!,
+                            strokeWidth: 2.0,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Icon(
+                          Icons.error_outline,
+                        ),
                       ),
+                      // Image.network(
+                      //   "https:" +
+                      //       widget.weatherData["current"]["condition"]["icon"],
+                      //   fit: BoxFit.fill,
+                      // ),
                     ),
                   ),
                   Text(

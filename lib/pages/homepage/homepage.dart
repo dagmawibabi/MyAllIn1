@@ -279,6 +279,7 @@ class _HomePageState extends State<HomePage>
         await Permission.location.status;
     if (locationPermissionStatus.isGranted == false) {
       await Permission.location.request();
+      getWeather();
     } else {
       // locationData = await location.getLocation();
       getWeather();

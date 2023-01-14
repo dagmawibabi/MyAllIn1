@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myallin1/pages/components/crypto_stats_type2.dart';
 
@@ -70,9 +71,22 @@ class _CryptoDetailBottomSheetState extends State<CryptoDetailBottomSheet> {
                       Container(
                         width: 120.0,
                         height: 120.0,
-                        child: Image.network(
-                          widget.cryptoObject["image"],
+                        child: CachedNetworkImage(
+                          imageUrl: widget.cryptoObject["image"],
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) =>
+                                  CircularProgressIndicator(
+                            value: downloadProgress.progress,
+                            color: Colors.grey[800]!,
+                            strokeWidth: 2.0,
+                          ),
+                          errorWidget: (context, url, error) => Icon(
+                            Icons.error_outline,
+                          ),
                         ),
+                        // Image.network(
+                        //   widget.cryptoObject["image"],
+                        // ),
                       ),
                       SizedBox(height: 15.0),
                       Text(

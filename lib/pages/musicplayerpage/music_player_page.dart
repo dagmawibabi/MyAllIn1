@@ -46,7 +46,8 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
   void deviceMusicListBottomSheet() async {
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.transparent,
+      // backgroundColor: Colors.black,
       builder: (context) {
         return MusicListBottomSheet(
           deviceMusicList: widget.deviceMusicList,
@@ -79,7 +80,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
             height: MediaQuery.of(context).size.height,
             decoration: isFullScreen == true
                 ? BoxDecoration(
-                    // color: Colors.black,
+                    color: Colors.black,
                     image: DecorationImage(
                       image: AssetImage("assets/images/INR.jpg"),
                       fit: BoxFit.cover,

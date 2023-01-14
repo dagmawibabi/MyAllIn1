@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myallin1/config/config.dart';
 import 'package:http/http.dart' as http;
@@ -70,7 +71,7 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                             ),
                           ),
                           child: CircularProgressIndicator(
-                            color: Colors.blueAccent!,
+                            color: Colors.blueAccent,
                           ),
                         )
                       : Container(
@@ -82,9 +83,22 @@ class _OthersProfilePageState extends State<OthersProfilePage> {
                               Radius.circular(1000.0),
                             ),
                           ),
-                          child: Image.network(
-                            profile["profile"]["profilepic"],
+                          child: CachedNetworkImage(
+                            imageUrl: profile["profile"]["profilepic"],
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) =>
+                                    CircularProgressIndicator(
+                              value: downloadProgress.progress,
+                              color: Colors.grey[800]!,
+                              strokeWidth: 2.0,
+                            ),
+                            errorWidget: (context, url, error) => Icon(
+                              Icons.error_outline,
+                            ),
                           ),
+                          // Image.network(
+                          //   profile["profile"]["profilepic"],
+                          // ),
                         ),
                   SizedBox(width: 15.0),
                   Column(

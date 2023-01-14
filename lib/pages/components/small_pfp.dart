@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class SmallPFP extends StatefulWidget {
@@ -42,12 +43,27 @@ class _SmallPFPState extends State<SmallPFP> {
               height: widget.size,
               fit: BoxFit.cover,
             )
-          : Image.network(
-              widget.netpic,
+          : CachedNetworkImage(
               width: widget.size,
               height: widget.size,
               fit: BoxFit.cover,
+              imageUrl: widget.netpic,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  CircularProgressIndicator(
+                value: downloadProgress.progress,
+                color: Colors.grey[800]!,
+                strokeWidth: 2.0,
+              ),
+              errorWidget: (context, url, error) => Icon(
+                Icons.error_outline,
+              ),
             ),
+      //  Image.network(
+      //           widget.netpic,
+      //           width: widget.size,
+      //           height: widget.size,
+      //           fit: BoxFit.cover,
+      //         ),
     );
   }
 }

@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myallin1/config/config.dart';
 import 'package:myallin1/pages/bottomsheets/weather_bottom_sheet.dart';
@@ -148,12 +149,30 @@ class _PostsPageState extends State<PostsPage> {
                               padding: EdgeInsets.only(left: 10.0, right: 8.0),
                               child: Hero(
                                 tag: "weatherIcon",
-                                child: Image.network(
-                                  "https:" +
+                                child: CachedNetworkImage(
+                                  fit: BoxFit.contain,
+                                  imageUrl: "https:" +
                                       widget.weatherData["current"]["condition"]
                                           ["icon"],
-                                  fit: BoxFit.contain,
+                                  progressIndicatorBuilder:
+                                      (context, url, downloadProgress) =>
+                                          Center(
+                                    child: CircularProgressIndicator(
+                                      value: downloadProgress.progress,
+                                      color: Colors.grey[800]!,
+                                      strokeWidth: 2.0,
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) => Icon(
+                                    Icons.error_outline,
+                                  ),
                                 ),
+                                // Image.network(
+                                //   "https:" +
+                                //       widget.weatherData["current"]["condition"]
+                                //           ["icon"],
+                                //   fit: BoxFit.contain,
+                                // ),
                               ),
                             ),
                             Text(

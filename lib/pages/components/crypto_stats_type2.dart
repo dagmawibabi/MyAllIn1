@@ -29,7 +29,7 @@ class _CryptoStatType2State extends State<CryptoStatType2> {
       // width: 100.0,
       margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
       decoration: BoxDecoration(
-        color: Colors.grey[900]!,
+        // color: Colors.grey[900]!.withOpacity(0.2),
         borderRadius: BorderRadius.all(
           Radius.circular(15.0),
         ),
@@ -49,7 +49,7 @@ class _CryptoStatType2State extends State<CryptoStatType2> {
           Container(
             // padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
             decoration: BoxDecoration(
-              color: Colors.grey[900]!,
+              // color: Colors.grey[900]!.withOpacity(0.4),
               // borderRadius: BorderRadius.only(
               //   bottomLeft: Radius.circular(15.0),
               //   bottomRight: Radius.circular(15.0),
@@ -64,29 +64,44 @@ class _CryptoStatType2State extends State<CryptoStatType2> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    // Main Title
                     Container(
-                      width: 140.0,
+                      width: 150.0,
+                      height: 58.0,
                       padding: EdgeInsets.only(left: 15.0),
-                      child: Text(
-                        widget.mainTitle,
-                        style: TextStyle(
-                          color: Colors.white,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[900]!.withOpacity(0.4),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15.0),
+                          bottomLeft: Radius.circular(15.0),
+                        ),
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          widget.mainTitle,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.grey[900]!,
+                        // color: Colors.grey[900]!.withOpacity(0.2),
                         borderRadius: BorderRadius.only(
                           topRight: Radius.circular(15.0),
                           bottomRight: Radius.circular(15.0),
                         ),
                       ),
+                      // Title and Value 1 and 2
                       child: Row(
                         children: [
+                          // Title and Value 1
                           Container(
                             width: 120.0,
-                            color: Colors.grey[850]!.withOpacity(0.2),
+                            color: Colors.grey[900]!.withOpacity(0.2),
                             padding: EdgeInsets.only(
                                 right: 10.0, left: 6, top: 10.0, bottom: 10.0),
                             child: Column(
@@ -112,8 +127,17 @@ class _CryptoStatType2State extends State<CryptoStatType2> {
                               ],
                             ),
                           ),
+
+                          // Title and Value 2
                           Container(
                             width: 125.0,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[900]!.withOpacity(0.3),
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(15.0),
+                                bottomRight: Radius.circular(15.0),
+                              ),
+                            ),
                             padding: EdgeInsets.only(
                                 right: 10.0, top: 10.0, bottom: 10.0),
                             child: Column(

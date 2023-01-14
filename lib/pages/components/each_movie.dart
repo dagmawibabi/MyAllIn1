@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class EachMovie extends StatefulWidget {
@@ -58,13 +59,31 @@ class _EachMovieState extends State<EachMovie> {
                     color: Colors.grey[700]!,
                   ),
                 ),
-                Image.network(
-                  "https://image.tmdb.org/t/p/original" +
-                      widget.movieObject["poster_path"],
+                CachedNetworkImage(
                   width: 200.0,
                   height: 280.0,
                   fit: BoxFit.cover,
+                  imageUrl: "https://image.tmdb.org/t/p/original" +
+                      widget.movieObject["poster_path"],
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      Center(
+                    child: CircularProgressIndicator(
+                      value: downloadProgress.progress,
+                      color: Colors.grey[800]!,
+                      strokeWidth: 2.0,
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Icon(
+                    Icons.error_outline,
+                  ),
                 ),
+                //               Image.network(
+                //     "https://image.tmdb.org/t/p/original" +
+                //         widget.movieObject["poster_path"],
+                //     width: 200.0,
+                //     height: 280.0,
+                //     fit: BoxFit.cover,
+                //   ),
               ],
             ),
           ),

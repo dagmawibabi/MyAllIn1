@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -100,13 +101,31 @@ class _MovieDetailBottomSheetState extends State<MovieDetailBottomSheet> {
                 // Movie Poster
                 Stack(
                   children: [
-                    Image.network(
-                      "https://image.tmdb.org/t/p/original" +
-                          widget.movieObject["poster_path"],
-                      // height: 550.0,
+                    CachedNetworkImage(
                       width: double.infinity,
+                      // height: 550.0,
                       fit: BoxFit.fitWidth,
+                      imageUrl: "https://image.tmdb.org/t/p/original" +
+                          widget.movieObject["poster_path"],
+                      progressIndicatorBuilder:
+                          (context, url, downloadProgress) => Center(
+                        child: CircularProgressIndicator(
+                          value: downloadProgress.progress,
+                          color: Colors.grey[800]!,
+                          strokeWidth: 2.0,
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Icon(
+                        Icons.error_outline,
+                      ),
                     ),
+                    //             Image.network(
+                    //   "https://image.tmdb.org/t/p/original" +
+                    //       widget.movieObject["poster_path"],
+                    //   // height: 550.0,
+                    //   width: double.infinity,
+                    //   fit: BoxFit.fitWidth,
+                    // ),
                     Container(
                       // padding: EdgeInsets.all(0.0),
                       // decoration: BoxDecoration(

@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/pages/profilepage/profile_details.dart';
@@ -64,10 +65,22 @@ class _ProfilePageState extends State<ProfilePage> {
                     topRight: Radius.circular(20.0),
                   ),
                 ),
-                child: Image.network(
-                  widget.profile["profilepic"],
-                  // "assets/images/me2.jpg",
+                child: CachedNetworkImage(
+                  imageUrl: widget.profile["profilepic"],
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      CircularProgressIndicator(
+                    value: downloadProgress.progress,
+                    color: Colors.grey[800]!,
+                    strokeWidth: 2.0,
+                  ),
+                  errorWidget: (context, url, error) => Icon(
+                    Icons.error_outline,
+                  ),
                 ),
+                // Image.network(
+                //   widget.profile["profilepic"],
+                //   // "assets/images/me2.jpg",
+                // ),
               ),
             ),
             Container(
