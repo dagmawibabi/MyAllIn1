@@ -69,12 +69,108 @@ class _PostsPageState extends State<PostsPage> {
       children: [
         // Start of Page
         SizedBox(height: 10.0),
-        // Text(
-        //   widget.weatherData["name"].toString(),
-        //   style: TextStyle(
-        //     color: Colors.white,
-        //   ),
-        // ),
+        Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Image.network(
+                    "https:" +
+                        widget.weatherData["current"]["condition"]["icon"],
+                    height: 100.0,
+                    width: 100.0,
+                  ),
+                  Text(
+                    widget.weatherData["forecast"]["forecastday"][0]["day"]
+                            ["condition"]["text"]
+                        .toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                width: 200.0,
+                // color: Colors.grey,
+                padding: EdgeInsets.only(right: 15.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        Text(
+                          widget.weatherData["forecast"]["forecastday"][0]
+                                      ["day"]["mintemp_c"]
+                                  .toString() +
+                              " °C",
+                          style: TextStyle(
+                            fontSize: 13.0,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 3.0),
+                        Text(
+                          "min",
+                          style: TextStyle(
+                            fontSize: 11.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          widget.weatherData["forecast"]["forecastday"][0]
+                                      ["day"]["avgtemp_c"]
+                                  .toString() +
+                              " °C",
+                          style: TextStyle(
+                            fontSize: 13.0,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 3.0),
+                        Text(
+                          "avg",
+                          style: TextStyle(
+                            fontSize: 11.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Text(
+                          widget.weatherData["forecast"]["forecastday"][0]
+                                      ["day"]["maxtemp_c"]
+                                  .toString() +
+                              " °C",
+                          style: TextStyle(
+                            fontSize: 13.0,
+                            color: Colors.white,
+                          ),
+                        ),
+                        SizedBox(height: 3.0),
+                        Text(
+                          "max",
+                          style: TextStyle(
+                            fontSize: 11.0,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
 
         // widget.feed.map((item) => new Text(item)).toList());
         widget.feed.length == 0

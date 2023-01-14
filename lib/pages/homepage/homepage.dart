@@ -243,6 +243,7 @@ class _HomePageState extends State<HomePage>
   void nextDeviceMusic() async {}
 
   // Get Weather
+  late loc.LocationData locationData;
   Future<void> getWeather() async {
     // Get Current Latitude and Longitude
     loc.Location location = await loc.Location();
@@ -251,21 +252,20 @@ class _HomePageState extends State<HomePage>
     String longitude = locationData.longitude.toString();
     // Fetch Weather
     var url = Uri.parse(
-        "http://api.weatherapi.com/v1/current.json?key=d2fea15ced26458aa9801210231401&q=" +
+        "http://api.weatherapi.com/v1/forecast.json?key=d2fea15ced26458aa9801210231401&q=" +
             latitude +
             "," +
             longitude +
             "&aqi=yes");
     var response = await http.get(url);
-    print(response);
     var responseJSON = jsonDecode(response.body);
+    print(responseJSON);
     weatherData = responseJSON;
     weatherLoading = false;
     setState(() {});
   }
 
   // Ask For Permission
-  late loc.LocationData locationData;
   void askPermission() async {
     // Ask Storage Permissions
     PermissionStatus storagePermissionStatus = await Permission.storage.status;
@@ -276,16 +276,19 @@ class _HomePageState extends State<HomePage>
     }
     // Ask Location Permission
     loc.Location location = await new loc.Location();
-    if (await Permission.location.status.isGranted == true) {
-      locationData = await location.getLocation();
-    } else {
+    PermissionStatus locationPermissionStatus =
+        await Permission.location.status;
+    if (locationPermissionStatus.isGranted == false) {
       await Permission.location.request();
+    } else {
+      // locationData = await location.getLocation();
+      getWeather();
     }
   }
 
   // getData
   void getContent() async {
-    getWeather();
+    // getWeather();
     getFeed();
     getFeedPolling();
   }
@@ -403,7 +406,7 @@ class _HomePageState extends State<HomePage>
             searchFocusNode: searchFocusNode,
           ),
           // Posts
-          feedLoading
+          feedLoading || weatherLoading
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
