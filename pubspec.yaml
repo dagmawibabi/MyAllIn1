@@ -40,6 +40,7 @@ dependencies:
   marquee: ^2.2.3
   url_launcher: ^6.1.7
   image_downloader: ^0.31.0
+  location: ^4.2.0
 
 
   # The following adds the Cupertino Icons font to your application.

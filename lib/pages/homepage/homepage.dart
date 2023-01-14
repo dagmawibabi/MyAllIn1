@@ -16,7 +16,7 @@ import 'package:myallin1/pages/postspage/posts_page.dart';
 import 'package:myallin1/pages/profilepage/profilepage.dart';
 import 'package:myallin1/pages/searchpage/search_page.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:location/location.dart' as loc;
 import 'package:assets_audio_player/assets_audio_player.dart';
 
 import 'package:myallin1/config/config.dart';
@@ -40,12 +40,14 @@ class _HomePageState extends State<HomePage>
   // Globals
   String baseURL = Config.baseUrl;
   late TabController tabController;
-  int pageIndex = 0;
+  int pageIndex = 1;
   bool feedLoading = true;
   bool isMusicPlaying = false;
   List deviceMusicList = [];
   String currentSong = " Sample Song ";
   FocusNode searchFocusNode = FocusNode();
+  Map weatherData = {};
+  bool weatherLoading = true;
 
   // Sample Data
   Map currentUser = {
@@ -240,7 +242,30 @@ class _HomePageState extends State<HomePage>
 
   void nextDeviceMusic() async {}
 
+  // Get Weather
+  Future<void> getWeather() async {
+    // Get Current Latitude and Longitude
+    loc.Location location = await loc.Location();
+    locationData = await location.getLocation();
+    String latitude = locationData.latitude.toString();
+    String longitude = locationData.longitude.toString();
+    // Fetch Weather
+    var url = Uri.parse(
+        "http://api.weatherapi.com/v1/current.json?key=d2fea15ced26458aa9801210231401&q=" +
+            latitude +
+            "," +
+            longitude +
+            "&aqi=yes");
+    var response = await http.get(url);
+    print(response);
+    var responseJSON = jsonDecode(response.body);
+    weatherData = responseJSON;
+    weatherLoading = false;
+    setState(() {});
+  }
+
   // Ask For Permission
+  late loc.LocationData locationData;
   void askPermission() async {
     // Ask Storage Permissions
     PermissionStatus storagePermissionStatus = await Permission.storage.status;
@@ -249,6 +274,20 @@ class _HomePageState extends State<HomePage>
     } else {
       getDeviceAudioFiles();
     }
+    // Ask Location Permission
+    loc.Location location = await new loc.Location();
+    if (await Permission.location.status.isGranted == true) {
+      locationData = await location.getLocation();
+    } else {
+      await Permission.location.request();
+    }
+  }
+
+  // getData
+  void getContent() async {
+    getWeather();
+    getFeed();
+    getFeedPolling();
   }
 
   // initState
@@ -263,8 +302,8 @@ class _HomePageState extends State<HomePage>
       setState(() {});
     });
 
-    getFeed();
-    getFeedPolling();
+    getContent();
+
     super.initState();
   }
 
@@ -393,6 +432,7 @@ class _HomePageState extends State<HomePage>
                   feed: feed,
                   currentUser: currentUser,
                   getFeed: getFeed,
+                  weatherData: weatherData,
                 ),
           // Chats
           ChatPage(currentUser: currentUser),

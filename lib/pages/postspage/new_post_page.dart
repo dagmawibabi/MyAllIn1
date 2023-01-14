@@ -21,6 +21,12 @@ class NewPostPage extends StatefulWidget {
 class _NewPostPageState extends State<NewPostPage> {
   TextEditingController postContentController = TextEditingController();
   bool isPosting = false;
+
+  bool isNSFW = false;
+  bool isHidden = false;
+  bool isSpoiler = false;
+  bool isGore = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +68,10 @@ class _NewPostPageState extends State<NewPostPage> {
                         "fullname": widget.currentUser["fullname"],
                         "username": widget.currentUser["username"],
                         "content": postContentController.text.trim(),
-                        "hidden": false,
+                        "gore": isGore,
+                        "hidden": isHidden,
+                        "spoiler": isSpoiler,
+                        "nsfw": isNSFW,
                       };
                       await widget.newPostFunction(newPostObject);
                       isPosting = false;
@@ -123,7 +132,7 @@ class _NewPostPageState extends State<NewPostPage> {
             children: [
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 10.0),
-                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                padding: EdgeInsets.symmetric(horizontal: 20.0),
                 decoration: BoxDecoration(
                   color: Colors.grey[900]!.withOpacity(0.5),
                   border: Border.all(
@@ -147,24 +156,82 @@ class _NewPostPageState extends State<NewPostPage> {
                       ),
                       onPressed: () {},
                     ),
+                    // Hidden
+                    Container(
+                      decoration: isHidden == false
+                          ? BoxDecoration()
+                          : BoxDecoration(
+                              color: Colors.lightBlueAccent.withOpacity(0.05),
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.lightBlueAccent,
+                                ),
+                              ),
+                            ),
+                      child: IconButton(
+                        icon: Icon(
+                          Ionicons.eye_off_outline,
+                          color: Colors.lightBlueAccent,
+                        ),
+                        onPressed: () {
+                          isHidden = !isHidden;
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                    // NSFW
+                    Container(
+                      decoration: isNSFW == false
+                          ? BoxDecoration()
+                          : BoxDecoration(
+                              color: Colors.redAccent.withOpacity(0.05),
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.redAccent,
+                                ),
+                              ),
+                            ),
+                      child: IconButton(
+                        icon: Icon(
+                          Ionicons.warning_outline,
+                          color: Colors.redAccent,
+                        ),
+                        onPressed: () {
+                          isNSFW = !isNSFW;
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                    // Spoiler
+                    Container(
+                      decoration: isSpoiler == false
+                          ? BoxDecoration()
+                          : BoxDecoration(
+                              color: Colors.orangeAccent.withOpacity(0.05),
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.orangeAccent,
+                                ),
+                              ),
+                            ),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.announcement_outlined,
+                          color: Colors.orangeAccent,
+                        ),
+                        onPressed: () {
+                          isSpoiler = !isSpoiler;
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                    // Gore
                     // IconButton(
                     //   icon: Icon(
-                    //     Ionicons.attach_outline,
+                    //     Ionicons.warning_outline,
                     //   ),
                     //   onPressed: () {},
                     // ),
-                    IconButton(
-                      icon: Icon(
-                        Ionicons.eye_off_outline,
-                      ),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Ionicons.warning_outline,
-                      ),
-                      onPressed: () {},
-                    ),
                   ],
                 ),
               ),

@@ -14,11 +14,13 @@ class PostsPage extends StatefulWidget {
     required this.feed,
     required this.currentUser,
     required this.getFeed,
+    required this.weatherData,
   });
 
   final List feed;
   final Map currentUser;
   final Function getFeed;
+  final Map weatherData;
 
   @override
   State<PostsPage> createState() => _PostsPageState();
@@ -67,17 +69,63 @@ class _PostsPageState extends State<PostsPage> {
       children: [
         // Start of Page
         SizedBox(height: 10.0),
+        // Text(
+        //   widget.weatherData["name"].toString(),
+        //   style: TextStyle(
+        //     color: Colors.white,
+        //   ),
+        // ),
 
         // widget.feed.map((item) => new Text(item)).toList());
-
-        for (var eachPost in widget.feed)
-          Posts(
-            post: eachPost,
-            currentUser: widget.currentUser,
-            postOptions: postOptions,
-            getFeed: widget.getFeed,
-            deletePost: deletePost,
-          ),
+        widget.feed.length == 0
+            ? Column(
+                children: [
+                  Container(
+                    margin:
+                        EdgeInsets.symmetric(vertical: 200.0, horizontal: 60.0),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[900]!.withOpacity(0.4),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(20.0),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "There are no posts on your feed!",
+                          style: TextStyle(
+                            color: Colors.grey[700]!,
+                          ),
+                        ),
+                        SizedBox(height: 15.0),
+                        Text(
+                          "Create your first post by clicking on the pencil icon on the bottom left corner.",
+                          style: TextStyle(
+                            color: Colors.grey[800]!,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            : Container(
+                child: Column(
+                  children: [
+                    for (var eachPost in widget.feed)
+                      Posts(
+                        post: eachPost,
+                        currentUser: widget.currentUser,
+                        postOptions: postOptions,
+                        getFeed: widget.getFeed,
+                        deletePost: deletePost,
+                      ),
+                  ],
+                ),
+              ),
 
         // End of Page
         SizedBox(height: 200.0),

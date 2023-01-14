@@ -291,7 +291,7 @@ class _SearchPageState extends State<SearchPage> {
                                     ),
                                   ),
                                   child: Image.asset(
-                                    "assets/images/me.jpg",
+                                    "assets/images/INR.jpg",
                                     width: 180.0,
                                   ),
                                 ),
@@ -305,7 +305,7 @@ class _SearchPageState extends State<SearchPage> {
                                     ),
                                   ),
                                   child: Image.asset(
-                                    "assets/images/me.jpg",
+                                    "assets/images/me2.jpg",
                                     width: 180.0,
                                   ),
                                 ),

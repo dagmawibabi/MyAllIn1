@@ -111,10 +111,10 @@ class _PostOptionsState extends State<PostOptions> {
               widget.currentUser["username"] != widget.postObject["username"]
                   ? GestureDetector(
                       onTap: () async {
-                        isDeleting = true;
-                        setState(() {});
-                        await widget.deletePost(widget.postObject);
-                        Navigator.pop(context);
+                        // isDeleting = true;
+                        // setState(() {});
+                        // await widget.deletePost(widget.postObject);
+                        // Navigator.pop(context);
                       },
                       child: Column(
                         children: [
@@ -163,7 +163,8 @@ class _PostOptionsState extends State<PostOptions> {
                       child: Column(
                         children: [
                           Container(
-                            padding: EdgeInsets.all(10.0),
+                            padding:
+                                EdgeInsets.all(isDeleting == true ? 7.5 : 10.0),
                             decoration: BoxDecoration(
                               color: Color.fromARGB(255, 18, 18, 18),
                               border: Border.all(
