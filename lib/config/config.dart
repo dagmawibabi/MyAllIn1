@@ -1,3 +1,3 @@
 class Config {
-  static const String baseUrl = "https://test.dagmawibabi.com/philomena";
+  static const String baseUrl = "https://datacollection.dagmawibabi.com/philomena";
 }

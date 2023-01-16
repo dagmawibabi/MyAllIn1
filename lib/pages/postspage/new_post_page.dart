@@ -1,8 +1,13 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:myallin1/config/config.dart';
 import 'package:myallin1/pages/components/profile_bar.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 
 class NewPostPage extends StatefulWidget {
   const NewPostPage({
@@ -21,11 +26,44 @@ class NewPostPage extends StatefulWidget {
 class _NewPostPageState extends State<NewPostPage> {
   TextEditingController postContentController = TextEditingController();
   bool isPosting = false;
+  bool imageSelected = false;
+  dynamic imageFile;
+  dynamic imageName;
 
   bool isNSFW = false;
   bool isHidden = false;
   bool isSpoiler = false;
   bool isGore = false;
+
+  void pickImage() async {
+    // // Pick a video
+    // final XFile? vid = await _picker.pickVideo(
+    //     source: ImageSource.gallery);
+    // // Capture a video
+    // final XFile? video =
+    //     await _picker.pickVideo(source: ImageSource.camera);
+    // // Pick multiple images
+    // final List<XFile>? images =
+    //     await _picker.pickMultiImage();
+
+    final ImagePicker _picker = ImagePicker();
+    // Pick an image
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    print("---------------------------------------------------");
+    imageFile = await image?.readAsBytes();
+    imageName = image?.name;
+    print(image?.name);
+    print(image?.path);
+    imageSelected = true;
+    setState(() => {});
+    print("---------------------------------------------------");
+    // Capture a photo
+    // final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+    // print(photo);
+
+    // var baseURL = Config.baseUrl + "/";
+    // var request = http.MultipartRequest("POST", Uri.parse(""));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +111,11 @@ class _NewPostPageState extends State<NewPostPage> {
                         "spoiler": isSpoiler,
                         "nsfw": isNSFW,
                       };
-                      await widget.newPostFunction(newPostObject);
+                      await widget.newPostFunction(
+                        newPostObject,
+                        imageFile,
+                        imageName,
+                      );
                       isPosting = false;
                       setState(() {});
                       Navigator.pop(context);
@@ -90,6 +132,7 @@ class _NewPostPageState extends State<NewPostPage> {
       ),
       body: ListView(
         children: [
+          // Profile Bar
           Container(
             // color: Colors.grey[900],
             padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
@@ -98,6 +141,7 @@ class _NewPostPageState extends State<NewPostPage> {
               widget: Container(),
             ),
           ),
+          // Text Field
           Container(
             height: 250.0,
             margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 10.0),
@@ -127,6 +171,7 @@ class _NewPostPageState extends State<NewPostPage> {
               ),
             ),
           ),
+          // Controls
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -154,7 +199,9 @@ class _NewPostPageState extends State<NewPostPage> {
                       icon: Icon(
                         Ionicons.image_outline,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        pickImage();
+                      },
                     ),
                     // Hidden
                     Container(
@@ -236,7 +283,62 @@ class _NewPostPageState extends State<NewPostPage> {
                 ),
               ),
             ],
-          )
+          ), // Images
+          SizedBox(height: 15.0),
+          imageSelected == true
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Stack(
+                      alignment: Alignment.topRight,
+                      children: [
+                        Container(
+                          clipBehavior: Clip.hardEdge,
+                          margin: EdgeInsets.only(left: 20.0, right: 15.0),
+                          padding: EdgeInsets.all(10.0),
+                          // width: 200.0,
+                          height: 350.0,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[900]!.withOpacity(0.4),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20.0),
+                            ),
+                          ),
+                          child: Image.memory(
+                            imageFile,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(100.0),
+                            ),
+                          ),
+                          child: IconButton(
+                            onPressed: () {
+                              imageSelected = !imageSelected;
+                              imageFile = null;
+                              setState(() {});
+                            },
+                            icon: Icon(
+                              Icons.remove_circle_outline,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                )
+              : Container(
+                  child: Text(
+                    "no image",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
         ],
       ),
     );

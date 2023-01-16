@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
@@ -196,15 +197,35 @@ class _HomePageState extends State<HomePage>
   }
 
   // New Post
-  void newPost(newPostObject) async {
+  void newPost(newPostObject, image, imageName) async {
     var route = "$baseURL/posts/newPost";
     var url = Uri.parse(route);
     var jsonFormat = jsonEncode(newPostObject);
-    await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: jsonFormat,
+    // await http.post(
+    //   url,
+    //   headers: {"Content-Type": "application/json"},
+    //   body: jsonFormat,
+    // );
+
+    var request = http.MultipartRequest("POST", url);
+    request.fields["fullname"] = newPostObject["fullname"];
+    request.fields["username"] = newPostObject["username"];
+    request.fields["content"] = newPostObject["content"];
+    request.fields["gore"] = newPostObject["gore"].toString();
+    request.fields["hidden"] = newPostObject["hidden"].toString();
+    request.fields["spoiler"] = newPostObject["spoiler"].toString();
+    request.fields["nsfw"] = newPostObject["nsfw"].toString();
+
+    var picture = http.MultipartFile.fromBytes(
+      "image",
+      image,
+      filename: imageName,
     );
+
+    request.files.add(picture);
+    var response = await request.send();
+    print(response);
+
     getFeed();
   }
 

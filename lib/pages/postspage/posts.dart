@@ -392,8 +392,8 @@ class _PostsState extends State<Posts> {
                               widget.borderRadius,
                             ),
                           ),
-                          child: Image.asset(
-                            widget.post["profilepic"],
+                          child: Image.network(
+                            widget.post["image"],
                           ),
                         ),
                       ),
