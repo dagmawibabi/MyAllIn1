@@ -211,8 +211,9 @@ class _HomePageState extends State<HomePage>
   }
 
   // New Upload
-  void newUpload(newPostObject, image, imageName) async {
-    var route = "$baseURL/upload/images";
+  void newUpload(newPostObject, image, imageName, isImage) async {
+    var route =
+        isImage == true ? "$baseURL/upload/images" : "$baseURL/upload/videos";
     var url = Uri.parse(route);
     var jsonFormat = jsonEncode(newPostObject);
 
@@ -226,16 +227,15 @@ class _HomePageState extends State<HomePage>
     request.fields["nsfw"] = newPostObject["nsfw"].toString();
 
     var picture = http.MultipartFile.fromBytes(
-      "image",
+      isImage == true ? "image" : "video",
       image,
       filename: imageName,
     );
 
     request.files.add(picture);
-    var response = await request.send();
-    print(response);
-
+    await request.send();
     getFeed();
+    setState(() {});
   }
 
   // Music Player

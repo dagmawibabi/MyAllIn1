@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,10 @@ import 'package:myallin1/pages/likeslistpage/likes_list_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:myallin1/pages/postspage/post_tags.dart';
 import 'package:myallin1/pages/profilepage/others_profile_page.dart';
+import 'package:myallin1/pages/videoPlayerPage/video_player_page.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../components/small_pfp.dart';
 import '../profilepage/profilepage.dart';
@@ -53,6 +58,8 @@ class _PostsState extends State<Posts> {
   bool isNSFW = false;
   bool isSpoiler = false;
   bool isBookmarked = false;
+  String? fileName = " ";
+  bool isGeneratingVideoThumbnail = false;
 
   // Like Displie Posts
   void likeDislikePosts(String postID) async {
@@ -77,10 +84,71 @@ class _PostsState extends State<Posts> {
     isSpoiler = widget.post["spoiler"];
   }
 
+  void videoThumbnail() async {
+    if (widget.post["video"] != "" &&
+        widget.post["video"] != " " &&
+        widget.post["video"] != null &&
+        widget.post["video"] != "null") {
+      isGeneratingVideoThumbnail = true;
+      setState(() {});
+
+      fileName = await VideoThumbnail.thumbnailFile(
+        video: Config.postImagesURL + widget.post["video"],
+        thumbnailPath: (await getTemporaryDirectory()).path,
+        imageFormat: ImageFormat.PNG,
+        quality: 100,
+        // maxHeight: 64,
+      );
+
+      isGeneratingVideoThumbnail = false;
+      setState(() {});
+    }
+  }
+
+  void share(post) {
+    var image = post["image"] != "" &&
+            post["image"] != " " &&
+            post["image"] != "null" &&
+            post["image"] != null
+        ? Config.postImagesURL + post["image"]
+        : "";
+    var video = post["video"] != "" &&
+            post["video"] != " " &&
+            post["video"] != "null" &&
+            post["video"] != null
+        ? Config.postImagesURL + post["video"]
+        : "";
+    Share.share(
+      // post["image"].toString() +
+      // "\n" +
+      // post["video"].toString() +
+
+      post["fullname"].toString() +
+          "\n@" +
+          post["username"].toString() +
+          "\n\n" +
+          post["content"].toString() +
+          "\n" +
+          image.toString() +
+          "\n" +
+          video.toString() +
+          "\n\n" +
+          DateTime.fromMillisecondsSinceEpoch(widget.post["time"])
+              .toString()
+              .substring(11, 16) +
+          " • " +
+          DateTime.fromMillisecondsSinceEpoch(widget.post["time"])
+              .toString()
+              .substring(0, 10),
+      subject: post["content"],
+    );
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    videoThumbnail();
   }
 
   @override
@@ -357,7 +425,7 @@ class _PostsState extends State<Posts> {
                       maxLines: widget.extended == true ? 100 : 5,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: widget.extended == true ? 15.5 : 15.0,
+                        fontSize: widget.extended == true ? 16.5 : 16.0,
                         color: widget.extended == true
                             ? Colors.grey[300]!
                             : widget.post["hidden"] == false
@@ -372,6 +440,8 @@ class _PostsState extends State<Posts> {
                     ),
                   ),
                 ),
+
+                // Images
                 widget.post["image"] == "" ||
                         widget.post["image"] == "null" ||
                         widget.post["image"] == null
@@ -442,10 +512,80 @@ class _PostsState extends State<Posts> {
                                 Icons.error_outline,
                               ),
                             ),
-                          ), // Image.network(
+                          ),
+                          // Image.network(
                           //   Config.postImagesURL +
                           //       widget.post["image"].toString(),
                           // ),
+                        ),
+                      ),
+
+                // Videos
+                widget.post["video"] == "" ||
+                        widget.post["video"] == "null" ||
+                        widget.post["video"] == null
+                    ? Container()
+                    : GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VideoPlayerPage(
+                                networkVideo: Config.postImagesURL +
+                                    widget.post["video"].toString(),
+                                title: widget.post["username"],
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: 400.0,
+                          height: 400.0,
+                          clipBehavior: Clip.hardEdge,
+                          margin: EdgeInsets.symmetric(vertical: 6.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[900]!.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(
+                              widget.borderRadius,
+                            ),
+                          ),
+                          child: isGeneratingVideoThumbnail == true
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2.0,
+                                  ),
+                                )
+                              : Stack(
+                                  fit: StackFit.expand,
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Image.file(
+                                      File(
+                                        fileName.toString(),
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    Center(
+                                      child: Container(
+                                        padding: EdgeInsets.all(10.0),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[900]!
+                                              .withOpacity(0.7),
+                                          border: Border.all(
+                                              color: Colors.grey[600]!),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(100.0),
+                                          ),
+                                        ),
+                                        child: Icon(
+                                          Icons.play_arrow_outlined,
+                                          size: 35.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                         ),
                       ),
               ],
@@ -607,7 +747,8 @@ class _PostsState extends State<Posts> {
                         children: [
                           IconButton(
                             onPressed: () {
-                              widget.postOptions();
+                              // widget.postOptions();
+                              share(widget.post);
                             },
                             icon: Icon(
                               Ionicons.share_social_outline,

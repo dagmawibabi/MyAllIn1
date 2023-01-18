@@ -58,15 +58,23 @@ class _PostsPageState extends State<PostsPage> {
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
       anchorPoint: Offset(0, 0),
-      constraints: BoxConstraints(
-        // minHeight: MediaQuery.of(context).size.height * 0.6,
-        maxHeight: post["image"] == "" ||
-                post["image"] == " " ||
-                post["image"] == "null" ||
-                post["image"] == null
-            ? (MediaQuery.of(context).size.height * 0.6)
-            : (MediaQuery.of(context).size.height * 0.9),
-      ),
+      constraints: (post["video"] == "" ||
+              post["video"] == " " ||
+              post["video"] == "null" ||
+              post["video"] == null)
+          ? BoxConstraints(
+              // minHeight: MediaQuery.of(context).size.height * 0.6,
+              maxHeight: post["image"] == "" ||
+                      post["image"] == " " ||
+                      post["image"] == "null" ||
+                      post["image"] == null
+                  ? (MediaQuery.of(context).size.height * 0.6)
+                  : (MediaQuery.of(context).size.height * 0.9),
+            )
+          : BoxConstraints(
+              // minHeight: MediaQuery.of(context).size.height * 0.6,
+              maxHeight: (MediaQuery.of(context).size.height * 0.9),
+            ),
       isScrollControlled: true,
       isDismissible: true,
       enableDrag: true,

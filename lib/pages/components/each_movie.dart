@@ -57,6 +57,7 @@ class _EachMovieState extends State<EachMovie> {
                 Center(
                   child: CircularProgressIndicator(
                     color: Colors.grey[700]!,
+                    strokeWidth: 2.0,
                   ),
                 ),
                 CachedNetworkImage(
