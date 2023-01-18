@@ -186,6 +186,7 @@ class _MovieDetailBottomSheetState extends State<MovieDetailBottomSheet> {
                                             onPressed: () {},
                                             icon: Icon(
                                               Icons.download_done_outlined,
+                                              color: Colors.greenAccent,
                                             ),
                                           )
                                         : IconButton(

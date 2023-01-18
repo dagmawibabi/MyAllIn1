@@ -59,8 +59,13 @@ class _PostsPageState extends State<PostsPage> {
       backgroundColor: Colors.transparent,
       anchorPoint: Offset(0, 0),
       constraints: BoxConstraints(
-        // minHeight: MediaQuery.of(context).size.height * 0.7,
-        maxHeight: MediaQuery.of(context).size.height * 0.7,
+        // minHeight: MediaQuery.of(context).size.height * 0.6,
+        maxHeight: post["image"] == "" ||
+                post["image"] == " " ||
+                post["image"] == "null" ||
+                post["image"] == null
+            ? (MediaQuery.of(context).size.height * 0.6)
+            : (MediaQuery.of(context).size.height * 0.9),
       ),
       isScrollControlled: true,
       isDismissible: true,

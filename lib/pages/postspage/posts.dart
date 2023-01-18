@@ -2,11 +2,13 @@
 
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/config/config.dart';
 import 'package:myallin1/pages/commentspage/comments_page.dart';
 import 'package:myallin1/pages/components/profile_bar.dart';
+import 'package:myallin1/pages/imageViewerPage/image_viewer_page.dart';
 import 'package:myallin1/pages/likeslistpage/likes_list_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:myallin1/pages/postspage/post_tags.dart';
@@ -370,31 +372,80 @@ class _PostsState extends State<Posts> {
                     ),
                   ),
                 ),
-                widget.showPic == false
+                widget.post["image"] == "" ||
+                        widget.post["image"] == "null" ||
+                        widget.post["image"] == null
                     ? Container()
                     : GestureDetector(
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => CommentsPage(
-                                currentUser: widget.currentUser,
-                                post: widget.post,
+                              builder: (context) => ImageViewerPage(
+                                isNetworkImage: true,
+                                networkImage: Config.postImagesURL +
+                                    widget.post["image"].toString(),
+                                title: widget.post["username"],
                               ),
                             ),
                           );
+                          // widget.extended == false
+                          //     ? Navigator.push(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //           builder: (context) => CommentsPage(
+                          //             currentUser: widget.currentUser,
+                          //             post: widget.post,
+                          //           ),
+                          //         ),
+                          //       )
+                          //     : Navigator.push(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //           builder: (context) => ImageViewerPage(
+                          //             isNetworkImage: true,
+                          //             networkImage: Config.postImagesURL +
+                          //                 widget.post["image"].toString(),
+                          //           ),
+                          //         ),
+                          //       );
                         },
                         child: Container(
+                          width: 400.0,
+                          height: 400.0,
                           clipBehavior: Clip.hardEdge,
+                          margin: EdgeInsets.symmetric(vertical: 6.0),
                           decoration: BoxDecoration(
-                            color: Colors.grey[900],
+                            color: Colors.grey[900]!.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(
                               widget.borderRadius,
                             ),
                           ),
-                          child: Image.network(
-                            widget.post["image"],
-                          ),
+                          child: Hero(
+                            tag: Config.postImagesURL +
+                                widget.post["image"].toString(),
+                            child: CachedNetworkImage(
+                              fit: widget.extended == true
+                                  ? BoxFit.contain
+                                  : BoxFit.cover,
+                              imageUrl: Config.postImagesURL +
+                                  widget.post["image"].toString(),
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) => Center(
+                                child: CircularProgressIndicator(
+                                  value: downloadProgress.progress,
+                                  color: Colors.grey[800]!,
+                                  strokeWidth: 2.0,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Icon(
+                                Icons.error_outline,
+                              ),
+                            ),
+                          ), // Image.network(
+                          //   Config.postImagesURL +
+                          //       widget.post["image"].toString(),
+                          // ),
                         ),
                       ),
               ],

@@ -68,7 +68,7 @@ class _PostOptionsState extends State<PostOptions> {
                     ),
                   ],
                 ),
-                SizedBox(height: 30.0),
+                SizedBox(height: 0.0),
 
                 Text(
                   "Post Options",
@@ -77,24 +77,23 @@ class _PostOptionsState extends State<PostOptions> {
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(height: 30.0),
+                SizedBox(height: 10.0),
 
                 // Post Preview
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.grey[900]!.withOpacity(0.2),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20.0),
-                    ),
+                    // borderRadius: BorderRadius.all(
+                    //   Radius.circular(20.0),
+                    // ),
                   ),
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                  padding: EdgeInsets.symmetric(horizontal: 5.0),
                   child: Posts(
                     post: widget.post,
                     currentUser: widget.currentUser,
                   ),
                 ),
-                SizedBox(height: 40.0),
+                SizedBox(height: 15.0),
 
                 // Post Block, Report, Hide and Delete
                 Row(

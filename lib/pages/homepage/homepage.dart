@@ -197,15 +197,24 @@ class _HomePageState extends State<HomePage>
   }
 
   // New Post
-  void newPost(newPostObject, image, imageName) async {
+  void newPost(newPostObject) async {
     var route = "$baseURL/posts/newPost";
     var url = Uri.parse(route);
     var jsonFormat = jsonEncode(newPostObject);
-    // await http.post(
-    //   url,
-    //   headers: {"Content-Type": "application/json"},
-    //   body: jsonFormat,
-    // );
+    await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonFormat,
+    );
+
+    getFeed();
+  }
+
+  // New Upload
+  void newUpload(newPostObject, image, imageName) async {
+    var route = "$baseURL/upload/images";
+    var url = Uri.parse(route);
+    var jsonFormat = jsonEncode(newPostObject);
 
     var request = http.MultipartRequest("POST", url);
     request.fields["fullname"] = newPostObject["fullname"];
@@ -637,6 +646,7 @@ class _HomePageState extends State<HomePage>
                           builder: (context) => NewPostPage(
                             currentUser: currentUser,
                             newPostFunction: newPost,
+                            uploadPostFunction: newUpload,
                           ),
                         ),
                       );

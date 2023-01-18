@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/config/config.dart';
+import 'package:myallin1/pages/bottomsheets/content_upload_option_bottom_sheet.dart';
 import 'package:myallin1/pages/components/profile_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -14,10 +15,12 @@ class NewPostPage extends StatefulWidget {
     super.key,
     required this.currentUser,
     required this.newPostFunction,
+    required this.uploadPostFunction,
   });
 
   final Map currentUser;
   final Function newPostFunction;
+  final Function uploadPostFunction;
 
   @override
   State<NewPostPage> createState() => _NewPostPageState();
@@ -35,34 +38,62 @@ class _NewPostPageState extends State<NewPostPage> {
   bool isSpoiler = false;
   bool isGore = false;
 
-  void pickImage() async {
-    // // Pick a video
-    // final XFile? vid = await _picker.pickVideo(
-    //     source: ImageSource.gallery);
-    // // Capture a video
-    // final XFile? video =
-    //     await _picker.pickVideo(source: ImageSource.camera);
+  void pickImage(imageFromGallery, imageFromCamera, videoFromGallery,
+      videoFromCamera) async {
     // // Pick multiple images
     // final List<XFile>? images =
     //     await _picker.pickMultiImage();
 
     final ImagePicker _picker = ImagePicker();
-    // Pick an image
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    print("---------------------------------------------------");
-    imageFile = await image?.readAsBytes();
-    imageName = image?.name;
-    print(image?.name);
-    print(image?.path);
-    imageSelected = true;
-    setState(() => {});
-    print("---------------------------------------------------");
-    // Capture a photo
-    // final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
-    // print(photo);
 
-    // var baseURL = Config.baseUrl + "/";
-    // var request = http.MultipartRequest("POST", Uri.parse(""));
+    if (imageFromGallery == true) {
+      // Pick an image
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      imageFile = await image?.readAsBytes();
+      imageName = image?.name;
+      imageSelected = true;
+      setState(() => {});
+    } else if (imageFromCamera == true) {
+      // Capture a photo
+      final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+      imageFile = await image?.readAsBytes();
+      imageName = image?.name;
+      imageSelected = true;
+      setState(() => {});
+    } else if (videoFromGallery == true) {
+      // Pick a video
+      final XFile? image = await _picker.pickVideo(source: ImageSource.gallery);
+      imageFile = await image?.readAsBytes();
+      imageName = image?.name;
+      imageSelected = true;
+      setState(() => {});
+    } else if (videoFromCamera == true) {
+      // Capture a video
+      final XFile? image = await _picker.pickVideo(source: ImageSource.camera);
+      imageFile = await image?.readAsBytes();
+      imageName = image?.name;
+      imageSelected = true;
+      setState(() => {});
+    }
+  }
+
+  void contentOptionBottomSheet(String source) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      anchorPoint: Offset(0, 0),
+      constraints: BoxConstraints(
+        // minHeight: MediaQuery.of(context).size.height * 0.6,
+        maxHeight: MediaQuery.of(context).size.height * 0.5,
+      ),
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      context: context,
+      builder: (context) => ContentUploadOptionsBottomSheet(
+        source: source,
+        pickImageFunction: pickImage,
+      ),
+    );
   }
 
   @override
@@ -111,11 +142,19 @@ class _NewPostPageState extends State<NewPostPage> {
                         "spoiler": isSpoiler,
                         "nsfw": isNSFW,
                       };
-                      await widget.newPostFunction(
-                        newPostObject,
-                        imageFile,
-                        imageName,
-                      );
+
+                      if (imageSelected == false) {
+                        await widget.newPostFunction(
+                          newPostObject,
+                        );
+                      } else {
+                        await widget.uploadPostFunction(
+                          newPostObject,
+                          imageFile,
+                          imageName,
+                        );
+                      }
+
                       isPosting = false;
                       setState(() {});
                       Navigator.pop(context);
@@ -193,16 +232,37 @@ class _NewPostPageState extends State<NewPostPage> {
                       icon: Icon(
                         Ionicons.camera_outline,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        // pickImage(false, true, false, false);
+                        contentOptionBottomSheet("camera");
+                      },
                     ),
                     IconButton(
                       icon: Icon(
                         Ionicons.image_outline,
                       ),
                       onPressed: () {
-                        pickImage();
+                        contentOptionBottomSheet("gallery");
+                        // pickImage(true, false, false, false);
                       },
                     ),
+                    // IconButton(
+                    //   icon: Icon(
+                    //     Ionicons.videocam_outline,
+                    //   ),
+                    //   onPressed: () {
+                    //     pickImage(false, false, true, false);
+                    //   },
+                    // ),
+                    // IconButton(
+                    //   icon: Icon(
+                    //     Icons.video_camera_back_outlined,
+                    //   ),
+                    //   onPressed: () {
+                    //     pickImage(false, false, false, true);
+                    //   },
+                    // ),
+
                     // Hidden
                     Container(
                       decoration: isHidden == false
@@ -296,8 +356,8 @@ class _NewPostPageState extends State<NewPostPage> {
                           clipBehavior: Clip.hardEdge,
                           margin: EdgeInsets.only(left: 20.0, right: 15.0),
                           padding: EdgeInsets.all(10.0),
-                          // width: 200.0,
-                          height: 350.0,
+                          width: 350.0,
+                          height: 290.0,
                           decoration: BoxDecoration(
                             color: Colors.grey[900]!.withOpacity(0.4),
                             borderRadius: BorderRadius.all(
@@ -306,7 +366,7 @@ class _NewPostPageState extends State<NewPostPage> {
                           ),
                           child: Image.memory(
                             imageFile,
-                            fit: BoxFit.contain,
+                            fit: BoxFit.cover,
                           ),
                         ),
                         Container(
@@ -331,14 +391,7 @@ class _NewPostPageState extends State<NewPostPage> {
                     ),
                   ],
                 )
-              : Container(
-                  child: Text(
-                    "no image",
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+              : Container(),
         ],
       ),
     );
