@@ -5,6 +5,8 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_link_previewer/flutter_link_previewer.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/config/config.dart';
 import 'package:myallin1/pages/commentspage/comments_page.dart';
@@ -17,6 +19,7 @@ import 'package:myallin1/pages/profilepage/others_profile_page.dart';
 import 'package:myallin1/pages/videoPlayerPage/video_player_page.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../components/small_pfp.dart';
@@ -53,6 +56,9 @@ class Posts extends StatefulWidget {
 }
 
 class _PostsState extends State<Posts> {
+  dynamic _previewData;
+  bool gotLinkPreview = false;
+
   String baseURL = Config.baseUrl;
   bool isHidden = false;
   bool isNSFW = false;
@@ -396,8 +402,13 @@ class _PostsState extends State<Posts> {
                       //   ],
                       // ),
                     ),
-                    child: Text(
-                      widget.extended == true
+                    child: Linkify(
+                      onOpen: (link) {
+                        var postedLink = Uri.parse(link.url);
+                        launchUrl(postedLink,
+                            mode: LaunchMode.externalApplication);
+                      },
+                      text: widget.extended == true
                           ? widget.post["content"].toString().trim()
                           : widget.post["hidden"] == false
                               ? widget.post["nsfw"] == false
@@ -421,9 +432,6 @@ class _PostsState extends State<Posts> {
                                   .replaceAll(RegExp(r" "), "X")
                                   .replaceAll(RegExp(r"[^X]"), "*")
                                   .replaceAll(RegExp(r"X"), " "),
-                      textAlign: TextAlign.start,
-                      maxLines: widget.extended == true ? 100 : 5,
-                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: widget.extended == true ? 16.5 : 16.0,
                         color: widget.extended == true
@@ -437,6 +445,109 @@ class _PostsState extends State<Posts> {
                                 : Colors.grey[400]!,
                         height: 1.4,
                       ),
+                      linkStyle: TextStyle(
+                        color: Colors.blueAccent,
+                      ),
+                      // child: Text(
+                      // widget.extended == true
+                      //     ? widget.post["content"].toString().trim()
+                      //     : widget.post["hidden"] == false
+                      //         ? widget.post["nsfw"] == false
+                      //             ? widget.post["spoiler"] == false
+                      //                 ? widget.post["content"].toString().trim()
+                      //                 : widget.post["content"]
+                      //                     .toString()
+                      //                     .trim()
+                      //                     .replaceAll(RegExp(r" "), "X")
+                      //                     .replaceAll(RegExp(r"[^X]"), "*")
+                      //                     .replaceAll(RegExp(r"X"), " ")
+                      //             : widget.post["content"]
+                      //                 .toString()
+                      //                 .trim()
+                      //                 .replaceAll(RegExp(r" "), "X")
+                      //                 .replaceAll(RegExp(r"[^X]"), "*")
+                      //                 .replaceAll(RegExp(r"X"), " ")
+                      //         : widget.post["content"]
+                      //             .toString()
+                      //             .trim()
+                      //             .replaceAll(RegExp(r" "), "X")
+                      //             .replaceAll(RegExp(r"[^X]"), "*")
+                      //             .replaceAll(RegExp(r"X"), " "),
+                      // textAlign: TextAlign.start,
+                      // maxLines: widget.extended == true ? 100 : 5,
+                      // overflow: TextOverflow.ellipsis,
+                      // style: TextStyle(
+                      //   fontSize: widget.extended == true ? 16.5 : 16.0,
+                      //   color: widget.extended == true
+                      //       ? Colors.grey[300]!
+                      //       : widget.post["hidden"] == false
+                      //           ? widget.post["nsfw"] == false
+                      //               ? widget.post["spoiler"] == false
+                      //                   ? Colors.grey[300]!
+                      //                   : Colors.grey[400]!
+                      //               : Colors.grey[400]!
+                      //           : Colors.grey[400]!,
+                      //   height: 1.4,
+                      // ),
+                    ),
+                  ),
+                ),
+
+                Visibility(
+                  visible: gotLinkPreview,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  maintainInteractivity: true,
+                  maintainSize: true,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[900]!.withOpacity(0.4),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                    ),
+                    child: LinkPreview(
+                      textStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                      headerStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                      enableAnimation: true,
+                      onPreviewDataFetched: (data) {
+                        if (data.title != null) {
+                          gotLinkPreview = true;
+                          _previewData = data;
+                          setState(() {});
+                        }
+                      },
+                      previewData:
+                          _previewData, // Pass the preview data from the state
+                      text: widget.extended == true
+                          ? widget.post["content"].toString().trim()
+                          : widget.post["hidden"] == false
+                              ? widget.post["nsfw"] == false
+                                  ? widget.post["spoiler"] == false
+                                      ? widget.post["content"].toString().trim()
+                                      : widget.post["content"]
+                                          .toString()
+                                          .trim()
+                                          .replaceAll(RegExp(r" "), "X")
+                                          .replaceAll(RegExp(r"[^X]"), "*")
+                                          .replaceAll(RegExp(r"X"), " ")
+                                  : widget.post["content"]
+                                      .toString()
+                                      .trim()
+                                      .replaceAll(RegExp(r" "), "X")
+                                      .replaceAll(RegExp(r"[^X]"), "*")
+                                      .replaceAll(RegExp(r"X"), " ")
+                              : widget.post["content"]
+                                  .toString()
+                                  .trim()
+                                  .replaceAll(RegExp(r" "), "X")
+                                  .replaceAll(RegExp(r"[^X]"), "*")
+                                  .replaceAll(RegExp(r"X"), " "),
+                      width: MediaQuery.of(context).size.width,
                     ),
                   ),
                 ),

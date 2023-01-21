@@ -62,6 +62,8 @@ class _ChatPageState extends State<ChatPage> {
             chatObject: eachChat,
           ),
 
+        //
+
         // End of Page
         SizedBox(height: 200.0),
       ],
