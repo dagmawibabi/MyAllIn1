@@ -10,9 +10,11 @@ class Chats extends StatefulWidget {
     super.key,
     this.borderRadius = 2.0,
     required this.chatObject,
+    required this.currentUsername,
   });
 
   final Map chatObject;
+  final String currentUsername;
   final double borderRadius;
 
   @override
@@ -28,7 +30,7 @@ class _ChatsState extends State<Chats> {
           context,
           MaterialPageRoute(
             builder: (context) => ChatRoomPage(
-              currentUsername: "dagmawibabi",
+              currentUsername: widget.currentUsername,
               chatObject: widget.chatObject,
             ),
           ),
@@ -87,7 +89,9 @@ class _ChatsState extends State<Chats> {
             ),
             // Chat Icon
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                print(widget.chatObject);
+              },
               icon: Icon(
                 Ionicons.paper_plane_outline,
                 color: Colors.white,

@@ -68,16 +68,18 @@ class _EachTextState extends State<EachText> {
                         : CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.textObject["message"],
+                    widget.textObject["content"],
                     style: TextStyle(
                       color: selected == true ? Colors.black : Colors.white,
+                      height: 1.4,
                     ),
                   ),
                   SizedBox(height: 5.0),
                   Row(
                     children: [
                       Text(
-                        widget.textObject["datetime"]
+                        DateTime.fromMillisecondsSinceEpoch(
+                                widget.textObject["dateTime"])
                             .toString()
                             .substring(11, 16),
                         style: TextStyle(
@@ -91,16 +93,31 @@ class _EachTextState extends State<EachText> {
                           ? Row(
                               children: [
                                 SizedBox(width: 4.0),
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: 2.8),
-                                  child: Icon(
-                                    Ionicons.eye_outline,
-                                    size: 14.0,
-                                    color: selected == true
-                                        ? Colors.black
-                                        : Colors.grey[500]!,
-                                  ),
-                                ),
+                                widget.textObject["seen"].contains(
+                                            widget.textObject["to"]) ==
+                                        true
+                                    // Seen Text
+                                    ? Padding(
+                                        padding: EdgeInsets.only(bottom: 2.8),
+                                        child: Icon(
+                                          Ionicons.eye_outline,
+                                          size: 14.0,
+                                          color: selected == true
+                                              ? Colors.black
+                                              : Colors.grey[600]!,
+                                        ),
+                                      )
+                                    // Unseen Text
+                                    : Padding(
+                                        padding: EdgeInsets.only(bottom: 2.8),
+                                        child: Icon(
+                                          Ionicons.eye_off_outline,
+                                          size: 14.0,
+                                          color: selected == true
+                                              ? Colors.black
+                                              : Colors.grey[300]!,
+                                        ),
+                                      ),
                               ],
                             )
                           : Container(),

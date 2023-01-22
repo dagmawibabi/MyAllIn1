@@ -31,8 +31,11 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Container(
       // color: Colors.grey[900],
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height,
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.center,
+
         children: [
           Spacer(),
           Text(
@@ -180,6 +183,22 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   onPressed: () {
                     widget.loginAccount("janedoe", "janedoe");
+                  },
+                ),
+                ElevatedButton(
+                  style: ButtonStyle(
+                    fixedSize: MaterialStateProperty.all(
+                      Size(200.0, 20.0),
+                    ),
+                    backgroundColor: MaterialStateProperty.all(
+                      Colors.grey[900]!,
+                    ),
+                  ),
+                  child: Text(
+                    "Anne Leone",
+                  ),
+                  onPressed: () {
+                    widget.loginAccount("anne", "anne");
                   },
                 ),
               ],

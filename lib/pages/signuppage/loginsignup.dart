@@ -97,20 +97,24 @@ class _LoginSignupState extends State<LoginSignup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: login
-          ? LoginPage(
-              switchPage: switchPage,
-              loginAccount: loginAccount,
-              usernameError: usernameError,
-              passwordError: passwordError,
-            )
-          : SignUpPage(
-              switchPage: switchPage,
-              signupAccount: signupAccount,
-              fullnameError: fullnameError,
-              usernameError: usernameError,
-              passwordError: passwordError,
-            ),
+      body: ListView(
+        children: [
+          login
+              ? LoginPage(
+                  switchPage: switchPage,
+                  loginAccount: loginAccount,
+                  usernameError: usernameError,
+                  passwordError: passwordError,
+                )
+              : SignUpPage(
+                  switchPage: switchPage,
+                  signupAccount: signupAccount,
+                  fullnameError: fullnameError,
+                  usernameError: usernameError,
+                  passwordError: passwordError,
+                ),
+        ],
+      ),
     );
   }
 }

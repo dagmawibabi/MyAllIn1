@@ -236,8 +236,7 @@ class _PostsState extends State<Posts> {
                       SizedBox(width: 5.0),
                       // Profile Pic
                       SmallPFP(
-                        netpic:
-                            "https://dagmawibabi.com/static/media/me.b4b941897136a2959e33.png",
+                        netpic: widget.currentUser["profilepic"],
                         size: 40.0,
                       ),
                       SizedBox(width: 7.0),
@@ -493,64 +492,64 @@ class _PostsState extends State<Posts> {
                   ),
                 ),
 
-                Visibility(
-                  visible: gotLinkPreview,
-                  maintainAnimation: true,
-                  maintainState: true,
-                  maintainInteractivity: true,
-                  maintainSize: true,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[900]!.withOpacity(0.4),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10.0),
-                      ),
-                    ),
-                    child: LinkPreview(
-                      textStyle: TextStyle(
-                        color: Colors.white,
-                      ),
-                      headerStyle: TextStyle(
-                        color: Colors.white,
-                      ),
-                      enableAnimation: true,
-                      onPreviewDataFetched: (data) {
-                        if (data.title != null) {
-                          gotLinkPreview = true;
-                          _previewData = data;
-                          setState(() {});
-                        }
-                      },
-                      previewData:
-                          _previewData, // Pass the preview data from the state
-                      text: widget.extended == true
-                          ? widget.post["content"].toString().trim()
-                          : widget.post["hidden"] == false
-                              ? widget.post["nsfw"] == false
-                                  ? widget.post["spoiler"] == false
-                                      ? widget.post["content"].toString().trim()
-                                      : widget.post["content"]
-                                          .toString()
-                                          .trim()
-                                          .replaceAll(RegExp(r" "), "X")
-                                          .replaceAll(RegExp(r"[^X]"), "*")
-                                          .replaceAll(RegExp(r"X"), " ")
-                                  : widget.post["content"]
-                                      .toString()
-                                      .trim()
-                                      .replaceAll(RegExp(r" "), "X")
-                                      .replaceAll(RegExp(r"[^X]"), "*")
-                                      .replaceAll(RegExp(r"X"), " ")
-                              : widget.post["content"]
-                                  .toString()
-                                  .trim()
-                                  .replaceAll(RegExp(r" "), "X")
-                                  .replaceAll(RegExp(r"[^X]"), "*")
-                                  .replaceAll(RegExp(r"X"), " "),
-                      width: MediaQuery.of(context).size.width,
-                    ),
-                  ),
-                ),
+                // Visibility(
+                //   visible: gotLinkPreview,
+                //   maintainAnimation: true,
+                //   maintainState: true,
+                //   maintainInteractivity: true,
+                //   maintainSize: true,
+                //   child: Container(
+                //     decoration: BoxDecoration(
+                //       color: Colors.grey[900]!.withOpacity(0.4),
+                //       borderRadius: BorderRadius.all(
+                //         Radius.circular(10.0),
+                //       ),
+                //     ),
+                //     child: LinkPreview(
+                //       textStyle: TextStyle(
+                //         color: Colors.white,
+                //       ),
+                //       headerStyle: TextStyle(
+                //         color: Colors.white,
+                //       ),
+                //       enableAnimation: true,
+                //       onPreviewDataFetched: (data) {
+                //         if (data.title != null) {
+                //           gotLinkPreview = true;
+                //           _previewData = data;
+                //           setState(() {});
+                //         }
+                //       },
+                //       previewData:
+                //           _previewData, // Pass the preview data from the state
+                //       text: widget.extended == true
+                //           ? widget.post["content"].toString().trim()
+                //           : widget.post["hidden"] == false
+                //               ? widget.post["nsfw"] == false
+                //                   ? widget.post["spoiler"] == false
+                //                       ? widget.post["content"].toString().trim()
+                //                       : widget.post["content"]
+                //                           .toString()
+                //                           .trim()
+                //                           .replaceAll(RegExp(r" "), "X")
+                //                           .replaceAll(RegExp(r"[^X]"), "*")
+                //                           .replaceAll(RegExp(r"X"), " ")
+                //                   : widget.post["content"]
+                //                       .toString()
+                //                       .trim()
+                //                       .replaceAll(RegExp(r" "), "X")
+                //                       .replaceAll(RegExp(r"[^X]"), "*")
+                //                       .replaceAll(RegExp(r"X"), " ")
+                //               : widget.post["content"]
+                //                   .toString()
+                //                   .trim()
+                //                   .replaceAll(RegExp(r" "), "X")
+                //                   .replaceAll(RegExp(r"[^X]"), "*")
+                //                   .replaceAll(RegExp(r"X"), " "),
+                //       width: MediaQuery.of(context).size.width,
+                //     ),
+                //   ),
+                // ),
 
                 // Images
                 widget.post["image"] == "" ||

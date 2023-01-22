@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/pages/profilepage/profile_details.dart';
+import 'package:myallin1/pages/signuppage/loginsignup.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.profile});
@@ -39,7 +40,12 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           IconButton(
             onPressed: () {
-              Navigator.popAndPushNamed(context, "loginSignup");
+              // Navigator.popAndPushNamed(context, "loginSignup");
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => LoginSignup()),
+                (route) => false,
+              );
             },
             icon: Icon(
               Ionicons.log_out_outline,

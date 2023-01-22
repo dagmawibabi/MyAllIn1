@@ -350,6 +350,7 @@ class _SearchPageState extends State<SearchPage> {
                             SizedBox(height: 15.0),
                             Chats(
                               borderRadius: 20.0,
+                              currentUsername: widget.currentUser["username"],
                               chatObject: {
                                 "profilepic":
                                     "https://assets.entrepreneur.com/content/3x2/2000/20150224165308-jeff-bezos-amazon.jpeg",
@@ -359,6 +360,7 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                             Chats(
                               borderRadius: 20.0,
+                              currentUsername: widget.currentUser["username"],
                               chatObject: {
                                 "profilepic":
                                     "https://media.vanityfair.com/photos/5d41c7688df537000832361b/4:3/w_2668,h_2001,c_limit/GettyImages-945005812.jpg",
@@ -371,89 +373,99 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                     ],
                   )
-                : searchResults["postResults"].length == 0 &&
-                        searchResults["accountResults"].length == 0
-                    ? Container(
-                        padding: EdgeInsets.only(top: 50.0),
-                        child: Text(
-                          "No Results Found",
-                          style: TextStyle(
-                            color: Colors.grey[500]!,
-                          ),
-                        ),
-                      )
-                    : Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: 4.0, vertical: 4.0),
-                        padding: EdgeInsets.symmetric(
-                            vertical: 8.0, horizontal: 5.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[900]!.withOpacity(0.4),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            searchResults["postResults"].length > 0
-                                ? Container(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 15.0, vertical: 8.0),
-                                          child: Text(
-                                            "Posts",
-                                            style: TextStyle(
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
+                : searchResults["postResults"] == null &&
+                        searchResults["accountResults"] == null
+                    ? Container()
+                    : searchResults["postResults"].length == 0 &&
+                            searchResults["accountResults"].length == 0
+                        ? Container(
+                            padding: EdgeInsets.only(top: 50.0),
+                            child: Text(
+                              "No Results Found",
+                              style: TextStyle(
+                                color: Colors.grey[500]!,
+                              ),
+                            ),
+                          )
+                        : Container(
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 4.0, vertical: 4.0),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 8.0, horizontal: 5.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[900]!.withOpacity(0.4),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10.0),
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                searchResults["postResults"].length > 0
+                                    ? Container(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 15.0,
+                                                      vertical: 8.0),
+                                              child: Text(
+                                                "Posts",
+                                                style: TextStyle(
+                                                  fontSize: 20.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                            for (var eachPostResult
+                                                in searchResults["postResults"])
+                                              Posts(
+                                                post: eachPostResult,
+                                                currentUser: widget.currentUser,
+                                              ),
+                                          ],
                                         ),
-                                        for (var eachPostResult
-                                            in searchResults["postResults"])
-                                          Posts(
-                                            post: eachPostResult,
-                                            currentUser: widget.currentUser,
-                                          ),
-                                      ],
-                                    ),
-                                  )
-                                : Container(),
-                            searchResults["accountResults"].length > 0
-                                ? Container(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 15.0, vertical: 8.0),
-                                          child: Text(
-                                            "Accounts",
-                                            style: TextStyle(
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
+                                      )
+                                    : Container(),
+                                searchResults["accountResults"].length > 0
+                                    ? Container(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 15.0,
+                                                      vertical: 8.0),
+                                              child: Text(
+                                                "Accounts",
+                                                style: TextStyle(
+                                                  fontSize: 20.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
                                             ),
-                                          ),
+                                            for (var eachAccountResult
+                                                in searchResults[
+                                                    "accountResults"])
+                                              Chats(
+                                                borderRadius: 20.0,
+                                                chatObject: eachAccountResult,
+                                                currentUsername: widget
+                                                    .currentUser["username"],
+                                              ),
+                                          ],
                                         ),
-                                        for (var eachAccountResult
-                                            in searchResults["accountResults"])
-                                          Chats(
-                                            borderRadius: 20.0,
-                                            chatObject: eachAccountResult,
-                                          ),
-                                      ],
-                                    ),
-                                  )
-                                : Container(),
-                          ],
-                        ),
-                      ),
+                                      )
+                                    : Container(),
+                              ],
+                            ),
+                          ),
             SizedBox(height: 300.0),
           ],
         ),

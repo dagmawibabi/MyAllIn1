@@ -1,10 +1,13 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:myallin1/config/config.dart';
 import 'package:myallin1/pages/chatpage/chat_date_divider.dart';
 import 'package:myallin1/pages/components/small_pfp.dart';
-
+import 'package:http/http.dart' as http;
 import 'each_text.dart';
 
 class ChatRoomPage extends StatefulWidget {
@@ -23,10 +26,52 @@ class ChatRoomPage extends StatefulWidget {
 
 class _ChatRoomPageState extends State<ChatRoomPage> {
   List texts = [];
+  bool textsLoading = true;
   bool editTexts = false;
   List selectedTexts = [];
+  TextEditingController textMessageController = TextEditingController();
 
-  void getTexts() {}
+  var baseURL = Config.baseUrl;
+
+  // Get Texts
+  void getTexts() async {
+    var from = widget.currentUsername;
+    var to = widget.chatObject["username"];
+
+    var route = "$baseURL/privateChats/getPrivateChat/$from/$to";
+    var url = Uri.parse(route);
+    dynamic results = await http.get(url);
+    dynamic resultJSON = jsonDecode(results.body);
+    texts = resultJSON;
+    // texts = resultJSON.reversed.toList();
+    // print(texts);
+    textsLoading = false;
+    setState(() {});
+  }
+
+  // Get Texts Polling
+  void getTextsPolling() async {
+    Timer.periodic(Duration(seconds: 2), (time) {
+      getTexts();
+    });
+  }
+
+  // Send Texts
+  void sendTexts(newTextObject) async {
+    var route = "$baseURL/privateChats/sendPrivateMessage";
+
+    var url = Uri.parse(route);
+    var jsonFormat = jsonEncode(newTextObject);
+    await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonFormat,
+    );
+
+    textMessageController.clear();
+
+    getTexts();
+  }
 
   void editTextsChange() {
     editTexts = !editTexts;
@@ -43,6 +88,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     // TODO: implement initState
     super.initState();
     getTexts();
+    getTextsPolling();
   }
 
   @override
@@ -223,90 +269,117 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
               // ),
 
               // Texts
-              Container(
-                height: MediaQuery.of(context).size.height * 0.827,
-                child: ListView(
-                  children: [
-                    Column(
-                      children: [
-                        // Space
-                        SizedBox(height: 10.0),
+              textsLoading == true
+                  ? Container(
+                      height: MediaQuery.of(context).size.height * 0.827,
+                      width: double.infinity,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.grey[400]!,
+                          strokeWidth: 2.0,
+                        ),
+                      ),
+                    )
+                  : Container(
+                      height: MediaQuery.of(context).size.height * 0.827,
+                      child: ListView(
+                        children: [
+                          Column(
+                            children: [
+                              // Space
+                              SizedBox(height: 10.0),
 
-                        texts.isEmpty == true
-                            ? Container(
-                                height: 400.0,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                      width: 280.0,
-                                      height: 280.0,
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 20.0),
-                                      decoration: BoxDecoration(
-                                        color:
-                                            Colors.grey[900]!.withOpacity(0.5),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(20.0),
-                                        ),
-                                      ),
+                              texts.isEmpty == true
+                                  ? Container(
+                                      height: 400.0,
                                       child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                            MainAxisAlignment.end,
                                         children: [
-                                          Text(
-                                            "No messages here yet",
-                                            style: TextStyle(
-                                              color: Colors.grey[200]!,
+                                          Container(
+                                            width: 280.0,
+                                            height: 280.0,
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 20.0,
+                                                vertical: 20.0),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[900]!
+                                                  .withOpacity(0.5),
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(20.0),
+                                              ),
                                             ),
-                                          ),
-                                          SizedBox(height: 10.0),
-                                          SmallPFP(
-                                            netpic:
-                                                widget.chatObject["profilepic"],
-                                            size: 150.0,
-                                          ),
-                                          SizedBox(height: 10.0),
-                                          Text(
-                                            "Type a message and send to start a conversation 👋",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              color: Colors.grey[400]!,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  "No messages here yet",
+                                                  style: TextStyle(
+                                                    color: Colors.grey[200]!,
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10.0),
+                                                SmallPFP(
+                                                  netpic: widget
+                                                      .chatObject["profilepic"],
+                                                  size: 150.0,
+                                                ),
+                                                SizedBox(height: 10.0),
+                                                Text(
+                                                  "Type a message and send to start a conversation 👋",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(
+                                                    color: Colors.grey[400]!,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : Container(
-                                child: Column(children: [
-                                  // All Texts
-                                  for (var eachDateText in texts) ...[
-                                    ChatDateDivider(
-                                      dateTime: eachDateText["datetime"],
-                                    ),
-                                    for (var eachText in eachDateText["texts"])
-                                      EachText(
-                                        textObject: eachText,
-                                        currentUsername: widget.currentUsername,
-                                        editTexts: editTexts,
-                                        editTextsChange: editTextsChange,
-                                      ),
-                                  ],
-                                ]),
-                              ),
+                                    )
+                                  : Container(
+                                      child: Column(
+                                        children: [
+                                          for (var eachMessage in texts)
+                                            EachText(
+                                              textObject: eachMessage,
+                                              currentUsername:
+                                                  widget.currentUsername,
+                                              editTexts: editTexts,
+                                              editTextsChange: editTextsChange,
+                                            ),
 
-                        // Space
-                        SizedBox(height: 10.0),
-                      ],
+                                          // All Texts
+                                          // for (var eachDateText in texts) ...[
+                                          //   ChatDateDivider(
+                                          //     dateTime: eachDateText["datetime"],
+                                          //   ),
+                                          //   for (var eachText
+                                          //       in eachDateText["texts"])
+                                          //     EachText(
+                                          //       textObject: eachText,
+                                          //       currentUsername:
+                                          //           widget.currentUsername,
+                                          //       editTexts: editTexts,
+                                          //       editTextsChange: editTextsChange,
+                                          //     ),
+                                          // ],
+                                        ],
+                                      ),
+                                    ),
+
+                              // Space
+                              SizedBox(height: 10.0),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
 
               // Input Box
               Container(
@@ -343,6 +416,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                                 BorderRadius.all(Radius.circular(10.0)),
                           ),
                           child: TextField(
+                            controller: textMessageController,
                             minLines: 1,
                             maxLines: 10,
                             style: TextStyle(
@@ -360,7 +434,27 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                       ],
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        var newTextObject = {
+                          "from": widget.currentUsername,
+                          "to": widget.chatObject["username"],
+                          "forwardedFrom": "",
+                          "content": textMessageController.text,
+                        };
+                        var tempTextObject = {
+                          "from": widget.currentUsername,
+                          "to": widget.chatObject["username"],
+                          "forwardedFrom": "",
+                          "content": textMessageController.text,
+                          "seen": [widget.currentUsername],
+                          "dateTime": DateTime.now().millisecondsSinceEpoch,
+                        };
+                        texts.add(tempTextObject);
+                        setState(() {});
+                        // print(widget.currentUsername);
+                        // print(widget.chatObject);
+                        sendTexts(newTextObject);
+                      },
                       icon: Icon(
                         Ionicons.paper_plane_outline,
                       ),

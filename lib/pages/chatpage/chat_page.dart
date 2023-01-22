@@ -60,6 +60,7 @@ class _ChatPageState extends State<ChatPage> {
         for (var eachChat in chats)
           Chats(
             chatObject: eachChat,
+            currentUsername: widget.currentUser["username"],
           ),
 
         //

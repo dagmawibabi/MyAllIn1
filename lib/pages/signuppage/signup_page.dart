@@ -33,7 +33,8 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // color: Colors.grey[900],
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height,
       child: Column(
         // mainAxisAlignment: MainAxisAlignment.center,
         children: [
