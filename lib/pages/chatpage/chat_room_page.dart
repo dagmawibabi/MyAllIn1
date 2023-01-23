@@ -15,10 +15,12 @@ class ChatRoomPage extends StatefulWidget {
     super.key,
     required this.currentUsername,
     required this.chatObject,
+    this.savedMessages = false,
   });
 
   final String currentUsername;
   final Map chatObject;
+  final bool savedMessages;
 
   @override
   State<ChatRoomPage> createState() => _ChatRoomPageState();
@@ -95,117 +97,39 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // backgroundColor: widget.savedMessages == true
+        //     ? Colors.blueAccent.withOpacity(0.2)
+        //     : Theme.of(context).appBarTheme.backgroundColor,
         title: Row(
           children: [
-            SmallPFP(
-              netpic: widget.chatObject["profilepic"],
-              size: 35.0,
-            ),
+            widget.savedMessages == true
+                ? Container(
+                    child: Icon(
+                      Icons.bookmark_border_outlined,
+                      color: Colors.lightBlueAccent,
+                    ),
+                  )
+                : SmallPFP(
+                    netpic: widget.chatObject["profilepic"],
+                    size: 35.0,
+                  ),
             SizedBox(width: 8.0),
             Text(
-              widget.chatObject["username"],
+              widget.savedMessages == true
+                  ? "Saved Messages"
+                  : widget.chatObject["username"],
+              style: TextStyle(
+                fontSize: 18.0,
+                color: widget.savedMessages == true
+                    ? Colors.lightBlueAccent
+                    : Colors.white,
+              ),
             ),
           ],
         ),
         actions: [
           IconButton(
             onPressed: () {
-              texts = [
-                {
-                  "datetime": DateTime.now(),
-                  "texts": [
-                    {
-                      "from": widget.currentUsername,
-                      "to": widget.chatObject["username"],
-                      "message": "Hey There!",
-                      "content": "",
-                      "datetime": DateTime.now(),
-                    },
-                    {
-                      "from": widget.chatObject["username"],
-                      "to": widget.currentUsername,
-                      "message": "Hey Man!",
-                      "content": "",
-                      "datetime": DateTime.now(),
-                    },
-                    {
-                      "from": widget.currentUsername,
-                      "to": widget.chatObject["username"],
-                      "message": "How r u doin dude?",
-                      "content": "",
-                      "datetime": DateTime.now(),
-                    },
-                    {
-                      "from": widget.chatObject["username"],
-                      "to": widget.currentUsername,
-                      "message": "I'm doing so fine my man, wby?",
-                      "content": "",
-                      "datetime": DateTime.now(),
-                    },
-                    {
-                      "from": widget.currentUsername,
-                      "to": widget.chatObject["username"],
-                      "message": "Ohw, I'm rocking life dude!!!",
-                      "content": "",
-                      "datetime": DateTime.now(),
-                    },
-                    {
-                      "from": widget.chatObject["username"],
-                      "to": widget.currentUsername,
-                      "message": "Hell's yeah man happy for us!",
-                      "content": "",
-                      "datetime": DateTime.now(),
-                    },
-                  ]
-                },
-                {
-                  "datetime": DateTime.now(),
-                  "texts": [
-                    {
-                      "from": widget.currentUsername,
-                      "to": widget.chatObject["username"],
-                      "message": "Hey There!",
-                      "content": "",
-                      "datetime": DateTime.now(),
-                    },
-                    {
-                      "from": widget.chatObject["username"],
-                      "to": widget.currentUsername,
-                      "message": "Hey Man!",
-                      "content": "",
-                      "datetime": DateTime.now(),
-                    },
-                    {
-                      "from": widget.currentUsername,
-                      "to": widget.chatObject["username"],
-                      "message": "How r u doin dude?",
-                      "content": "",
-                      "datetime": DateTime.now(),
-                    },
-                    {
-                      "from": widget.chatObject["username"],
-                      "to": widget.currentUsername,
-                      "message": "I'm doing so fine my man, wby?",
-                      "content": "",
-                      "datetime": DateTime.now(),
-                    },
-                    {
-                      "from": widget.currentUsername,
-                      "to": widget.chatObject["username"],
-                      "message": "Ohw, I'm rocking life dude!!!",
-                      "content": "",
-                      "datetime": DateTime.now(),
-                    },
-                    {
-                      "from": widget.chatObject["username"],
-                      "to": widget.currentUsername,
-                      "message": "Hell's yeah man happy for us!",
-                      "content": "",
-                      "datetime": DateTime.now(),
-                    },
-                  ]
-                }
-              ];
               setState(() {});
               // editTexts = true;
               // setState(() {});
@@ -217,7 +141,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
           IconButton(
             onPressed: () {},
             icon: Icon(
-              Icons.more_horiz_outlined,
+              Icons.more_vert_outlined,
             ),
           ),
         ],

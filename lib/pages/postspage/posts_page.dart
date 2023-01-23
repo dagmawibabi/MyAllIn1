@@ -307,7 +307,7 @@ class _PostsPageState extends State<PostsPage> {
                         ),
                         SizedBox(height: 15.0),
                         Text(
-                          "Create your first post by clicking on the pencil icon on the bottom left corner.",
+                          "Create your first post by clicking on the pencil icon on the bottom right corner.",
                           style: TextStyle(
                             color: Colors.grey[800]!,
                           ),

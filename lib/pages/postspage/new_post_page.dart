@@ -73,8 +73,8 @@ class _NewPostPageState extends State<NewPostPage> {
       final XFile? image = await _picker.pickVideo(source: ImageSource.gallery);
       imageFile = await image?.readAsBytes();
       imageName = image?.name;
-      videoSelected = true;
       imageSelected = false;
+      videoSelected = true;
       await videoThumbnail(image?.path);
       setState(() => {});
     } else if (videoFromCamera == true) {
@@ -82,8 +82,8 @@ class _NewPostPageState extends State<NewPostPage> {
       final XFile? image = await _picker.pickVideo(source: ImageSource.camera);
       imageFile = await image?.readAsBytes();
       imageName = image?.name;
-      videoSelected = true;
       imageSelected = false;
+      videoSelected = true;
       await videoThumbnail(image?.path);
       setState(() => {});
     }
@@ -416,7 +416,10 @@ class _NewPostPageState extends State<NewPostPage> {
                           ),
                           child: IconButton(
                             onPressed: () {
-                              imageSelected = !imageSelected;
+                              // imageSelected = !imageSelected;
+                              imageSelected = false;
+                              videoSelected = false;
+
                               imageFile = null;
                               setState(() {});
                             },
@@ -464,7 +467,9 @@ class _NewPostPageState extends State<NewPostPage> {
                           ),
                           child: IconButton(
                             onPressed: () {
-                              imageSelected = !imageSelected;
+                              // imageSelected = !imageSelected;
+                              imageSelected = false;
+                              videoSelected = false;
                               imageFile = null;
                               setState(() {});
                             },

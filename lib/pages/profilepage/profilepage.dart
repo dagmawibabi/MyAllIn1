@@ -1,10 +1,14 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:myallin1/config/config.dart';
 import 'package:myallin1/pages/profilepage/profile_details.dart';
 import 'package:myallin1/pages/signuppage/loginsignup.dart';
+import 'package:http/http.dart' as http;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.profile});
@@ -16,6 +20,29 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  String baseURL = Config.baseUrl;
+  Map profile = {};
+
+  void getProfile() async {
+    profile = widget.profile;
+    setState(() {});
+
+    var route = "$baseURL/profile/getprofile/" + widget.profile["username"];
+    var url = Uri.parse(route);
+    dynamic results = await http.get(url);
+    dynamic resultsJSON = jsonDecode(results.body);
+    profile = resultsJSON["profile"];
+
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getProfile();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +99,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 child: CachedNetworkImage(
-                  imageUrl: widget.profile["profilepic"],
+                  imageUrl: profile["profilepic"],
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       CircularProgressIndicator(
                     value: downloadProgress.progress,
@@ -84,7 +111,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 // Image.network(
-                //   widget.profile["profilepic"],
+                //   profile["profilepic"],
                 //   // "assets/images/me2.jpg",
                 // ),
               ),
@@ -136,7 +163,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Row(
                                   children: [
                                     Text(
-                                      widget.profile["fullname"].toString(),
+                                      profile["fullname"].toString(),
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 16.0,
@@ -153,7 +180,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 SizedBox(height: 2.0),
                                 Text(
                                   "@" +
-                                      widget.profile["username"]
+                                      profile["username"]
                                           .toString()
                                           .toLowerCase(),
                                   style: TextStyle(
@@ -198,7 +225,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Column(
                           children: [
                             Text(
-                              widget.profile["posts"].toString(),
+                              profile["posts"].toString(),
                               style: TextStyle(
                                 fontSize: 18.0,
                                 color: Colors.white,
@@ -217,7 +244,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Column(
                           children: [
                             Text(
-                              widget.profile["followers"].toString(),
+                              profile["followers"].length.toString(),
                               style: TextStyle(
                                 fontSize: 18.0,
                                 color: Colors.white,
@@ -236,7 +263,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Column(
                           children: [
                             Text(
-                              widget.profile["following"].toString(),
+                              profile["following"].length.toString(),
                               style: TextStyle(
                                 fontSize: 18.0,
                                 color: Colors.white,
@@ -259,17 +286,17 @@ class _ProfilePageState extends State<ProfilePage> {
                   ProfileDetails(
                     icon: Icons.phone_outlined,
                     label: "phone number",
-                    content: widget.profile["phone"],
+                    content: profile["phone"],
                   ),
                   ProfileDetails(
                     icon: Icons.alternate_email_outlined,
                     label: "email",
-                    content: widget.profile["email"],
+                    content: profile["email"],
                   ),
                   ProfileDetails(
                     icon: Icons.format_quote_rounded,
                     label: "bio",
-                    content: widget.profile["bio"],
+                    content: profile["bio"],
                   ),
                 ],
               ),

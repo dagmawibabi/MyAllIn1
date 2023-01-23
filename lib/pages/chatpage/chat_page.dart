@@ -1,8 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:myallin1/config/config.dart';
 
 import '../components/rounded_search_input_box.dart';
+import 'package:http/http.dart' as http;
+
 import 'chats.dart';
 
 class ChatPage extends StatefulWidget {
@@ -46,6 +51,29 @@ class _ChatPageState extends State<ChatPage> {
       "username": "repitilian",
     },
   ];
+
+  String baseURL = Config.baseUrl;
+  bool gettingChats = true;
+
+  void getChats() async {
+    var route =
+        "$baseURL/privateChats/getChats/" + widget.currentUser["username"];
+    var url = Uri.parse(route);
+    dynamic results = await http.get(url);
+    dynamic resultsJSON = jsonDecode(results.body);
+    chats = resultsJSON;
+    print(chats);
+    gettingChats = false;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getChats();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -56,12 +84,42 @@ class _ChatPageState extends State<ChatPage> {
           textEditingController: searchTextController,
         ),
 
+        gettingChats == true
+            ? Container(
+                height: 400.0,
+                width: double.infinity,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      color: Colors.grey[700]!,
+                      strokeWidth: 2.0,
+                    ),
+                    SizedBox(height: 15.0),
+                    Text(
+                      "Getting Chats",
+                      style: TextStyle(
+                        color: Colors.grey[700]!,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : Container(
+                child: Column(
+                  children: [
+                    for (var eachChat in chats)
+                      Chats(
+                        chatObject: eachChat,
+                        currentUsername: widget.currentUser["username"],
+                        savedMessages: widget.currentUser["username"] ==
+                            eachChat["username"],
+                      ),
+                  ],
+                ),
+              ),
+
         // Chat List
-        for (var eachChat in chats)
-          Chats(
-            chatObject: eachChat,
-            currentUsername: widget.currentUser["username"],
-          ),
 
         //
 

@@ -150,39 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                     "Dagmawi Babi",
                   ),
                   onPressed: () {
-                    widget.loginAccount("dagmawibabi", "db");
-                  },
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(
-                      Size(200.0, 20.0),
-                    ),
-                    backgroundColor: MaterialStateProperty.all(
-                      Colors.grey[900]!,
-                    ),
-                  ),
-                  child: Text(
-                    "John Doe",
-                  ),
-                  onPressed: () {
-                    widget.loginAccount("johndoe", "johndoe");
-                  },
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(
-                      Size(200.0, 20.0),
-                    ),
-                    backgroundColor: MaterialStateProperty.all(
-                      Colors.grey[900]!,
-                    ),
-                  ),
-                  child: Text(
-                    "Jane Doe",
-                  ),
-                  onPressed: () {
-                    widget.loginAccount("janedoe", "janedoe");
+                    widget.loginAccount("dagmawibabi", "dagmawibabi");
                   },
                 ),
                 ElevatedButton(
@@ -204,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
           ),
-          SizedBox(height: 25.0),
+          SizedBox(height: 100.0),
         ],
       ),
     );
