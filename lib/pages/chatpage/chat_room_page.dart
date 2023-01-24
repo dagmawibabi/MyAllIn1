@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/config/config.dart';
 import 'package:myallin1/pages/chatpage/chat_date_divider.dart';
+import 'package:myallin1/pages/chatpage/chat_room_options_bottom_sheet.dart';
 import 'package:myallin1/pages/components/small_pfp.dart';
 import 'package:http/http.dart' as http;
 import 'each_text.dart';
@@ -44,7 +45,22 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     var url = Uri.parse(route);
     dynamic results = await http.get(url);
     dynamic resultJSON = jsonDecode(results.body);
-    texts = resultJSON;
+    // texts = resultJSON;
+    texts = [];
+
+    for (var eachText in resultJSON) {
+      if (widget.savedMessages == true) {
+        if (eachText["from"] == widget.currentUsername &&
+            eachText["to"] == widget.currentUsername) {
+          texts.add(eachText);
+        }
+      } else {
+        if (eachText["from"] != eachText["to"]) {
+          texts.add(eachText);
+        }
+      }
+    }
+
     // texts = resultJSON.reversed.toList();
     // print(texts);
     textsLoading = false;
@@ -70,8 +86,6 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       body: jsonFormat,
     );
 
-    textMessageController.clear();
-
     getTexts();
   }
 
@@ -85,12 +99,27 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
     setState(() {});
   }
 
+  void chatOptions() async {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return ChatRoomOptionsBottomSheet();
+      },
+    );
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getTexts();
     getTextsPolling();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -139,7 +168,9 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              chatOptions();
+            },
             icon: Icon(
               Icons.more_vert_outlined,
             ),
@@ -241,20 +272,43 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                                                       .spaceBetween,
                                               children: [
                                                 Text(
-                                                  "No messages here yet",
+                                                  widget.savedMessages == true
+                                                      ? "No Saved Messages here yet"
+                                                      : "No messages here yet",
                                                   style: TextStyle(
                                                     color: Colors.grey[200]!,
                                                   ),
                                                 ),
                                                 SizedBox(height: 10.0),
-                                                SmallPFP(
-                                                  netpic: widget
-                                                      .chatObject["profilepic"],
-                                                  size: 150.0,
-                                                ),
+                                                widget.savedMessages == true
+                                                    ? Container(
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                            Radius.circular(
+                                                                100.0),
+                                                          ),
+                                                        ),
+                                                        child: Icon(
+                                                          Icons
+                                                              .bookmark_border_outlined,
+                                                          size: 130.0,
+                                                          color: Colors
+                                                              .lightBlueAccent,
+                                                        ),
+                                                      )
+                                                    : SmallPFP(
+                                                        netpic:
+                                                            widget.chatObject[
+                                                                "profilepic"],
+                                                        size: 150.0,
+                                                      ),
                                                 SizedBox(height: 10.0),
                                                 Text(
-                                                  "Type a message and send to start a conversation 👋",
+                                                  widget.savedMessages == true
+                                                      ? "Type a message and send it here as a note to yourself ✍️"
+                                                      : "Type a message and send to start a conversation 👋",
                                                   textAlign: TextAlign.center,
                                                   style: TextStyle(
                                                     color: Colors.grey[400]!,
@@ -373,10 +427,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                           "seen": [widget.currentUsername],
                           "dateTime": DateTime.now().millisecondsSinceEpoch,
                         };
+
                         texts.add(tempTextObject);
+                        textMessageController.clear();
                         setState(() {});
-                        // print(widget.currentUsername);
-                        // print(widget.chatObject);
                         sendTexts(newTextObject);
                       },
                       icon: Icon(

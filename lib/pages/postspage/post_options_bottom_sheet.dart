@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:myallin1/pages/components/rounded_icon_labeled_button.dart';
 import 'package:myallin1/pages/postspage/posts.dart';
 
 class PostOptions extends StatefulWidget {
@@ -99,65 +100,15 @@ class _PostOptionsState extends State<PostOptions> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 18, 18, 18),
-                            border: Border.all(
-                              color: Colors.blueAccent,
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                100.0,
-                              ),
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.block_outlined,
-                            size: 30.0,
-                            color: Colors.blueAccent,
-                          ),
-                        ),
-                        SizedBox(height: 4.0),
-                        Text(
-                          "Block",
-                          style: TextStyle(
-                            color: Colors.blueAccent,
-                          ),
-                        ),
-                      ],
+                    RoundedIconLabeledButton(
+                      icon: Icons.block_outlined,
+                      label: "Block",
+                      color: Colors.blueAccent,
                     ),
-                    Column(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(10.0),
-                          decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 18, 18, 18),
-                            border: Border.all(
-                              color: Colors.yellowAccent,
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                100.0,
-                              ),
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.report_gmailerrorred,
-                            size: 30.0,
-                            color: Colors.yellowAccent,
-                          ),
-                        ),
-                        SizedBox(height: 4.0),
-                        Text(
-                          "Report",
-                          style: TextStyle(
-                            color: Colors.yellowAccent,
-                          ),
-                        ),
-                      ],
+                    RoundedIconLabeledButton(
+                      icon: Icons.report_gmailerrorred,
+                      label: "Report",
+                      color: Colors.yellowAccent,
                     ),
                     widget.currentUser["username"] !=
                             widget.postObject["username"]
@@ -168,41 +119,11 @@ class _PostOptionsState extends State<PostOptions> {
                               // await widget.deletePost(widget.postObject);
                               // Navigator.pop(context);
                             },
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(10.0),
-                                  decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 18, 18, 18),
-                                    border: Border.all(
-                                      color: Colors.orange,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        100.0,
-                                      ),
-                                    ),
-                                  ),
-                                  child: isDeleting == true
-                                      ? Container(
-                                          child: CircularProgressIndicator(
-                                            color: Colors.orange,
-                                          ),
-                                        )
-                                      : Icon(
-                                          Ionicons.eye_off_outline,
-                                          size: 30.0,
-                                          color: Colors.orange,
-                                        ),
-                                ),
-                                SizedBox(height: 4.0),
-                                Text(
-                                  "Hide",
-                                  style: TextStyle(
-                                    color: Colors.orange,
-                                  ),
-                                ),
-                              ],
+                            child: RoundedIconLabeledButton(
+                              icon: Ionicons.eye_off_outline,
+                              label: "Hide",
+                              color: Colors.orange,
+                              isLoading: isDeleting,
                             ),
                           )
                         : GestureDetector(
@@ -212,42 +133,11 @@ class _PostOptionsState extends State<PostOptions> {
                               await widget.deletePost(widget.postObject);
                               Navigator.pop(context);
                             },
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.all(
-                                      isDeleting == true ? 7.5 : 10.0),
-                                  decoration: BoxDecoration(
-                                    color: Color.fromARGB(255, 18, 18, 18),
-                                    border: Border.all(
-                                      color: Colors.redAccent,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        100.0,
-                                      ),
-                                    ),
-                                  ),
-                                  child: isDeleting == true
-                                      ? Container(
-                                          child: CircularProgressIndicator(
-                                            color: Colors.redAccent,
-                                          ),
-                                        )
-                                      : Icon(
-                                          Icons.delete_forever_outlined,
-                                          size: 30.0,
-                                          color: Colors.redAccent,
-                                        ),
-                                ),
-                                SizedBox(height: 4.0),
-                                Text(
-                                  "Delete",
-                                  style: TextStyle(
-                                    color: Colors.redAccent,
-                                  ),
-                                ),
-                              ],
+                            child: RoundedIconLabeledButton(
+                              icon: Icons.delete_forever_outlined,
+                              label: "Delete",
+                              color: Colors.redAccent,
+                              isLoading: isDeleting,
                             ),
                           ),
                   ],

@@ -2,6 +2,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:myallin1/pages/imageViewerPage/image_viewer_page.dart';
 
 class SmallPFP extends StatefulWidget {
   const SmallPFP({
@@ -37,25 +38,48 @@ class _SmallPFPState extends State<SmallPFP> {
         ),
       ),
       child: widget.pic != "null"
-          ? Image.asset(
-              widget.pic,
-              width: widget.size,
-              height: widget.size,
-              fit: BoxFit.cover,
-            )
-          : CachedNetworkImage(
-              width: widget.size,
-              height: widget.size,
-              fit: BoxFit.cover,
-              imageUrl: widget.netpic,
-              progressIndicatorBuilder: (context, url, downloadProgress) =>
-                  CircularProgressIndicator(
-                value: downloadProgress.progress,
-                color: Colors.grey[800]!,
-                strokeWidth: 2.0,
+          ? GestureDetector(
+              // onTap: () {
+              //   Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //       builder: (context) => ImageViewerPage(
+              //         isNetworkImage: false,
+              //         networkImage: widget.pic,
+              //         title: " ",
+              //       ),
+              //     ),
+              //   );
+              // },
+              child: Image.asset(
+                widget.pic,
+                width: widget.size,
+                height: widget.size,
+                fit: BoxFit.cover,
               ),
-              errorWidget: (context, url, error) => Icon(
-                Icons.error_outline,
+            )
+          : GestureDetector(
+              // onTap: () {
+              //   ImageViewerPage(
+              //     isNetworkImage: true,
+              //     networkImage: widget.netpic,
+              //     title: " ",
+              //   );
+              // },
+              child: CachedNetworkImage(
+                width: widget.size,
+                height: widget.size,
+                fit: BoxFit.cover,
+                imageUrl: widget.netpic,
+                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                    CircularProgressIndicator(
+                  value: downloadProgress.progress,
+                  color: Colors.grey[800]!,
+                  strokeWidth: 2.0,
+                ),
+                errorWidget: (context, url, error) => Icon(
+                  Icons.error_outline,
+                ),
               ),
             ),
       //  Image.network(

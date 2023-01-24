@@ -357,6 +357,8 @@ class _SearchPageState extends State<SearchPage> {
                                 "fullname": "Jeff Bezos",
                                 "username": "jeffyman",
                               },
+                              backgroundColor: Colors.grey[900]!,
+                              currentUser: widget.currentUser,
                             ),
                             Chats(
                               borderRadius: 20.0,
@@ -367,6 +369,8 @@ class _SearchPageState extends State<SearchPage> {
                                 "fullname": "Mark Zuckerberg",
                                 "username": "repitilian",
                               },
+                              backgroundColor: Colors.grey[900]!,
+                              currentUser: widget.currentUser,
                             ),
                           ],
                         ),
@@ -458,6 +462,9 @@ class _SearchPageState extends State<SearchPage> {
                                                 chatObject: eachAccountResult,
                                                 currentUsername: widget
                                                     .currentUser["username"],
+                                                backgroundColor:
+                                                    Colors.grey[900]!,
+                                                currentUser: widget.currentUser,
                                               ),
                                           ],
                                         ),

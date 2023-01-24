@@ -227,6 +227,7 @@ class _PostsState extends State<Posts> {
                                 username: widget.post["username"],
                                 profilepic:
                                     "https://dagmawibabi.com/static/media/me.b4b941897136a2959e33.png",
+                                currentUser: widget.currentUser,
                               ),
                             ),
                           );

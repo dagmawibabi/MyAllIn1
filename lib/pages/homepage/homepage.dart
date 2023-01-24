@@ -8,6 +8,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/main.dart';
+import 'package:myallin1/pages/bottomsheets/accounts_list_bottom_sheet.dart';
 import 'package:myallin1/pages/chatpage/chat_page.dart';
 import 'package:myallin1/pages/components/small_pfp.dart';
 import 'package:myallin1/pages/musicplayerpage/music_player_page.dart';
@@ -49,6 +50,7 @@ class _HomePageState extends State<HomePage>
   FocusNode searchFocusNode = FocusNode();
   Map weatherData = {};
   bool weatherLoading = true;
+  List availableChats = [];
 
   // Sample Data
   Map currentUser = {
@@ -179,7 +181,7 @@ class _HomePageState extends State<HomePage>
 
   // Get Feed
   void getFeed() async {
-    var route = "$baseURL/posts/getAllPosts";
+    var route = "$baseURL/posts/getFeed/" + widget.currentUser["username"];
     var url = Uri.parse(route);
     dynamic results = await http.get(url);
     dynamic resultJSON = jsonDecode(results.body);
@@ -191,7 +193,7 @@ class _HomePageState extends State<HomePage>
 
   // Get Feed Polling
   void getFeedPolling() async {
-    Timer.periodic(Duration(seconds: 30), (time) {
+    Timer.periodic(Duration(seconds: 10), (time) {
       getFeed();
     });
   }
@@ -294,6 +296,36 @@ class _HomePageState extends State<HomePage>
     setState(() {});
   }
 
+  void getAvailableChats() async {
+    var route = "$baseURL/profile/getAllProfiles/";
+    var url = Uri.parse(route);
+    dynamic results = await http.get(url);
+    dynamic resultsJSON = jsonDecode(results.body);
+    availableChats = resultsJSON;
+  }
+
+  void availableChatsList() {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      anchorPoint: Offset(0, 0),
+      constraints: BoxConstraints(
+        // minHeight: MediaQuery.of(context).size.height * 0.6,
+        maxHeight: (MediaQuery.of(context).size.height * 0.8),
+      ),
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      context: context,
+      builder: (context) {
+        return AccountsListBottomSheet(
+          listOfAccounts: availableChats,
+          currentUser: widget.currentUser,
+          listTitle: "Chat With",
+        );
+      },
+    );
+  }
+
   // Ask For Permission
   void askPermission() async {
     // Ask Storage Permissions
@@ -321,6 +353,7 @@ class _HomePageState extends State<HomePage>
     // getWeather();
     getFeed();
     getFeedPolling();
+    getAvailableChats();
   }
 
   // initState
@@ -390,6 +423,14 @@ class _HomePageState extends State<HomePage>
           ],
         ),
         actions: [
+          IconButton(
+            onPressed: () {
+              getFeed();
+            },
+            icon: Icon(
+              Icons.refresh_outlined,
+            ),
+          ),
           IconButton(
             onPressed: () {
               Navigator.push(
@@ -650,7 +691,9 @@ class _HomePageState extends State<HomePage>
                           ),
                         ),
                       );
-                    } else if (pageIndex == 2) {}
+                    } else if (pageIndex == 2) {
+                      availableChatsList();
+                    }
                   },
                   child: Container(
                     padding: EdgeInsets.only(bottom: 6.0),

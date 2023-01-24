@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:myallin1/pages/components/rounded_icon_labeled_button.dart';
 
 class ContentUploadOptionsBottomSheet extends StatefulWidget {
   const ContentUploadOptionsBottomSheet({
@@ -62,161 +63,94 @@ class _ContentUploadOptionsBottomSheetState
 
                 // Options
                 Container(
-                    child: widget.source == "camera"
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(5.0),
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[900]!,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(100.0),
-                                        ),
-                                      ),
-                                      child: IconButton(
-                                        onPressed: () async {
-                                          await widget.pickImageFunction(
-                                            false,
-                                            true,
-                                            false,
-                                            false,
-                                          );
-                                          Navigator.pop(context);
-                                        },
-                                        icon: Icon(
-                                          Ionicons.camera_outline,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 10.0),
-                                    Text(
-                                      "Take a Picture",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
+                  child: widget.source == "camera"
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                await widget.pickImageFunction(
+                                  false,
+                                  true,
+                                  false,
+                                  false,
+                                );
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                child: RoundedIconLabeledButton(
+                                  icon: Ionicons.camera_outline,
+                                  label: "Take a Picture",
+                                  color: Colors.white,
+                                  padding: 14.0,
                                 ),
                               ),
-                              Container(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(5.0),
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[900]!,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(100.0),
-                                        ),
-                                      ),
-                                      child: IconButton(
-                                        onPressed: () async {
-                                          await widget.pickImageFunction(
-                                            false,
-                                            false,
-                                            false,
-                                            true,
-                                          );
-                                          Navigator.pop(context);
-                                        },
-                                        icon: Icon(
-                                          Ionicons.videocam_outline,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 10.0),
-                                    Text(
-                                      "Capture a Video",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                await widget.pickImageFunction(
+                                  false,
+                                  false,
+                                  false,
+                                  true,
+                                );
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                child: RoundedIconLabeledButton(
+                                  icon: Ionicons.videocam_outline,
+                                  label: "Capture a Video",
+                                  color: Colors.white,
+                                  padding: 14.0,
                                 ),
                               ),
-                            ],
-                          )
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(5.0),
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[900]!,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(100.0),
-                                        ),
-                                      ),
-                                      child: IconButton(
-                                        onPressed: () async {
-                                          await widget.pickImageFunction(
-                                            true,
-                                            false,
-                                            false,
-                                            false,
-                                          );
-                                          Navigator.pop(context);
-                                        },
-                                        icon: Icon(
-                                          Ionicons.image_outline,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 10.0),
-                                    Text(
-                                      "Pick a Picture",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
+                            ),
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                await widget.pickImageFunction(
+                                  true,
+                                  false,
+                                  false,
+                                  false,
+                                );
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                child: RoundedIconLabeledButton(
+                                  icon: Ionicons.image_outline,
+                                  label: "Pick a Picture",
+                                  color: Colors.white,
+                                  padding: 14.0,
                                 ),
                               ),
-                              Container(
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      padding: EdgeInsets.all(5.0),
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[900]!,
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(100.0),
-                                        ),
-                                      ),
-                                      child: IconButton(
-                                        onPressed: () async {
-                                          await widget.pickImageFunction(
-                                            false,
-                                            false,
-                                            true,
-                                            false,
-                                          );
-                                          Navigator.pop(context);
-                                        },
-                                        icon: Icon(
-                                          Icons.video_camera_back_outlined,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 10.0),
-                                    Text(
-                                      "Choose a Video",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                await widget.pickImageFunction(
+                                  false,
+                                  false,
+                                  true,
+                                  false,
+                                );
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                child: RoundedIconLabeledButton(
+                                  icon: Icons.video_camera_back_outlined,
+                                  label: "Choose a Video",
+                                  color: Colors.white,
+                                  padding: 14.0,
                                 ),
                               ),
-                            ],
-                          )),
+                            ),
+                          ],
+                        ),
+                ),
               ],
             ),
           ],

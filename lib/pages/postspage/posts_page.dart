@@ -7,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myallin1/config/config.dart';
 import 'package:myallin1/pages/bottomsheets/weather_bottom_sheet.dart';
+import 'package:myallin1/pages/components/error_messages.dart';
 import 'package:myallin1/pages/postspage/post_options_bottom_sheet.dart';
 import 'package:myallin1/pages/postspage/posts.dart';
 import 'package:http/http.dart' as http;
@@ -283,39 +284,11 @@ class _PostsPageState extends State<PostsPage> {
 
         // widget.feed.map((item) => new Text(item)).toList());
         widget.feed.length == 0
-            ? Column(
-                children: [
-                  Container(
-                    margin:
-                        EdgeInsets.symmetric(vertical: 200.0, horizontal: 60.0),
-                    padding:
-                        EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[900]!.withOpacity(0.4),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(20.0),
-                      ),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "There are no posts on your feed!",
-                          style: TextStyle(
-                            color: Colors.grey[700]!,
-                          ),
-                        ),
-                        SizedBox(height: 15.0),
-                        Text(
-                          "Create your first post by clicking on the pencil icon on the bottom right corner.",
-                          style: TextStyle(
-                            color: Colors.grey[800]!,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+            ? ErrorMessages(
+                title: "There are no posts on your feed!",
+                body:
+                    "Create your first post by clicking on the pencil icon on the bottom right corner.",
+                color: Colors.grey[500]!,
               )
             : Container(
                 child: Column(
