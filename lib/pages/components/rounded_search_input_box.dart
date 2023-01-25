@@ -40,12 +40,13 @@ class _RoundedSearchInputBoxState extends State<RoundedSearchInputBox> {
         },
         decoration: InputDecoration(
           border: InputBorder.none,
-          prefixIcon: Icon(
-            Ionicons.search_outline,
-            color: Colors.white,
-          ),
+          // prefixIcon: Icon(
+          //   Ionicons.search_outline,
+          //   color: Colors.white,
+          // ),
+          prefix: Container(width: 20.0),
           suffixIcon: Icon(
-            Ionicons.paper_plane_outline,
+            Ionicons.search_outline,
             color: Colors.white,
           ),
           hintText: "Search",

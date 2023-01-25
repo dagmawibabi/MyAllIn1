@@ -408,6 +408,7 @@ class _PostsState extends State<Posts> {
                         launchUrl(postedLink,
                             mode: LaunchMode.externalApplication);
                       },
+
                       text: widget.extended == true
                           ? widget.post["content"].toString().trim()
                           : widget.post["hidden"] == false
@@ -447,6 +448,7 @@ class _PostsState extends State<Posts> {
                       ),
                       linkStyle: TextStyle(
                         color: Colors.blueAccent,
+                        fontSize: widget.extended == true ? 14.5 : 14.0,
                       ),
                       // child: Text(
                       // widget.extended == true

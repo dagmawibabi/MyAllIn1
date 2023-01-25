@@ -6,11 +6,13 @@ class ErrorMessages extends StatefulWidget {
     required this.title,
     required this.body,
     required this.color,
+    this.marginHorizontal = 60,
   });
 
   final String title;
   final String body;
   final Color color;
+  final double marginHorizontal;
 
   @override
   State<ErrorMessages> createState() => _ErrorMessagesState();
@@ -20,7 +22,9 @@ class _ErrorMessagesState extends State<ErrorMessages> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 200.0, horizontal: 60.0),
+      // width: widget.width,
+      margin: EdgeInsets.symmetric(
+          vertical: 200.0, horizontal: widget.marginHorizontal),
       padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
       decoration: BoxDecoration(
         color: Colors.grey[900]!.withOpacity(0.4),
