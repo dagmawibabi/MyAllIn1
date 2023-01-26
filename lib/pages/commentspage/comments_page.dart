@@ -37,6 +37,8 @@ class _CommentsPageState extends State<CommentsPage> {
             clickable: false,
           ),
 
+          SizedBox(height: 10.0),
+
           Comments(),
           Comments(),
           Comments(),

@@ -29,7 +29,8 @@ class _MyAppState extends State<MyApp> {
       ),
     );
 
-    Color primaryColor = Color.fromARGB(255, 18, 18, 18);
+    // Color primaryColor = Color.fromARGB(255, 18, 18, 18);
+    Color primaryColor = Color.fromARGB(100, 18, 18, 18);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -68,6 +69,8 @@ class _MyAppState extends State<MyApp> {
           foregroundColor: Colors.white,
         ),
         scaffoldBackgroundColor: primaryColor,
+        // scaffoldBackgroundColor:
+        //     Colors.grey[900]!.withOpacity(0.4), // primaryColor,
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: primaryColor,
         ),

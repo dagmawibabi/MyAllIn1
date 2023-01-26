@@ -117,7 +117,7 @@ class _PostsPageState extends State<PostsPage> {
     return ListView(
       children: [
         // Start of Page
-        SizedBox(height: 10.0),
+        SizedBox(height: 5.0),
 
         // Weather
         widget.weatherLoading == true
@@ -144,7 +144,7 @@ class _PostsPageState extends State<PostsPage> {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.grey[900]!.withOpacity(0.01),
+                    color: Colors.grey[900]!.withOpacity(0.12),
                     border: Border(
                       bottom: BorderSide(color: Colors.black),
                     ),

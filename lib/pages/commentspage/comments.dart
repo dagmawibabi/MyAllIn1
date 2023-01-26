@@ -15,10 +15,10 @@ class _CommentsState extends State<Comments> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+      margin: EdgeInsets.only(left: 5.0, right: 5.0, bottom: 8.0),
       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
       decoration: BoxDecoration(
-        color: Colors.grey[900]!.withOpacity(0.4),
+        color: Colors.grey[900]!.withOpacity(0.2),
         borderRadius: BorderRadius.all(
           Radius.circular(20.0),
         ),
@@ -42,7 +42,7 @@ class _CommentsState extends State<Comments> {
                       Text(
                         "Dagmawi Babi",
                         style: TextStyle(
-                          fontSize: 16.0,
+                          fontSize: 14.0,
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
@@ -50,7 +50,7 @@ class _CommentsState extends State<Comments> {
                       Text(
                         "@DagmawiBabi",
                         style: TextStyle(
-                          fontSize: 14.0,
+                          fontSize: 12.0,
                           color: Colors.white70,
                         ),
                       ),
@@ -62,7 +62,7 @@ class _CommentsState extends State<Comments> {
                 "4m ago",
                 style: TextStyle(
                   fontSize: 12.0,
-                  color: Colors.grey,
+                  color: Colors.grey[800]!,
                 ),
               ),
             ],
@@ -71,8 +71,8 @@ class _CommentsState extends State<Comments> {
           Text(
             "This is the first comment on this post. Cool pixel picture bruh so cool!",
             style: TextStyle(
-              fontSize: 16.0,
-              color: Colors.white,
+              fontSize: 14.0,
+              color: Colors.grey[200]!,
             ),
           ),
         ],

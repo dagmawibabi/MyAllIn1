@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
@@ -119,6 +120,65 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
+  void communityInfoBottomSheet(title, information) {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      anchorPoint: Offset(0, 0),
+      constraints: BoxConstraints(
+        // minHeight: MediaQuery.of(context).size.height * 0.6,
+        maxHeight: (MediaQuery.of(context).size.height * 0.8),
+      ),
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      context: context,
+      builder: (context) => Container(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+          child: ListView(
+            children: [
+              // Back Button
+              Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[900]!,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(20.0),
+                        bottomRight: Radius.circular(20.0),
+                      ),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.arrow_back,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20.0),
+              Text(
+                title,
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                information,
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -140,11 +200,22 @@ class _ChatPageState extends State<ChatPage> {
         // SizedBox(height: 15.0),
 
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Side Bar
             Container(
               height: MediaQuery.of(context).size.height * 0.85,
               width: 70.0,
-              color: Color.fromARGB(255, 18, 18, 18),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(150, 18, 18, 18),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 4.0,
+                  ),
+                ],
+              ),
+              // color: Colors.grey[900]!.withOpacity(0.3),
               child: ListView(
                 children: [
                   Column(
@@ -204,17 +275,161 @@ class _ChatPageState extends State<ChatPage> {
                 ],
               ),
             ),
-            Expanded(
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.85,
-                // width: MediaQuery.of(context).size.height * 0.85,
-                color: Colors.black.withOpacity(0.2),
-                child: ListView(
-                  children: [
-                    Column(
-                      children: [
-                        currentChatPage == 2
-                            ? Column(
+
+            currentChatPage == 1
+                // Private Chats
+                ? Expanded(
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.85,
+                      color: Colors.grey[900]!.withOpacity(0.14),
+                      child: gettingChats == true
+                          ? Container(
+                              height: 400.0,
+                              width: double.infinity,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(
+                                    color: Colors.grey[700]!,
+                                    strokeWidth: 2.0,
+                                  ),
+                                  SizedBox(height: 15.0),
+                                  Text(
+                                    "Getting Chats",
+                                    style: TextStyle(
+                                      color: Colors.grey[700]!,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(
+                              child: chats.length <= 1
+                                  ? ErrorMessages(
+                                      title: "There are no chats yet",
+                                      body:
+                                          "Start a conversation by clicking on the bottom right button and choosing a friend from the list.",
+                                      color: Colors.grey[500]!,
+                                      marginHorizontal: 40.0,
+                                    )
+                                  : Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        SizedBox(height: 8.0),
+
+                                        // Search
+                                        RoundedSearchInputBox(
+                                          textEditingController:
+                                              searchTextController,
+                                        ),
+                                        SizedBox(height: 10.0),
+
+                                        // Saved Messages
+                                        for (var eachChat in chats)
+                                          eachChat["username"] ==
+                                                  widget.currentUser["username"]
+                                              ? Container(
+                                                  // width: double.infinity,
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal: 8.0),
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 10.0,
+                                                      horizontal: 10.0),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey[900]!
+                                                        .withOpacity(0.2),
+                                                    border: Border.all(
+                                                      color: Colors.blue
+                                                          .withOpacity(0.1),
+                                                    ),
+                                                    // color: Colors.blue
+                                                    //     .withOpacity(0.4),
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(10.0),
+                                                    ),
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Icon(
+                                                            Icons
+                                                                .bookmark_outline,
+                                                            size: 20.0,
+                                                            color: Colors.blue,
+                                                          ),
+                                                          SizedBox(width: 5.0),
+                                                          Text(
+                                                            "Saved Messages",
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.blue,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                      Icon(
+                                                        Ionicons.pencil_outline,
+                                                        size: 18.0,
+                                                        color: Colors.blue,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              : Container(),
+                                        SizedBox(height: 10.0),
+
+                                        // Chats
+                                        for (var eachChat in chats)
+                                          eachChat["username"] !=
+                                                  widget.currentUser["username"]
+                                              ? Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 4.0),
+                                                  child: Chats(
+                                                    chatObject: eachChat,
+                                                    currentUsername:
+                                                        widget.currentUser[
+                                                            "username"],
+                                                    backgroundColor:
+                                                        Colors.grey[900]!,
+                                                    currentUser:
+                                                        widget.currentUser,
+                                                  ),
+                                                )
+                                              : Container(),
+                                      ],
+                                    ),
+                            ),
+                    ),
+                  )
+
+                // Communities
+                : Expanded(
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.85,
+                      // width: MediaQuery.of(context).size.height * 0.85,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.2),
+                        image: DecorationImage(
+                          image: NetworkImage(
+                            chosenCommunityObject["profilepic"],
+                          ),
+                          fit: BoxFit.cover,
+                          opacity: 0.02,
+                        ),
+                      ),
+
+                      child: ListView(
+                        children: [
+                          Column(
+                            children: [
+                              Column(
                                 children: [
                                   // Header
                                   Container(
@@ -230,11 +445,12 @@ class _ChatPageState extends State<ChatPage> {
                                         Radius.circular(20.0),
                                       ),
                                     ),
-                                    child: Column(
+                                    child: Stack(
+                                      alignment: Alignment.bottomCenter,
                                       children: [
                                         // Banner
                                         Container(
-                                          height: 150.0,
+                                          height: 180.0,
                                           width: double.infinity,
                                           child: Image.network(
                                             chosenCommunityObject["banner"],
@@ -244,10 +460,10 @@ class _ChatPageState extends State<ChatPage> {
                                         // Community Name
                                         Container(
                                           padding: EdgeInsets.symmetric(
-                                              vertical: 8.0, horizontal: 20.0),
+                                              vertical: 5.0, horizontal: 20.0),
                                           decoration: BoxDecoration(
                                             color:
-                                                Colors.black.withOpacity(0.4),
+                                                Colors.black.withOpacity(0.8),
                                             borderRadius: BorderRadius.only(
                                               bottomLeft: Radius.circular(20.0),
                                               bottomRight:
@@ -255,46 +471,65 @@ class _ChatPageState extends State<ChatPage> {
                                             ),
                                           ),
                                           child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        chosenCommunityObject[
-                                                            "fullname"],
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 16.0,
+                                                  Container(
+                                                    width: 250.0,
+                                                    clipBehavior: Clip.hardEdge,
+                                                    decoration: BoxDecoration(),
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          chosenCommunityObject[
+                                                              "fullname"],
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 14.0,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      SizedBox(width: 5.0),
-                                                      Text(
-                                                        "@" +
-                                                            chosenCommunityObject[
-                                                                "username"],
-                                                        style: TextStyle(
-                                                          color:
-                                                              Colors.grey[500]!,
-                                                          fontSize: 14.0,
+                                                        SizedBox(width: 4.0),
+                                                        Expanded(
+                                                          child: Text(
+                                                            "@" +
+                                                                chosenCommunityObject[
+                                                                    "username"],
+                                                            style: TextStyle(
+                                                              color: Colors
+                                                                  .grey[500]!,
+                                                              fontSize: 12.0,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                            ),
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
-                                                  SizedBox(height: 4.0),
+                                                  SizedBox(height: 3.0),
                                                   Text(
                                                     chosenCommunityObject[
                                                         "bio"],
                                                     style: TextStyle(
                                                       color: Colors.grey[300]!,
-                                                      fontSize: 15.0,
+                                                      fontSize: 13.0,
                                                     ),
                                                   ),
                                                 ],
+                                              ),
+                                              Icon(
+                                                Icons.public_outlined,
+                                                size: 22.0,
                                               ),
                                             ],
                                           ),
@@ -337,7 +572,7 @@ class _ChatPageState extends State<ChatPage> {
                                           chosenCommunityObject["members"]
                                               .toString(),
                                           style: TextStyle(
-                                            color: Colors.grey[300]!,
+                                            color: Colors.lightBlue,
                                             fontSize: 15.0,
                                           ),
                                         ),
@@ -347,365 +582,133 @@ class _ChatPageState extends State<ChatPage> {
                                   SizedBox(height: 8.0),
 
                                   // FAQ HELP GENERAL
-                                  CommunityInfoBar(
-                                    leadingIcon: Ionicons.book_outline,
-                                    title: "Introduction",
-                                    trailingIcon:
-                                        Icons.keyboard_arrow_right_outlined,
+                                  GestureDetector(
+                                    onTap: () {
+                                      var commName =
+                                          chosenCommunityObject["fullname"];
+                                      var intro = "Welcome to  $commName!";
+                                      communityInfoBottomSheet(
+                                          "Introduction", intro);
+                                    },
+                                    child: CommunityInfoBar(
+                                      leadingIcon: Ionicons.book_outline,
+                                      title: "Introduction",
+                                      trailingIcon:
+                                          Icons.keyboard_arrow_right_outlined,
+                                    ),
                                   ),
-                                  CommunityInfoBar(
-                                    leadingIcon: Ionicons.book_outline,
-                                    title: "Rules",
-                                    trailingIcon:
-                                        Icons.keyboard_arrow_right_outlined,
+                                  GestureDetector(
+                                    onTap: () {
+                                      var commName =
+                                          chosenCommunityObject["fullname"];
+                                      var intro = "Welcome to  $commName!";
+                                      communityInfoBottomSheet("Rules", intro);
+                                    },
+                                    child: CommunityInfoBar(
+                                      leadingIcon: Ionicons.warning_outline,
+                                      title: "Rules",
+                                      trailingIcon:
+                                          Icons.keyboard_arrow_right_outlined,
+                                    ),
                                   ),
-                                  CommunityInfoBar(
-                                    leadingIcon: Ionicons.book_outline,
-                                    title: "FAQ",
-                                    trailingIcon:
-                                        Icons.keyboard_arrow_right_outlined,
+                                  GestureDetector(
+                                    onTap: () {
+                                      var commName =
+                                          chosenCommunityObject["fullname"];
+                                      var intro = "Welcome to  $commName!";
+                                      communityInfoBottomSheet("FAQ", intro);
+                                    },
+                                    child: CommunityInfoBar(
+                                      leadingIcon: Icons.question_mark_outlined,
+                                      title: "FAQ",
+                                      trailingIcon:
+                                          Icons.keyboard_arrow_right_outlined,
+                                    ),
                                   ),
                                 ],
-                              )
-                            : RoundedSearchInputBox(
-                                textEditingController: searchTextController,
                               ),
-                        gettingChats == true
-                            ? Container(
-                                height: 400.0,
-                                width: double.infinity,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    CircularProgressIndicator(
-                                      color: Colors.grey[700]!,
-                                      strokeWidth: 2.0,
-                                    ),
-                                    SizedBox(height: 15.0),
-                                    Text(
-                                      "Getting Chats",
-                                      style: TextStyle(
-                                        color: Colors.grey[700]!,
+
+                              SizedBox(height: 20.0),
+
+                              // Leave or Join
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      margin: EdgeInsets.only(left: 10.0),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 10.0, horizontal: 10.0),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            Colors.redAccent.withOpacity(0.8),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Ionicons.log_out_outline,
+                                          ),
+                                          SizedBox(width: 5.0),
+                                          Text(
+                                            "Leave",
+                                            style: TextStyle(
+                                              color: Colors.grey[300]!,
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              )
-                            : Container(
-                                child: Column(
-                                  children: [
-                                    currentChatPage == 1
-                                        ? Container(
-                                            child: chats.length <= 1
-                                                ? ErrorMessages(
-                                                    title:
-                                                        "There are no chats yet",
-                                                    body:
-                                                        "Start a conversation by clicking on the bottom right button and choosing a friend from the list.",
-                                                    color: Colors.grey[500]!,
-                                                    marginHorizontal: 40.0,
-                                                  )
-                                                : Column(children: [
-                                                    // Chats
-                                                    for (var eachChat in chats)
-                                                      eachChat["username"] !=
-                                                              widget.currentUser[
-                                                                  "username"]
-                                                          ? Chats(
-                                                              chatObject:
-                                                                  eachChat,
-                                                              currentUsername:
-                                                                  widget.currentUser[
-                                                                      "username"],
-                                                              backgroundColor:
-                                                                  Colors.grey[
-                                                                      900]!,
-                                                              currentUser: widget
-                                                                  .currentUser,
-                                                            )
-                                                          : Container(),
-                                                  ]),
-                                          )
-                                        : Container(
-                                            child: communities.length <= 1
-                                                ? ErrorMessages(
-                                                    title:
-                                                        "You didn't join any community yet",
-                                                    body:
-                                                        "Start joining one of the available communities by clicking on the bottom right button.",
-                                                    color: Colors.grey[500]!,
-                                                    marginHorizontal: 35.0,
-                                                  )
-                                                : Column(
-                                                    children: [
-                                                      // Communities
-                                                      // for (var eachChat
-                                                      //     in communities)
-                                                      //   Chats(
-                                                      //     chatObject: eachChat,
-                                                      //     currentUsername:
-                                                      //         widget.currentUser[
-                                                      //             "username"],
-                                                      //     backgroundColor:
-                                                      //         Colors.grey[900]!,
-                                                      //     currentUser: widget
-                                                      //         .currentUser,
-                                                      //   ),
-                                                    ],
-                                                  ),
+                                  ),
+                                  SizedBox(width: 8.0),
+                                  Expanded(
+                                    child: Container(
+                                      margin: EdgeInsets.only(right: 10.0),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 10.0, horizontal: 10.0),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            Colors.greenAccent.withOpacity(0.8),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10.0),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Ionicons.log_in_outline,
+                                            color: Colors.black,
                                           ),
-                                  ],
-                                ),
+                                          SizedBox(width: 5.0),
+                                          Text(
+                                            "Browse",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                      ],
+                              SizedBox(height: 8.0),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
           ],
         ),
-
-        // Private Chats or Communities
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.center,
-        //   children: [
-        //     GestureDetector(
-        //       onTap: () {
-        //         currentChatPage = 1;
-        //         setState(() {});
-        //       },
-        //       child: Container(
-        //         width: 150.0,
-        //         padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-        //         // margin: EdgeInsets.symmetric(vertical: 5.0),
-        //         decoration: BoxDecoration(
-        //           color: currentChatPage == 1
-        //               ? Colors.lightBlueAccent
-        //               : Colors.grey[900]!.withOpacity(0.4),
-        //           // border: Border.all(
-        //           //   color: Colors.lightBlue.withOpacity(0.4),
-        //           // ),
-        //           borderRadius: BorderRadius.all(
-        //             Radius.circular(20.0),
-        //           ),
-        //         ),
-        //         child: Row(
-        //           mainAxisAlignment: MainAxisAlignment.center,
-        //           children: [
-        //             Icon(
-        //               Ionicons.chatbox_ellipses_outline,
-        //               size: 18.0,
-        //               color: currentChatPage == 1 ? Colors.black : Colors.white,
-        //             ),
-        //             SizedBox(width: 8.0),
-        //             Text(
-        //               "Private Chats",
-        //               style: TextStyle(
-        //                 color:
-        //                     currentChatPage == 1 ? Colors.black : Colors.white,
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-        //     ),
-        //     SizedBox(width: 10.0),
-        //     GestureDetector(
-        //       onTap: () {
-        //         currentChatPage = 2;
-        //         setState(() {});
-        //       },
-        //       child: Container(
-        //         width: 150.0,
-        //         padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-        //         // margin: EdgeInsets.symmetric(vertical: 5.0),
-        //         decoration: BoxDecoration(
-        //           color: currentChatPage == 2
-        //               ? Colors.lightGreenAccent
-        //               : Colors.grey[900]!.withOpacity(0.4),
-        //           // border: Border.all(
-        //           //   color: Colors.lightBlue.withOpacity(0.4),
-        //           // ),
-        //           borderRadius: BorderRadius.all(
-        //             Radius.circular(20.0),
-        //           ),
-        //         ),
-        //         child: Row(
-        //           mainAxisAlignment: MainAxisAlignment.center,
-        //           children: [
-        //             Icon(
-        //               Ionicons.people_outline,
-        //               size: 18.0,
-        //               color: currentChatPage == 2 ? Colors.black : Colors.white,
-        //             ),
-        //             SizedBox(width: 8.0),
-        //             Text(
-        //               "Communities",
-        //               style: TextStyle(
-        //                 color:
-        //                     currentChatPage == 2 ? Colors.black : Colors.white,
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-        //     ),
-        //   ],
-        // ),
-
-        // currentChatPage == 1
-        //     ? chats.length <= 1
-        //         ? Container(height: 15.0)
-        //         : RoundedSearchInputBox(
-        //             textEditingController: searchTextController,
-        //           )
-        //     : communities.length <= 1
-        //         ? Container(height: 15.0)
-        //         : RoundedSearchInputBox(
-        //             textEditingController: searchTextController,
-        //           ),
-
-        // // Saved Messages
-        // GestureDetector(
-        //   onTap: () {
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(
-        //         builder: (context) => ChatRoomPage(
-        //           currentUsername: widget.currentUser["username"],
-        //           chatObject: {"username": widget.currentUser["username"]},
-        //           savedMessages: true,
-        //         ),
-        //       ),
-        //     );
-        //   },
-        //   child: Container(
-        //     color: Colors.blueAccent.withOpacity(0.05),
-        //     padding: EdgeInsets.symmetric(horizontal: 10.0),
-        //     margin: EdgeInsets.only(bottom: 5.0),
-        //     child: Row(
-        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //       children: [
-        //         Row(
-        //           children: [
-        //             Container(
-        //               padding: EdgeInsets.all(8.0),
-        //               decoration: BoxDecoration(
-        //                 // border: Border.all(
-        //                 //   color: Colors.blueAccent,
-        //                 // ),
-        //                 borderRadius: BorderRadius.all(
-        //                   Radius.circular(100.0),
-        //                 ),
-        //               ),
-        //               child: Icon(
-        //                 Icons.bookmark_border,
-        //               ),
-        //             ),
-        //             SizedBox(width: 10.0),
-        //             Text(
-        //               "Saved Messages",
-        //               style: TextStyle(
-        //                 fontSize: 14.0,
-        //                 color: Colors.white,
-        //                 fontWeight: FontWeight.bold,
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //         IconButton(
-        //           onPressed: () {},
-        //           icon: Icon(
-        //             Ionicons.pencil_outline,
-        //             color: Colors.white,
-        //             size: 18.0,
-        //           ),
-        //         )
-        //       ],
-        //     ),
-        //   ),
-        // ),
-
-        // gettingChats == true
-        //     ? Container(
-        //         height: 400.0,
-        //         width: double.infinity,
-        //         child: Column(
-        //           mainAxisAlignment: MainAxisAlignment.center,
-        //           children: [
-        //             CircularProgressIndicator(
-        //               color: Colors.grey[700]!,
-        //               strokeWidth: 2.0,
-        //             ),
-        //             SizedBox(height: 15.0),
-        //             Text(
-        //               "Getting Chats",
-        //               style: TextStyle(
-        //                 color: Colors.grey[700]!,
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //       )
-        //     : Container(
-        //         child: Column(
-        //           children: [
-        //             currentChatPage == 1
-        //                 ? Container(
-        //                     child: chats.length <= 1
-        //                         ? ErrorMessages(
-        //                             title: "There are no chats yet",
-        //                             body:
-        //                                 "Start a conversation by clicking on the bottom right button and choosing a friend from the list.",
-        //                             color: Colors.grey[500]!,
-        //                           )
-        //                         : Column(children: [
-        //                             // Chats
-        //                             for (var eachChat in chats)
-        //                               eachChat["username"] !=
-        //                                       widget.currentUser["username"]
-        //                                   ? Chats(
-        //                                       chatObject: eachChat,
-        //                                       currentUsername: widget
-        //                                           .currentUser["username"],
-        //                                       backgroundColor:
-        //                                           Colors.grey[900]!,
-        //                                       currentUser: widget.currentUser,
-        //                                     )
-        //                                   : Container(),
-        //                           ]),
-        //                   )
-        //                 : Container(
-        //                     child: communities.length <= 1
-        //                         ? ErrorMessages(
-        //                             title: "You didn't join any community yet",
-        //                             body:
-        //                                 "Start joining one of the available communities by clicking on the bottom right button.",
-        //                             color: Colors.grey[500]!,
-        //                           )
-        //                         : Column(
-        //                             children: [
-        //                               // Communities
-        //                               for (var eachChat in communities)
-        //                                 Chats(
-        //                                   chatObject: eachChat,
-        //                                   currentUsername:
-        //                                       widget.currentUser["username"],
-        //                                   backgroundColor: Colors.grey[900]!,
-        //                                   currentUser: widget.currentUser,
-        //                                 ),
-        //                             ],
-        //                           ),
-        //                   ),
-        //           ],
-        //         ),
-        //       ),
-
-        // Chat List
-
-        // End of Page
-        // SizedBox(height: 200.0),
       ],
     );
   }

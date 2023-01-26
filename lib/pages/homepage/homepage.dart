@@ -379,6 +379,7 @@ class _HomePageState extends State<HomePage>
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        elevation: 5.0,
         title: Row(
           children: [
             GestureDetector(
@@ -451,7 +452,19 @@ class _HomePageState extends State<HomePage>
         ],
         bottom: TabBar(
           controller: tabController,
-          indicatorColor: Colors.grey[600],
+          indicatorColor: Colors.white,
+          indicatorWeight: 1.0,
+
+          // indicatorColor: Colors.greenAccent.withOpacity(0.4),
+          // indicatorPadding: EdgeInsets.symmetric(horizontal: 20.0),
+          labelStyle: TextStyle(
+            fontSize: 15.0,
+          ),
+          indicatorSize: TabBarIndicatorSize.label,
+          unselectedLabelColor: Colors.grey[800]!,
+          unselectedLabelStyle: TextStyle(
+            fontSize: 14.0,
+          ),
           tabs: [
             Tab(
               // icon: Icon(Icons.directions_transit),

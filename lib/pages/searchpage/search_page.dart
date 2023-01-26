@@ -247,236 +247,341 @@ class _SearchPageState extends State<SearchPage> {
     List searchScreens = [
       // Sample
       Container(
+        // width: double.infinity,
+        // height: 280.0,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Post Results
-            curSearchTerm == "" || curSearchTerm == " "
-                ? Column(
-                    children: [
-                      // Trending Results
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: 4.0, vertical: 4.0),
-                        padding: EdgeInsets.symmetric(vertical: 8.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[900]!.withOpacity(0.0),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.0),
+            newsLoading == true
+                ? Container()
+                : Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: 10.0, bottom: 5.0, left: 20.0),
+                          child: Text(
+                            "Headlines",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0,
+                            ),
                           ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 15.0, vertical: 5.0),
-                              child: Text(
-                                "Trending",
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Container(
-                                  clipBehavior: Clip.hardEdge,
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 4.0, vertical: 4.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10.0),
-                                    ),
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/INR.jpg",
-                                    width: 180.0,
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.hardEdge,
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 4.0, vertical: 4.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(10.0),
-                                    ),
-                                  ),
-                                  child: Image.asset(
-                                    "assets/images/me2.jpg",
-                                    width: 180.0,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                        for (var eachNews in [0, 2, 3, 4, 5])
+                          EachNews(newsObject: news[eachNews]),
+                      ],
+                    ),
+                  ),
 
-                      Divider(
-                        // color: Colors.black,
-                        height: 20.0,
-                      ),
+            cryptoLoading == true
+                ? Container()
+                : Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: 20.0, bottom: 10.0, left: 15.0),
+                          child: Text(
+                            "Top Cryptos",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0,
+                            ),
+                          ),
+                        ),
+                        for (var eachCrypto in [0, 2, 3, 4, 5])
+                          GestureDetector(
+                            onTap: () {
+                              showCryptoDetails(cryptos[eachCrypto]);
+                            },
+                            child: EachCrypto(
+                              cryptoObject: cryptos[eachCrypto],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
 
-                      // Chat Results
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                            horizontal: 4.0, vertical: 0.0),
-                        padding: EdgeInsets.symmetric(
-                            vertical: 0.0, horizontal: 5.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[900]!.withOpacity(0.0),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 15.0),
-                              child: Text(
-                                "Accounts",
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            SizedBox(height: 15.0),
-                            Chats(
-                              borderRadius: 20.0,
-                              currentUsername: widget.currentUser["username"],
-                              chatObject: {
-                                "profilepic":
-                                    "https://assets.entrepreneur.com/content/3x2/2000/20150224165308-jeff-bezos-amazon.jpeg",
-                                "fullname": "Jeff Bezos",
-                                "username": "jeffyman",
-                              },
-                              backgroundColor: Colors.grey[900]!,
-                              currentUser: widget.currentUser,
-                            ),
-                            Chats(
-                              borderRadius: 20.0,
-                              currentUsername: widget.currentUser["username"],
-                              chatObject: {
-                                "profilepic":
-                                    "https://media.vanityfair.com/photos/5d41c7688df537000832361b/4:3/w_2668,h_2001,c_limit/GettyImages-945005812.jpg",
-                                "fullname": "Mark Zuckerberg",
-                                "username": "repitilian",
-                              },
-                              backgroundColor: Colors.grey[900]!,
-                              currentUser: widget.currentUser,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                : searchResults["postResults"] == null &&
-                        searchResults["accountResults"] == null
-                    ? Container()
-                    : searchResults["postResults"].length == 0 &&
-                            searchResults["accountResults"].length == 0
-                        ? Container(
-                            padding: EdgeInsets.only(top: 50.0),
-                            child: Text(
-                              "No Results Found",
-                              style: TextStyle(
-                                color: Colors.grey[500]!,
-                              ),
-                            ),
-                          )
-                        : Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 4.0, vertical: 4.0),
-                            padding: EdgeInsets.symmetric(
-                                vertical: 8.0, horizontal: 5.0),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[900]!.withOpacity(0.4),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10.0),
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                searchResults["postResults"].length > 0
-                                    ? Container(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 15.0,
-                                                      vertical: 8.0),
-                                              child: Text(
-                                                "Posts",
-                                                style: TextStyle(
-                                                  fontSize: 20.0,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                            for (var eachPostResult
-                                                in searchResults["postResults"])
-                                              Posts(
-                                                post: eachPostResult,
-                                                currentUser: widget.currentUser,
-                                              ),
-                                          ],
-                                        ),
-                                      )
-                                    : Container(),
-                                searchResults["accountResults"].length > 0
-                                    ? Container(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 15.0,
-                                                      vertical: 8.0),
-                                              child: Text(
-                                                "Accounts",
-                                                style: TextStyle(
-                                                  fontSize: 20.0,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                            for (var eachAccountResult
-                                                in searchResults[
-                                                    "accountResults"])
-                                              Chats(
-                                                borderRadius: 20.0,
-                                                chatObject: eachAccountResult,
-                                                currentUsername: widget
-                                                    .currentUser["username"],
-                                                backgroundColor:
-                                                    Colors.grey[900]!,
-                                                currentUser: widget.currentUser,
-                                              ),
-                                          ],
-                                        ),
-                                      )
-                                    : Container(),
-                              ],
+            moviesLoading == true
+                ? Container()
+                : Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: 10.0, bottom: 15.0, left: 15.0),
+                          child: Text(
+                            "Trending Movies",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.0,
                             ),
                           ),
-            SizedBox(height: 300.0),
+                        ),
+                      ],
+                    ),
+                  ),
+            moviesLoading == true
+                ? Container()
+                : Container(
+                    width: double.infinity,
+                    height: 280.0,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        for (var eachMovie in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+                          GestureDetector(
+                            onTap: () {
+                              showMovieDetails(movies[eachMovie]);
+                            },
+                            child: EachMovie(
+                              movieObject: movies[eachMovie],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+
+            // EOP
+            SizedBox(height: 200.0),
           ],
         ),
       ),
+      // Container(
+      //   child: Column(
+      //     children: [
+      //       // Post Results
+      //       curSearchTerm == "" || curSearchTerm == " "
+      //           ? Column(
+      //               children: [
+      //                 // Trending Results
+      //                 Container(
+      //                   margin: EdgeInsets.symmetric(
+      //                       horizontal: 4.0, vertical: 4.0),
+      //                   padding: EdgeInsets.symmetric(vertical: 8.0),
+      //                   decoration: BoxDecoration(
+      //                     color: Colors.grey[900]!.withOpacity(0.0),
+      //                     borderRadius: BorderRadius.all(
+      //                       Radius.circular(10.0),
+      //                     ),
+      //                   ),
+      //                   child: Column(
+      //                     crossAxisAlignment: CrossAxisAlignment.start,
+      //                     children: [
+      //                       Padding(
+      //                         padding: const EdgeInsets.symmetric(
+      //                             horizontal: 15.0, vertical: 5.0),
+      //                         child: Text(
+      //                           "Trending",
+      //                           style: TextStyle(
+      //                             fontSize: 20.0,
+      //                             fontWeight: FontWeight.bold,
+      //                             color: Colors.white,
+      //                           ),
+      //                         ),
+      //                       ),
+      //                       Row(
+      //                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      //                         children: [
+      //                           Container(
+      //                             clipBehavior: Clip.hardEdge,
+      //                             margin: EdgeInsets.symmetric(
+      //                                 horizontal: 4.0, vertical: 4.0),
+      //                             decoration: BoxDecoration(
+      //                               borderRadius: BorderRadius.all(
+      //                                 Radius.circular(10.0),
+      //                               ),
+      //                             ),
+      //                             child: Image.asset(
+      //                               "assets/images/INR.jpg",
+      //                               width: 180.0,
+      //                             ),
+      //                           ),
+      //                           Container(
+      //                             clipBehavior: Clip.hardEdge,
+      //                             margin: EdgeInsets.symmetric(
+      //                                 horizontal: 4.0, vertical: 4.0),
+      //                             decoration: BoxDecoration(
+      //                               borderRadius: BorderRadius.all(
+      //                                 Radius.circular(10.0),
+      //                               ),
+      //                             ),
+      //                             child: Image.asset(
+      //                               "assets/images/me2.jpg",
+      //                               width: 180.0,
+      //                             ),
+      //                           ),
+      //                         ],
+      //                       ),
+      //                     ],
+      //                   ),
+      //                 ),
+
+      //                 Divider(
+      //                   // color: Colors.black,
+      //                   height: 20.0,
+      //                 ),
+
+      //                 // Chat Results
+      //                 Container(
+      //                   margin: EdgeInsets.symmetric(
+      //                       horizontal: 4.0, vertical: 0.0),
+      //                   padding: EdgeInsets.symmetric(
+      //                       vertical: 0.0, horizontal: 5.0),
+      //                   decoration: BoxDecoration(
+      //                     color: Colors.grey[900]!.withOpacity(0.0),
+      //                     borderRadius: BorderRadius.all(
+      //                       Radius.circular(10.0),
+      //                     ),
+      //                   ),
+      //                   child: Column(
+      //                     crossAxisAlignment: CrossAxisAlignment.start,
+      //                     children: [
+      //                       Padding(
+      //                         padding: EdgeInsets.symmetric(horizontal: 15.0),
+      //                         child: Text(
+      //                           "Accounts",
+      //                           style: TextStyle(
+      //                             fontSize: 20.0,
+      //                             fontWeight: FontWeight.bold,
+      //                             color: Colors.white,
+      //                           ),
+      //                         ),
+      //                       ),
+      //                       SizedBox(height: 15.0),
+      //                       Chats(
+      //                         borderRadius: 20.0,
+      //                         currentUsername: widget.currentUser["username"],
+      //                         chatObject: {
+      //                           "profilepic":
+      //                               "https://assets.entrepreneur.com/content/3x2/2000/20150224165308-jeff-bezos-amazon.jpeg",
+      //                           "fullname": "Jeff Bezos",
+      //                           "username": "jeffyman",
+      //                         },
+      //                         backgroundColor: Colors.grey[900]!,
+      //                         currentUser: widget.currentUser,
+      //                       ),
+      //                       Chats(
+      //                         borderRadius: 20.0,
+      //                         currentUsername: widget.currentUser["username"],
+      //                         chatObject: {
+      //                           "profilepic":
+      //                               "https://media.vanityfair.com/photos/5d41c7688df537000832361b/4:3/w_2668,h_2001,c_limit/GettyImages-945005812.jpg",
+      //                           "fullname": "Mark Zuckerberg",
+      //                           "username": "repitilian",
+      //                         },
+      //                         backgroundColor: Colors.grey[900]!,
+      //                         currentUser: widget.currentUser,
+      //                       ),
+      //                     ],
+      //                   ),
+      //                 ),
+      //               ],
+      //             )
+      //           : searchResults["postResults"] == null &&
+      //                   searchResults["accountResults"] == null
+      //               ? Container()
+      //               : searchResults["postResults"].length == 0 &&
+      //                       searchResults["accountResults"].length == 0
+      //                   ? Container(
+      //                       padding: EdgeInsets.only(top: 50.0),
+      //                       child: Text(
+      //                         "No Results Found",
+      //                         style: TextStyle(
+      //                           color: Colors.grey[500]!,
+      //                         ),
+      //                       ),
+      //                     )
+      //                   : Container(
+      //                       margin: EdgeInsets.symmetric(
+      //                           horizontal: 4.0, vertical: 4.0),
+      //                       padding: EdgeInsets.symmetric(
+      //                           vertical: 8.0, horizontal: 5.0),
+      //                       decoration: BoxDecoration(
+      //                         color: Colors.grey[900]!.withOpacity(0.4),
+      //                         borderRadius: BorderRadius.all(
+      //                           Radius.circular(10.0),
+      //                         ),
+      //                       ),
+      //                       child: Column(
+      //                         children: [
+      //                           searchResults["postResults"].length > 0
+      //                               ? Container(
+      //                                   child: Column(
+      //                                     crossAxisAlignment:
+      //                                         CrossAxisAlignment.start,
+      //                                     children: [
+      //                                       Padding(
+      //                                         padding:
+      //                                             const EdgeInsets.symmetric(
+      //                                                 horizontal: 15.0,
+      //                                                 vertical: 8.0),
+      //                                         child: Text(
+      //                                           "Posts",
+      //                                           style: TextStyle(
+      //                                             fontSize: 20.0,
+      //                                             fontWeight: FontWeight.bold,
+      //                                             color: Colors.white,
+      //                                           ),
+      //                                         ),
+      //                                       ),
+      //                                       for (var eachPostResult
+      //                                           in searchResults["postResults"])
+      //                                         Posts(
+      //                                           post: eachPostResult,
+      //                                           currentUser: widget.currentUser,
+      //                                         ),
+      //                                     ],
+      //                                   ),
+      //                                 )
+      //                               : Container(),
+      //                           searchResults["accountResults"].length > 0
+      //                               ? Container(
+      //                                   child: Column(
+      //                                     crossAxisAlignment:
+      //                                         CrossAxisAlignment.start,
+      //                                     children: [
+      //                                       Padding(
+      //                                         padding:
+      //                                             const EdgeInsets.symmetric(
+      //                                                 horizontal: 15.0,
+      //                                                 vertical: 8.0),
+      //                                         child: Text(
+      //                                           "Accounts",
+      //                                           style: TextStyle(
+      //                                             fontSize: 20.0,
+      //                                             fontWeight: FontWeight.bold,
+      //                                             color: Colors.white,
+      //                                           ),
+      //                                         ),
+      //                                       ),
+      //                                       for (var eachAccountResult
+      //                                           in searchResults[
+      //                                               "accountResults"])
+      //                                         Chats(
+      //                                           borderRadius: 20.0,
+      //                                           chatObject: eachAccountResult,
+      //                                           currentUsername: widget
+      //                                               .currentUser["username"],
+      //                                           backgroundColor:
+      //                                               Colors.grey[900]!,
+      //                                           currentUser: widget.currentUser,
+      //                                         ),
+      //                                     ],
+      //                                   ),
+      //                                 )
+      //                               : Container(),
+      //                         ],
+      //                       ),
+      //                     ),
+      //       SizedBox(height: 300.0),
+      //     ],
+      //   ),
+      // ),
       // News
       newsLoading
           ? Container(
