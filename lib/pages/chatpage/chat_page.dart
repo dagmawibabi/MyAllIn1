@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/config/config.dart';
@@ -120,7 +121,7 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  void communityInfoBottomSheet(title, information) {
+  void communityInfoBottomSheet(title, information, communityObject) {
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
       anchorPoint: Offset(0, 0),
@@ -137,39 +138,300 @@ class _ChatPageState extends State<ChatPage> {
           filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
           child: ListView(
             children: [
-              // Back Button
-              Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[900]!,
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(20.0),
-                        bottomRight: Radius.circular(20.0),
+              Container(
+                // decoration: BoxDecoration(
+                //   image: DecorationImage(
+                //     image: NetworkImage(
+                //       chosenCommunityObject["banner"],
+                //     ),
+                //   ),
+                // ),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                  child: Column(
+                    children: [
+                      // Back Button
+                      Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[900]!,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(20.0),
+                                bottomRight: Radius.circular(20.0),
+                              ),
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: Icon(
+                                Icons.arrow_back,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(
-                        Icons.arrow_back,
+                      SizedBox(height: 20.0),
+
+                      // Content
+                      Column(
+                        children: [
+                          Text(
+                            title,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 22.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            information,
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
+                      SizedBox(height: 10.0),
+                      Container(
+                        height: 200.0,
+                        width: double.infinity,
+                        clipBehavior: Clip.hardEdge,
+                        margin: EdgeInsets.symmetric(horizontal: 10.0),
+                        decoration: BoxDecoration(
+                          // color: Colors.grey[850]!,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(20.0),
+                          ),
+                        ),
+                        child: Image.network(
+                          chosenCommunityObject["banner"],
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      SizedBox(height: 20.0),
+
+                      title == "Introduction"
+                          ? Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Welcome to our community",
+                                    // textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.0),
+                                  Text(
+                                    "This's the official philomena community group of Google. You can access resources and news about all of Google's products. You can network and meet all kinds of incredibly people from the google community all around the world",
+                                    // textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(),
+
+                      title == "Rules"
+                          ? Column(
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "1. No NSFW content",
+                                        // textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8.0),
+                                      Text(
+                                        "Don't post sexually explicit, gory or anything NSFW content in this community.",
+                                        // textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15.0,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 15.0),
+                                Container(
+                                  width: double.infinity,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "2. No hateful content",
+                                        // textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8.0),
+                                      Text(
+                                        "You should be nice and inclusive and kind with the content you post and the interactions you form.",
+                                        // textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15.0,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 15.0),
+                                Container(
+                                  width: double.infinity,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "3. Post source or link of your content",
+                                        // textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8.0),
+                                      Text(
+                                        "You should always post and tag references you used for the content you produce",
+                                        // textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15.0,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 15.0),
+                              ],
+                            )
+                          : Container(),
+
+                      title == "FAQ"
+                          ? Column(
+                              children: [
+                                Container(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "1. What is this group about?",
+                                        // textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 10.0),
+                                      Text(
+                                        "Welcome to the official philomena community group of Google. You can access resources and news about all of Google's products. You can network and meet all kinds of incredibly people from the google community all around the world",
+                                        // textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 12.0),
+                                Container(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "2. What is this group about?",
+                                        // textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 10.0),
+                                      Text(
+                                        "Welcome to the official philomena community group of Google. You can access resources and news about all of Google's products. You can network and meet all kinds of incredibly people from the google community all around the world",
+                                        // textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 12.0),
+                                Container(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "3. What is this group about?",
+                                        // textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      SizedBox(height: 10.0),
+                                      Text(
+                                        "Welcome to the official philomena community group of Google. You can access resources and news about all of Google's products. You can network and meet all kinds of incredibly people from the google community all around the world",
+                                        // textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16.0,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Container(),
+                    ],
                   ),
-                ],
-              ),
-              SizedBox(height: 20.0),
-              Text(
-                title,
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              Text(
-                information,
-                style: TextStyle(
-                  color: Colors.white,
                 ),
               ),
             ],
@@ -329,56 +591,78 @@ class _ChatPageState extends State<ChatPage> {
                                         for (var eachChat in chats)
                                           eachChat["username"] ==
                                                   widget.currentUser["username"]
-                                              ? Container(
-                                                  // width: double.infinity,
-                                                  margin: EdgeInsets.symmetric(
-                                                      horizontal: 8.0),
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: 10.0,
-                                                      horizontal: 10.0),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey[900]!
-                                                        .withOpacity(0.2),
-                                                    border: Border.all(
-                                                      color: Colors.blue
-                                                          .withOpacity(0.1),
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ChatRoomPage(
+                                                          currentUsername:
+                                                              widget.currentUser[
+                                                                  "username"],
+                                                          chatObject: eachChat,
+                                                          savedMessages: true,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    // width: double.infinity,
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 8.0),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 10.0,
+                                                            horizontal: 10.0),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.grey[900]!
+                                                          .withOpacity(0.2),
+                                                      border: Border.all(
+                                                        color: Colors.blue
+                                                            .withOpacity(0.1),
+                                                      ),
+                                                      // color: Colors.blue
+                                                      //     .withOpacity(0.4),
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                        Radius.circular(10.0),
+                                                      ),
                                                     ),
-                                                    // color: Colors.blue
-                                                    //     .withOpacity(0.4),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(10.0),
-                                                    ),
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Row(
-                                                        children: [
-                                                          Icon(
-                                                            Icons
-                                                                .bookmark_outline,
-                                                            size: 20.0,
-                                                            color: Colors.blue,
-                                                          ),
-                                                          SizedBox(width: 5.0),
-                                                          Text(
-                                                            "Saved Messages",
-                                                            style: TextStyle(
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Icon(
+                                                              Icons
+                                                                  .bookmark_outline,
+                                                              size: 20.0,
                                                               color:
                                                                   Colors.blue,
                                                             ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      Icon(
-                                                        Ionicons.pencil_outline,
-                                                        size: 18.0,
-                                                        color: Colors.blue,
-                                                      ),
-                                                    ],
+                                                            SizedBox(
+                                                                width: 5.0),
+                                                            Text(
+                                                              "Saved Messages",
+                                                              style: TextStyle(
+                                                                color:
+                                                                    Colors.blue,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Icon(
+                                                          Ionicons
+                                                              .pencil_outline,
+                                                          size: 18.0,
+                                                          color: Colors.blue,
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 )
                                               : Container(),
@@ -452,10 +736,29 @@ class _ChatPageState extends State<ChatPage> {
                                         Container(
                                           height: 180.0,
                                           width: double.infinity,
-                                          child: Image.network(
-                                            chosenCommunityObject["banner"],
+                                          child: CachedNetworkImage(
                                             fit: BoxFit.cover,
+                                            imageUrl:
+                                                chosenCommunityObject["banner"],
+                                            progressIndicatorBuilder: (context,
+                                                    url, downloadProgress) =>
+                                                Center(
+                                              child: CircularProgressIndicator(
+                                                value:
+                                                    downloadProgress.progress,
+                                                color: Colors.grey[800]!,
+                                                strokeWidth: 2.0,
+                                              ),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) => Icon(
+                                              Icons.error_outline,
+                                            ),
                                           ),
+                                          // Image.network(
+                                          //   chosenCommunityObject["banner"],
+                                          //   fit: BoxFit.cover,
+                                          // ),
                                         ),
                                         // Community Name
                                         Container(
@@ -572,7 +875,8 @@ class _ChatPageState extends State<ChatPage> {
                                           chosenCommunityObject["members"]
                                               .toString(),
                                           style: TextStyle(
-                                            color: Colors.lightBlue,
+                                            // color: Colors.lightBlue,
+                                            color: Colors.white,
                                             fontSize: 15.0,
                                           ),
                                         ),
@@ -587,8 +891,8 @@ class _ChatPageState extends State<ChatPage> {
                                       var commName =
                                           chosenCommunityObject["fullname"];
                                       var intro = "Welcome to  $commName!";
-                                      communityInfoBottomSheet(
-                                          "Introduction", intro);
+                                      communityInfoBottomSheet("Introduction",
+                                          intro, chosenCommunityObject);
                                     },
                                     child: CommunityInfoBar(
                                       leadingIcon: Ionicons.book_outline,
@@ -602,7 +906,8 @@ class _ChatPageState extends State<ChatPage> {
                                       var commName =
                                           chosenCommunityObject["fullname"];
                                       var intro = "Welcome to  $commName!";
-                                      communityInfoBottomSheet("Rules", intro);
+                                      communityInfoBottomSheet("Rules", intro,
+                                          chosenCommunityObject);
                                     },
                                     child: CommunityInfoBar(
                                       leadingIcon: Ionicons.warning_outline,
@@ -616,7 +921,8 @@ class _ChatPageState extends State<ChatPage> {
                                       var commName =
                                           chosenCommunityObject["fullname"];
                                       var intro = "Welcome to  $commName!";
-                                      communityInfoBottomSheet("FAQ", intro);
+                                      communityInfoBottomSheet(
+                                          "FAQ", intro, chosenCommunityObject);
                                     },
                                     child: CommunityInfoBar(
                                       leadingIcon: Icons.question_mark_outlined,

@@ -57,7 +57,9 @@ class _PostsPageState extends State<PostsPage> {
   // Post Options
   void postOptions(Map postObject, Map post) {
     showModalBottomSheet(
+      // backgroundColor: Colors.black.withOpacity(0.4),
       backgroundColor: Colors.transparent,
+      // barrierColor: Colors.black,
       anchorPoint: Offset(0, 0),
       constraints: (post["video"] == "" ||
               post["video"] == " " ||

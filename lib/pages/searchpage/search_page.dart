@@ -48,7 +48,7 @@ class _SearchPageState extends State<SearchPage> {
   String curSearchTerm = "";
 
   // News
-  void getNews() async {
+  Future<void> getNews() async {
     // Get Headlines
     var url =
         "https://newsapi.org/v2/top-headlines?country=us&apiKey=158f7ed38d5e42aea76930d43ecca9c8";
@@ -124,7 +124,7 @@ class _SearchPageState extends State<SearchPage> {
     eachMovieWidget = [];
     movies = [];
     movies = resultJSON["results"];
-    // moviesLoading = false;
+    moviesLoading = false;
     // setState(() {});
     // displayMovies();
   }
@@ -172,7 +172,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   // Crypto
-  void getCrypto() async {
+  Future<void> getCrypto() async {
     var url = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd";
     var uri = Uri.parse(url);
     var result = await http.get(uri);
@@ -233,13 +233,17 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {});
   }
 
+  void getContent() {
+    getNews();
+    getMovies();
+    getCrypto();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getNews();
-    getMovies();
-    getCrypto();
+    getContent();
   }
 
   @override
@@ -258,19 +262,37 @@ class _SearchPageState extends State<SearchPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: 10.0, bottom: 5.0, left: 20.0),
-                          child: Text(
-                            "Headlines",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: 10.0, bottom: 5.0, left: 20.0),
+                              child: Text(
+                                "Headlines",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                ),
+                              ),
                             ),
-                          ),
+                            IconButton(
+                              onPressed: () {
+                                currentSearchPage = 1;
+                                displayNews();
+                                setState(() {});
+                              },
+                              icon: Icon(
+                                Icons.keyboard_arrow_right_outlined,
+                              ),
+                            ),
+                          ],
                         ),
                         for (var eachNews in [0, 2, 3, 4, 5])
-                          EachNews(newsObject: news[eachNews]),
+                          EachNews(
+                            newsObject: news[eachNews],
+                            extended: false,
+                          ),
                       ],
                     ),
                   ),
@@ -281,16 +303,31 @@ class _SearchPageState extends State<SearchPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: 20.0, bottom: 10.0, left: 15.0),
-                          child: Text(
-                            "Top Cryptos",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: 20.0, bottom: 10.0, left: 15.0),
+                              child: Text(
+                                "Top Cryptos",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                ),
+                              ),
                             ),
-                          ),
+                            IconButton(
+                              onPressed: () {
+                                currentSearchPage = 2;
+                                displayCrypto();
+                                setState(() {});
+                              },
+                              icon: Icon(
+                                Icons.keyboard_arrow_right_outlined,
+                              ),
+                            ),
+                          ],
                         ),
                         for (var eachCrypto in [0, 2, 3, 4, 5])
                           GestureDetector(
@@ -311,16 +348,31 @@ class _SearchPageState extends State<SearchPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: 10.0, bottom: 15.0, left: 15.0),
-                          child: Text(
-                            "Trending Movies",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.0,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: 25.0, bottom: 15.0, left: 15.0),
+                              child: Text(
+                                "Trending Movies",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18.0,
+                                ),
+                              ),
                             ),
-                          ),
+                            IconButton(
+                              onPressed: () {
+                                currentSearchPage = 3;
+                                displayMovies();
+                                setState(() {});
+                              },
+                              icon: Icon(
+                                Icons.keyboard_arrow_right_outlined,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

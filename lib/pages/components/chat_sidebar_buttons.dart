@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -35,7 +36,7 @@ class _ChatSidebarButtonState extends State<ChatSidebarButton> {
         padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0),
         decoration: BoxDecoration(
           color: widget.borderColor != Colors.transparent
-              ? Colors.black.withOpacity(0.2)
+              ? Colors.black
               : widget.borderColor, // widget.borderColor.withOpacity(0.1),
           border: Border(
             left: BorderSide(
@@ -73,10 +74,24 @@ class _ChatSidebarButtonState extends State<ChatSidebarButton> {
                       Radius.circular(widget.radius),
                     ),
                   ),
-                  child: Image.network(
-                    widget.netPic,
+                  child: CachedNetworkImage(
                     fit: BoxFit.cover,
+                    imageUrl: widget.netPic,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) =>
+                            CircularProgressIndicator(
+                      value: downloadProgress.progress,
+                      color: Colors.grey[800]!,
+                      strokeWidth: 2.0,
+                    ),
+                    errorWidget: (context, url, error) => Icon(
+                      Icons.error_outline,
+                    ),
                   ),
+                  // Image.network(
+                  //   widget.netPic,
+                  //   fit: BoxFit.cover,
+                  // ),
                 )
               : Icon(
                   widget.icon,

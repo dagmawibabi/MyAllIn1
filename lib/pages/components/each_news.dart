@@ -6,9 +6,11 @@ class EachNews extends StatefulWidget {
   const EachNews({
     super.key,
     this.newsObject,
+    this.extended = true,
   });
 
   final dynamic newsObject;
+  final bool extended;
 
   @override
   State<EachNews> createState() => _EachNewsState();
@@ -88,40 +90,44 @@ class _EachNewsState extends State<EachNews> {
                 height: 1.4,
               ),
             ),
-            SizedBox(height: 10.0),
+            SizedBox(height: widget.extended == true ? 10.0 : 0.0),
             widget.newsObject["description"] == "" ||
                     widget.newsObject["description"] == null
                 ? Container()
                 : Text(
-                    widget.newsObject["description"],
+                    widget.extended == true
+                        ? widget.newsObject["description"]
+                        : "",
                     style: TextStyle(
                       color: Colors.grey[300],
                       fontSize: 14.0,
-                      height: 1.4,
+                      height: widget.extended == true ? 1.4 : 0.0,
                     ),
                   ),
-            SizedBox(height: 10.0),
+            SizedBox(height: widget.extended == true ? 10.0 : 0.0),
             // Published Date and Time
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  "${widget.newsObject["publishedAt"].toString().substring(11, 19)}",
-                  style: TextStyle(
-                    color: Colors.grey[500],
-                    fontSize: 12.0,
+            widget.extended == false
+                ? Container()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${widget.newsObject["publishedAt"].toString().substring(11, 19)}",
+                        style: TextStyle(
+                          color: Colors.grey[500],
+                          fontSize: 12.0,
+                        ),
+                      ),
+                      SizedBox(width: 10.0),
+                      Text(
+                        "${widget.newsObject["publishedAt"].toString().substring(0, 10)}",
+                        style: TextStyle(
+                          color: Colors.grey[500],
+                          fontSize: 12.0,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(width: 10.0),
-                Text(
-                  "${widget.newsObject["publishedAt"].toString().substring(0, 10)}",
-                  style: TextStyle(
-                    color: Colors.grey[500],
-                    fontSize: 12.0,
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),
