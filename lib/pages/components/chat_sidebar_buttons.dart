@@ -78,11 +78,12 @@ class _ChatSidebarButtonState extends State<ChatSidebarButton> {
                     fit: BoxFit.cover,
                     imageUrl: widget.netPic,
                     progressIndicatorBuilder:
-                        (context, url, downloadProgress) =>
-                            CircularProgressIndicator(
-                      value: downloadProgress.progress,
-                      color: Colors.grey[800]!,
-                      strokeWidth: 2.0,
+                        (context, url, downloadProgress) => Center(
+                      child: CircularProgressIndicator(
+                        value: downloadProgress.progress,
+                        color: Colors.grey[800]!,
+                        strokeWidth: 2.0,
+                      ),
                     ),
                     errorWidget: (context, url, error) => Icon(
                       Icons.error_outline,

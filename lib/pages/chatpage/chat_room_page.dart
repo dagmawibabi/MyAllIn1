@@ -180,267 +180,277 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       body: Container(
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/INR.jpg"),
-            fit: BoxFit.cover,
-            opacity: 0.8,
-          ),
-        ),
+            image: widget.savedMessages == true
+                ? DecorationImage(
+                    image: AssetImage("assets/images/me2.jpg"),
+                    fit: BoxFit.cover,
+                    opacity: 1,
+                  )
+                : DecorationImage(
+                    image: NetworkImage(widget.chatObject["profilepic"]),
+                    fit: BoxFit.cover,
+                    opacity: 1,
+                  )),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-          child: ListView(
-            children: [
-              // Space
-              SizedBox(height: 10.0),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+            child: ListView(
+              children: [
+                // Space
+                SizedBox(height: 10.0),
 
-              // Custom App Bar
-              // Padding(
-              //   padding: EdgeInsets.only(right: 10.0, bottom: 5.0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       Row(
-              //         children: [
-              //           IconButton(
-              //             onPressed: () {},
-              //             icon: Icon(
-              //               Icons.arrow_back,
-              //             ),
-              //           ),
-              //           Text(
-              //             widget.chatObject["username"],
-              //             style: TextStyle(
-              //               fontSize: 20.0,
-              //               color: Colors.white,
-              //             ),
-              //           ),
-              //         ],
-              //       ),
-              //       SmallPFP(
-              //         pic: "assets/images/INR.jpg",
-              //       ),
-              //     ],
-              //   ),
-              // ),
+                // Custom App Bar
+                // Padding(
+                //   padding: EdgeInsets.only(right: 10.0, bottom: 5.0),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       Row(
+                //         children: [
+                //           IconButton(
+                //             onPressed: () {},
+                //             icon: Icon(
+                //               Icons.arrow_back,
+                //             ),
+                //           ),
+                //           Text(
+                //             widget.chatObject["username"],
+                //             style: TextStyle(
+                //               fontSize: 20.0,
+                //               color: Colors.white,
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //       SmallPFP(
+                //         pic: "assets/images/INR.jpg",
+                //       ),
+                //     ],
+                //   ),
+                // ),
 
-              // Texts
-              textsLoading == true
-                  ? Container(
-                      height: MediaQuery.of(context).size.height * 0.827,
-                      width: double.infinity,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.grey[400]!,
-                          strokeWidth: 2.0,
+                // Texts
+                textsLoading == true
+                    ? Container(
+                        height: MediaQuery.of(context).size.height * 0.827,
+                        width: double.infinity,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.grey[400]!,
+                            strokeWidth: 2.0,
+                          ),
                         ),
-                      ),
-                    )
-                  : Container(
-                      height: MediaQuery.of(context).size.height * 0.827,
-                      child: ListView(
-                        children: [
-                          Column(
-                            children: [
-                              // Space
-                              SizedBox(height: 10.0),
+                      )
+                    : Container(
+                        height: MediaQuery.of(context).size.height * 0.827,
+                        child: ListView(
+                          children: [
+                            Column(
+                              children: [
+                                // Space
+                                SizedBox(height: 10.0),
 
-                              texts.isEmpty == true
-                                  ? Container(
-                                      height: 400.0,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Container(
-                                            width: 280.0,
-                                            height: 280.0,
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 20.0,
-                                                vertical: 20.0),
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey[900]!
-                                                  .withOpacity(0.5),
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(20.0),
+                                texts.isEmpty == true
+                                    ? Container(
+                                        height: 400.0,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Container(
+                                              width: 280.0,
+                                              height: 280.0,
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 20.0,
+                                                  vertical: 20.0),
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey[900]!
+                                                    .withOpacity(0.5),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(20.0),
+                                                ),
+                                              ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    widget.savedMessages == true
+                                                        ? "No Saved Messages here yet"
+                                                        : "No messages here yet",
+                                                    style: TextStyle(
+                                                      color: Colors.grey[200]!,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 10.0),
+                                                  widget.savedMessages == true
+                                                      ? Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .all(
+                                                              Radius.circular(
+                                                                  100.0),
+                                                            ),
+                                                          ),
+                                                          child: Icon(
+                                                            Icons
+                                                                .bookmark_border_outlined,
+                                                            size: 130.0,
+                                                            color: Colors
+                                                                .lightBlueAccent,
+                                                          ),
+                                                        )
+                                                      : SmallPFP(
+                                                          netpic:
+                                                              widget.chatObject[
+                                                                  "profilepic"],
+                                                          size: 150.0,
+                                                        ),
+                                                  SizedBox(height: 10.0),
+                                                  Text(
+                                                    widget.savedMessages == true
+                                                        ? "Type a message and send it here as a note to yourself ✍️"
+                                                        : "Type a message and send to start a conversation 👋",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      color: Colors.grey[400]!,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Text(
-                                                  widget.savedMessages == true
-                                                      ? "No Saved Messages here yet"
-                                                      : "No messages here yet",
-                                                  style: TextStyle(
-                                                    color: Colors.grey[200]!,
-                                                  ),
-                                                ),
-                                                SizedBox(height: 10.0),
-                                                widget.savedMessages == true
-                                                    ? Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                            Radius.circular(
-                                                                100.0),
-                                                          ),
-                                                        ),
-                                                        child: Icon(
-                                                          Icons
-                                                              .bookmark_border_outlined,
-                                                          size: 130.0,
-                                                          color: Colors
-                                                              .lightBlueAccent,
-                                                        ),
-                                                      )
-                                                    : SmallPFP(
-                                                        netpic:
-                                                            widget.chatObject[
-                                                                "profilepic"],
-                                                        size: 150.0,
-                                                      ),
-                                                SizedBox(height: 10.0),
-                                                Text(
-                                                  widget.savedMessages == true
-                                                      ? "Type a message and send it here as a note to yourself ✍️"
-                                                      : "Type a message and send to start a conversation 👋",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                    color: Colors.grey[400]!,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
+                                      )
+                                    : Container(
+                                        child: Column(
+                                          children: [
+                                            for (var eachMessage in texts)
+                                              EachText(
+                                                textObject: eachMessage,
+                                                currentUsername:
+                                                    widget.currentUsername,
+                                                editTexts: editTexts,
+                                                editTextsChange:
+                                                    editTextsChange,
+                                              ),
+
+                                            // All Texts
+                                            // for (var eachDateText in texts) ...[
+                                            //   ChatDateDivider(
+                                            //     dateTime: eachDateText["datetime"],
+                                            //   ),
+                                            //   for (var eachText
+                                            //       in eachDateText["texts"])
+                                            //     EachText(
+                                            //       textObject: eachText,
+                                            //       currentUsername:
+                                            //           widget.currentUsername,
+                                            //       editTexts: editTexts,
+                                            //       editTextsChange: editTextsChange,
+                                            //     ),
+                                            // ],
+                                          ],
+                                        ),
                                       ),
-                                    )
-                                  : Container(
-                                      child: Column(
-                                        children: [
-                                          for (var eachMessage in texts)
-                                            EachText(
-                                              textObject: eachMessage,
-                                              currentUsername:
-                                                  widget.currentUsername,
-                                              editTexts: editTexts,
-                                              editTextsChange: editTextsChange,
-                                            ),
 
-                                          // All Texts
-                                          // for (var eachDateText in texts) ...[
-                                          //   ChatDateDivider(
-                                          //     dateTime: eachDateText["datetime"],
-                                          //   ),
-                                          //   for (var eachText
-                                          //       in eachDateText["texts"])
-                                          //     EachText(
-                                          //       textObject: eachText,
-                                          //       currentUsername:
-                                          //           widget.currentUsername,
-                                          //       editTexts: editTexts,
-                                          //       editTextsChange: editTextsChange,
-                                          //     ),
-                                          // ],
-                                        ],
-                                      ),
-                                    ),
-
-                              // Space
-                              SizedBox(height: 10.0),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-
-              // Input Box
-              Container(
-                // margin: EdgeInsets.only(left: 30.0),
-                padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-                decoration: BoxDecoration(
-                  color: Color.fromARGB(255, 18, 18, 18),
-                  // border: Border.all(
-                  //   color: Colors.grey[850]!,
-                  // ),
-                  borderRadius: BorderRadius.all(Radius.circular(0.0)),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Ionicons.attach_outline,
-                          ),
-                        ),
-                        Container(
-                          width: 310.0,
-                          // height: 35.0,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 12.0, vertical: 0.0),
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 0.0, vertical: 5.0),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900]!.withOpacity(0.4),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                          ),
-                          child: TextField(
-                            controller: textMessageController,
-                            minLines: 1,
-                            maxLines: 10,
-                            style: TextStyle(
-                              color: Colors.white,
+                                // Space
+                                SizedBox(height: 10.0),
+                              ],
                             ),
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: "Type message ...",
-                              hintStyle: TextStyle(
-                                color: Colors.grey[500]!,
+                          ],
+                        ),
+                      ),
+
+                // Input Box
+                Container(
+                  // margin: EdgeInsets.only(left: 30.0),
+                  padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 18, 18, 18),
+                    // border: Border.all(
+                    //   color: Colors.grey[850]!,
+                    // ),
+                    borderRadius: BorderRadius.all(Radius.circular(0.0)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Ionicons.attach_outline,
+                            ),
+                          ),
+                          Container(
+                            width: 310.0,
+                            // height: 35.0,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12.0, vertical: 0.0),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 0.0, vertical: 5.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[900]!.withOpacity(0.4),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10.0)),
+                            ),
+                            child: TextField(
+                              controller: textMessageController,
+                              minLines: 1,
+                              maxLines: 10,
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: "Type message ...",
+                                hintStyle: TextStyle(
+                                  color: Colors.grey[500]!,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        var newTextObject = {
-                          "from": widget.currentUsername,
-                          "to": widget.chatObject["username"],
-                          "forwardedFrom": "",
-                          "content": textMessageController.text,
-                        };
-                        var tempTextObject = {
-                          "from": widget.currentUsername,
-                          "to": widget.chatObject["username"],
-                          "forwardedFrom": "",
-                          "content": textMessageController.text,
-                          "seen": [widget.currentUsername],
-                          "dateTime": DateTime.now().millisecondsSinceEpoch,
-                        };
-
-                        texts.add(tempTextObject);
-                        textMessageController.clear();
-                        setState(() {});
-                        sendTexts(newTextObject);
-                      },
-                      icon: Icon(
-                        Ionicons.paper_plane_outline,
+                        ],
                       ),
-                    ),
-                  ],
+                      IconButton(
+                        onPressed: () {
+                          var newTextObject = {
+                            "from": widget.currentUsername,
+                            "to": widget.chatObject["username"],
+                            "forwardedFrom": "",
+                            "content": textMessageController.text,
+                          };
+                          var tempTextObject = {
+                            "from": widget.currentUsername,
+                            "to": widget.chatObject["username"],
+                            "forwardedFrom": "",
+                            "content": textMessageController.text,
+                            "seen": [widget.currentUsername],
+                            "dateTime": DateTime.now().millisecondsSinceEpoch,
+                          };
+
+                          texts.add(tempTextObject);
+                          textMessageController.clear();
+                          setState(() {});
+                          sendTexts(newTextObject);
+                        },
+                        icon: Icon(
+                          Ionicons.paper_plane_outline,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

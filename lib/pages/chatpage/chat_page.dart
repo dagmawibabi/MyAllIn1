@@ -36,66 +36,7 @@ class _ChatPageState extends State<ChatPage> {
   String chosenCommunity = "";
   Map chosenCommunityObject = {};
   List chats = [];
-  List communities = [
-    {
-      "fullname": "Open AI",
-      "username": "openai",
-      "bio": "Opensource AI Projects",
-      "profilepic":
-          "https://openai.com/content/images/2022/05/openai-avatar.png",
-      "banner": "https://miro.medium.com/max/1400/1*qPao_uBbHlzHIzOL7ejI8w.png",
-      "members": 1246,
-    },
-    {
-      "fullname": "Tesla",
-      "username": "tesla",
-      "bio": "Smart Electric Vehicles",
-      "profilepic":
-          "https://storage.googleapis.com/webdesignledger.pub.network/WDL/12f213e1-t1.jpg",
-      "banner":
-          "https://cdn.motor1.com/images/mgl/WPOoO/s3/travel-retail-norway-places-order-for-tesla-semi.jpg",
-      "members": 6421,
-    },
-    {
-      "fullname": "Google",
-      "username": "google",
-      "bio": "Search Anything",
-      "profilepic":
-          "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/480px-Google_%22G%22_Logo.svg.png",
-      "banner":
-          "https://storage.googleapis.com/gd-wagtail-prod-assets/original_images/Design-Guide-IO_3X2.png",
-      "members": 46812,
-    },
-    {
-      "fullname": "Flutter",
-      "username": "flutter",
-      "bio": "Build Apps Fast",
-      "profilepic":
-          "https://cdn-images-1.medium.com/max/1200/1*5-aoK8IBmXve5whBQM90GA.png",
-      "banner":
-          "https://mobiosolutions.com/wp-content/uploads/2020/07/Group-3.png",
-      "members": 7315,
-    },
-    {
-      "fullname": "Boston Dynamics",
-      "username": "bostondynamics",
-      "bio": "Robots helping Humans",
-      "profilepic":
-          "https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/v1478269890/yeffwbmsn7bmg1gwesrk.png",
-      "banner":
-          "https://www.rightpoint.com/-/media/boston%20dynamics%20case%20study%20banner.png",
-      "members": 4676,
-    },
-    {
-      "fullname": "Apple",
-      "username": "apple",
-      "bio": "Think Different",
-      "profilepic": "https://wallpaperaccess.com/full/213588.jpg",
-      "banner":
-          "https://www.applestore.pk/wp-content/uploads/2020/03/iPhone-11-Pro-Inner-Banner-1920-X-710-Website.jpg",
-      "members": 46842,
-    },
-  ];
+  List communities = [];
   List availableChats = [];
   String baseURL = Config.baseUrl;
   bool gettingChats = true;
@@ -457,6 +398,146 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    communities = [
+      {
+        "fullname": "NASA",
+        "username": "nasa",
+        "bio": "Go Beyond!",
+        "profilepic":
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/NASA_logo.svg/2449px-NASA_logo.svg.png",
+        "banner":
+            "https://64.media.tumblr.com/719ddcf66d9a9542cd7549f9f04d2b91/tumblr_p2rwrtsRw71w5jef7o9_1280.png",
+        "members": 864613,
+      },
+      {
+        "fullname": "Mr.Beast",
+        "username": "mrbeast",
+        "bio": "Featables?",
+        "profilepic":
+            "https://i.pinimg.com/736x/fb/dc/f4/fbdcf4b9742a55e3434de52b6cba87fb.jpg",
+        "banner":
+            "https://pbs.twimg.com/media/EjQAPfdXsAE6KNZ?format=jpg&name=large",
+        "members": 13831361,
+      },
+      {
+        "fullname": "Open AI",
+        "username": "openai",
+        "bio": "Opensource AI Projects",
+        "profilepic":
+            "https://openai.com/content/images/2022/05/openai-avatar.png",
+        "banner":
+            "https://miro.medium.com/max/1400/1*qPao_uBbHlzHIzOL7ejI8w.png",
+        "members": 1246,
+      },
+      {
+        "fullname": "Tesla",
+        "username": "tesla",
+        "bio": "Smart Electric Vehicles",
+        "profilepic":
+            "https://storage.googleapis.com/webdesignledger.pub.network/WDL/12f213e1-t1.jpg",
+        "banner":
+            "https://cdn.motor1.com/images/mgl/WPOoO/s3/travel-retail-norway-places-order-for-tesla-semi.jpg",
+        "members": 6421,
+      },
+      {
+        "fullname": "DHMIS",
+        "username": "DHMIS",
+        "bio": "Think Different",
+        "profilepic":
+            "https://i.pinimg.com/originals/1b/5b/fe/1b5bfe2395ba2cb78523b660bb9597da.jpg",
+        "banner":
+            "https://ic.c4assets.com/brands/dont-hug-me-im-scared/0e3d3efa-ed95-482e-9b95-32c2cd32b9bc.jpg?interpolation=progressive-bicubic&output-format=jpeg&output-quality=90{&resize}",
+        "members": 23143,
+      },
+      {
+        "fullname": "Google",
+        "username": "google",
+        "bio": "Search Anything",
+        "profilepic":
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/480px-Google_%22G%22_Logo.svg.png",
+        "banner":
+            "https://storage.googleapis.com/gd-wagtail-prod-assets/original_images/Design-Guide-IO_3X2.png",
+        "members": 46812,
+      },
+      {
+        "fullname": "Veritasium",
+        "username": "veritasium",
+        "bio": "The Element of Truth",
+        "profilepic":
+            "https://static.wikia.nocookie.net/youtube/images/7/7d/Veritasium_Italia.jpg/revision/latest?cb=20210909083234",
+        "banner":
+            "https://c10.patreonusercontent.com/4/patreon-media/p/campaign/70092/ca593903846542c7b6c49d9f3f5b5751/eyJ3IjoxOTIwLCJ3ZSI6MX0%3D/1.jpg?token-time=1675468800&token-hash=RLtZPK8FKNzWOuK6CrN4oCIODjFyqKVp8qIXJkcrfPk%3D",
+        "members": 246842,
+      },
+      {
+        "fullname": "Boston Dynamics",
+        "username": "bostondynamics",
+        "bio": "Robots helping Humans",
+        "profilepic":
+            "https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/v1478269890/yeffwbmsn7bmg1gwesrk.png",
+        "banner":
+            "https://www.rightpoint.com/-/media/boston%20dynamics%20case%20study%20banner.png",
+        "members": 4676,
+      },
+      {
+        "fullname": "Godot",
+        "username": "godot",
+        "bio": "Think Different",
+        "profilepic":
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Godot_icon.svg/2048px-Godot_icon.svg.png",
+        "banner":
+            "https://user-images.githubusercontent.com/1103897/34840206-e7adbb50-f6c9-11e7-84bc-08e4b7d9b661.png",
+        "members": 16834,
+      },
+      {
+        "fullname": "Void Pet",
+        "username": "voidpet",
+        "bio": "A feelings game",
+        "profilepic":
+            "https://assets.change.org/photos/3/fq/bv/dqFQbvEvLeEketH-800x450-noPad.jpg",
+        "banner": "https://voidpet.com/ogimage.png",
+        "members": 46842,
+      },
+      {
+        "fullname": "Serenity OS",
+        "username": "serenityos",
+        "bio": "Vintage Linux OS",
+        "profilepic":
+            "https://avatars.githubusercontent.com/u/50811782?s=200&v=4",
+        "banner": "https://i.ytimg.com/vi/puTsBKAQzk4/maxresdefault.jpg",
+        "members": 1342,
+      },
+      {
+        "fullname": "Flutter",
+        "username": "flutter",
+        "bio": "Build Apps Fast",
+        "profilepic":
+            "https://res.cloudinary.com/teepublic/image/private/s--lxNXHPN3--/c_fit,g_north_west,h_840,w_679/co_ffffff,e_outline:40/co_ffffff,e_outline:inner_fill:1/co_ffffff,e_outline:40/co_ffffff,e_outline:inner_fill:1/co_bbbbbb,e_outline:3:1000/c_mpad,g_center,h_1260,w_1260/b_rgb:eeeeee/c_limit,f_jpg,h_630,q_90,w_630/v1585726530/production/designs/8796655_0.jpg",
+        "banner":
+            "https://mobiosolutions.com/wp-content/uploads/2020/07/Group-3.png",
+        "members": 7315,
+      },
+      {
+        "fullname": "The Simpsons",
+        "username": "thesimpsons",
+        "bio": "Think Different",
+        "profilepic":
+            "https://m.media-amazon.com/images/M/MV5BYjFkMTlkYWUtZWFhNy00M2FmLThiOTYtYTRiYjVlZWYxNmJkXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_FMjpg_UX1000_.jpg",
+        "banner":
+            "https://static.posters.cz/image/1300/affiches-et-posters/the-simpsons-stars-i8081.jpg",
+        "members": 612134,
+      },
+      {
+        "fullname": "Apple",
+        "username": "apple",
+        "bio": "Think Different",
+        "profilepic":
+            "https://1000logos.net/wp-content/uploads/2016/10/apple-emblem.jpg",
+        "banner":
+            "https://www.applestore.pk/wp-content/uploads/2020/03/iPhone-11-Pro-Inner-Banner-1920-X-710-Website.jpg",
+        "members": 46842,
+      },
+    ];
     return ListView(
       children: [
         // SizedBox(height: 15.0),
@@ -702,10 +783,10 @@ class _ChatPageState extends State<ChatPage> {
                         color: Colors.black.withOpacity(0.2),
                         image: DecorationImage(
                           image: NetworkImage(
-                            chosenCommunityObject["profilepic"],
+                            chosenCommunityObject["banner"],
                           ),
                           fit: BoxFit.cover,
-                          opacity: 0.02,
+                          opacity: 0.03,
                         ),
                       ),
 

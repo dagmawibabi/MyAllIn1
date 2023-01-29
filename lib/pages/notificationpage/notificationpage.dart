@@ -46,6 +46,14 @@ class _NotificationPageState extends State<NotificationPage> {
     setState(() {});
   }
 
+  void readAllNotifications() async {
+    var route = "$baseURL/notifications/readAllNotifications/" +
+        widget.currentUser["username"];
+    var url = Uri.parse(route);
+    await http.get(url);
+    getNotifications();
+  }
+
   void readNotifications(notificationID) async {
     var readNotification = {
       "notificationID": notificationID,
@@ -84,7 +92,9 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              readAllNotifications();
+            },
             icon: Icon(
               Icons.clear_all_outlined,
             ),

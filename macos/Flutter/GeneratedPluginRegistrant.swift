@@ -8,7 +8,7 @@ import Foundation
 import assets_audio_player
 import assets_audio_player_web
 import location
-import path_provider_macos
+import path_provider_foundation
 import share_plus
 import sqflite
 import url_launcher_macos
