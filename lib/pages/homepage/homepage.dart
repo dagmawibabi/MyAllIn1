@@ -247,12 +247,13 @@ class _HomePageState extends State<HomePage>
   void getDeviceAudioFiles() async {
     deviceMusicList = [];
     dynamic files =
-        Directory('/storage/emulated/0/Music').listSync(recursive: false);
+        Directory('/storage/emulated/0/Music').listSync(recursive: true);
     for (dynamic file in files) {
       if (file.path.endsWith(".mp3") == true) {
         deviceMusicList.add(file.path);
       }
     }
+    chooseRandomAlbumArt();
   }
 
   // Load Music FIle
@@ -264,6 +265,7 @@ class _HomePageState extends State<HomePage>
       showNotification: false,
       loopMode: LoopMode.single,
     );
+    chooseRandomAlbumArt();
   }
 
   // Change the title of the current playing music
@@ -273,6 +275,17 @@ class _HomePageState extends State<HomePage>
   }
 
   void nextDeviceMusic() async {}
+
+  int albumArtIndex = 0;
+  var albumArts = [
+    "https://i.pinimg.com/564x/5a/f1/ce/5af1ce2c040bbfaa7fc6717b3d2fceac.jpg",
+    "https://i.pinimg.com/564x/66/74/fe/6674fe273ff978cf8faeae9b1115b097.jpg",
+    "https://i.pinimg.com/564x/1a/ad/d3/1aadd37ada5ec9cd4ad3076bf0361d39.jpg",
+  ];
+  void chooseRandomAlbumArt() async {
+    var random = Random();
+    albumArtIndex = random.nextInt(albumArts.length - 1);
+  }
 
   // Get Weather
   late loc.LocationData locationData;
@@ -360,6 +373,7 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     askPermission();
+    chooseRandomAlbumArt();
 
     tabController = TabController(length: 3, vsync: this);
     tabController.index = 1;
@@ -559,7 +573,7 @@ class _HomePageState extends State<HomePage>
                         ),
                       ),
                       image: DecorationImage(
-                        image: AssetImage("assets/images/INR.jpg"),
+                        image: NetworkImage(albumArts[albumArtIndex]),
                         fit: BoxFit.cover,
                         opacity: 0.05,
                       ),
@@ -581,6 +595,7 @@ class _HomePageState extends State<HomePage>
                                   getDeviceAudioFiles: getDeviceAudioFiles,
                                   changeMusicTitle: changeMusicTitle,
                                   currentSong: currentSong,
+                                  albumArt: albumArts[albumArtIndex],
                                 ),
                               ),
                             );
@@ -588,7 +603,7 @@ class _HomePageState extends State<HomePage>
                           child: Hero(
                             tag: "musicAlbumArt",
                             child: SmallPFP(
-                              pic: "assets/images/INR.jpg",
+                              netpic: albumArts[albumArtIndex],
                               size: 40.0,
                             ),
                           ),
@@ -676,6 +691,7 @@ class _HomePageState extends State<HomePage>
               width: 60.0,
               height: 60.0,
               decoration: BoxDecoration(
+                color: Colors.black,
                 border: Border.all(color: Colors.grey[850]!),
                 borderRadius: BorderRadius.all(
                   Radius.circular(100.0),

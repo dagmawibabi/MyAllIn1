@@ -35,6 +35,10 @@ class _EachTextState extends State<EachText> {
         setState(() {});
       },
       child: Container(
+        constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width,
+          minWidth: 50.0,
+        ),
         color: selected
             ? Colors.blue.withOpacity(0.1)
             : Colors.grey[900]!.withOpacity(0.001),
@@ -44,6 +48,9 @@ class _EachTextState extends State<EachText> {
               : MainAxisAlignment.start,
           children: [
             Container(
+              width: MediaQuery.of(context).size.width * 0.5,
+
+              // height: 50.0,
               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
               margin: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               decoration: BoxDecoration(
@@ -71,7 +78,7 @@ class _EachTextState extends State<EachText> {
                     widget.textObject["content"],
                     style: TextStyle(
                       color: selected == true ? Colors.black : Colors.white,
-                      height: 1.4,
+                      height: 1.3,
                     ),
                   ),
                   SizedBox(height: 5.0),

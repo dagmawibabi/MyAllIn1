@@ -41,7 +41,7 @@ class _NotificationPageState extends State<NotificationPage> {
       body: jsonFormat,
     );
     notifications = jsonDecode(notificationsRaw.body);
-
+    notifications = notifications.reversed.toList();
     notificationLoading = false;
     setState(() {});
   }

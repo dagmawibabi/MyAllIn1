@@ -5,10 +5,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/config/config.dart';
+import 'package:myallin1/pages/bottomsheets/search_categories_bottom_sheet.dart';
 import 'package:myallin1/pages/components/each_crypto.dart';
 import 'package:myallin1/pages/components/each_movie.dart';
 import 'package:myallin1/pages/components/each_news.dart';
+import 'package:myallin1/pages/components/icon_pill_button.dart';
 import 'package:myallin1/pages/components/movie_detail_bottom_sheet.dart';
+import 'package:myallin1/pages/components/rounded_icon_labeled_button.dart';
 
 import '../chatpage/chats.dart';
 import '../components/crypto_detail_bottom_sheet.dart';
@@ -237,6 +240,25 @@ class _SearchPageState extends State<SearchPage> {
     getNews();
     getMovies();
     getCrypto();
+  }
+
+  // Search Categories
+  void searchCategories() {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      anchorPoint: Offset(0, 0),
+      constraints: BoxConstraints(
+        // minHeight: MediaQuery.of(context).size.height * 0.7,
+        maxHeight: MediaQuery.of(context).size.height * 0.5,
+      ),
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      context: context,
+      builder: (context) {
+        return SearchCategoriesBottomSheet();
+      },
+    );
   }
 
   @override
@@ -806,6 +828,7 @@ class _SearchPageState extends State<SearchPage> {
 
         // Search Pages
         Container(
+          height: 50.0,
           margin: EdgeInsets.symmetric(horizontal: 12.0, vertical: 0.0),
           padding: EdgeInsets.symmetric(vertical: 1.0),
           decoration: BoxDecoration(
@@ -817,242 +840,196 @@ class _SearchPageState extends State<SearchPage> {
               Radius.circular(10.0),
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
             children: [
-              GestureDetector(
-                onTap: () {
-                  displayNews();
-                },
-                child: Container(
-                  width: 120.0,
-                  padding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                  decoration: BoxDecoration(
-                    color: currentSearchPage == 1
-                        ? Colors.lightBlue
-                        : Colors.grey[900]!.withOpacity(0.4),
-                    // border: Border.all(
-                    //   color: Colors.lightBlue.withOpacity(0.4),
-                    // ),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      displayNews();
+                    },
+                    child: IconPillButton(
+                      chosenColor: Colors.lightBlue,
+                      icon: Ionicons.newspaper_outline,
+                      label: "News",
+                      chosen: (currentSearchPage == 1 ? true : false),
                     ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Ionicons.newspaper_outline,
-                        size: 18.0,
-                        color: currentSearchPage == 1
-                            ? Colors.black
-                            : Colors.white,
-                      ),
-                      SizedBox(width: 8.0),
-                      Text(
-                        "News",
-                        style: TextStyle(
-                          color: currentSearchPage == 1
-                              ? Colors.black
-                              : Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  displayMovies();
-                },
-                child: Container(
-                  width: 120.0,
-                  padding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                  decoration: BoxDecoration(
-                    color: currentSearchPage == 2
-                        ? Colors.amberAccent
-                        : Colors.grey[900]!.withOpacity(0.4),
-                    // border: Border.all(
-                    //   color: Colors.amberAccent.withOpacity(0.4),
-                    // ),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20.0),
+                  SizedBox(width: 8.0),
+
+                  GestureDetector(
+                    onTap: () {
+                      displayMovies();
+                    },
+                    child: IconPillButton(
+                      chosenColor: Colors.amberAccent,
+                      icon: Ionicons.film_outline,
+                      label: "Movies",
+                      chosen: (currentSearchPage == 2 ? true : false),
                     ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Ionicons.film_outline,
-                        size: 18.0,
-                        color: currentSearchPage == 2
-                            ? Colors.black
-                            : Colors.white,
-                      ),
-                      SizedBox(width: 8.0),
-                      Text(
-                        "Movies",
-                        style: TextStyle(
-                          color: currentSearchPage == 2
-                              ? Colors.black
-                              : Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  displayCrypto();
-                },
-                child: Container(
-                  width: 120.0,
-                  padding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                  decoration: BoxDecoration(
-                    color: currentSearchPage == 3
-                        ? Colors.greenAccent
-                        : Colors.grey[900]!.withOpacity(0.4),
-                    // border: Border.all(
-                    //   color: Colors.greenAccent.withOpacity(0.4),
-                    // ),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20.0),
+                  SizedBox(width: 8.0),
+
+                  GestureDetector(
+                    onTap: () {
+                      // displayCrypto();
+                    },
+                    child: IconPillButton(
+                      chosenColor: Colors.white,
+                      icon: Ionicons.sparkles_outline,
+                      label: "Space",
+                      chosen: (currentSearchPage == 4 ? true : false),
                     ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Ionicons.cash_outline,
-                        size: 18.0,
-                        color: currentSearchPage == 3
-                            ? Colors.black
-                            : Colors.white,
-                      ),
-                      SizedBox(width: 8.0),
-                      Text(
-                        "Crypto",
-                        style: TextStyle(
-                          color: currentSearchPage == 3
-                              ? Colors.black
-                              : Colors.white,
-                        ),
-                      ),
-                    ],
+                  SizedBox(width: 8.0),
+
+                  GestureDetector(
+                    onTap: () {
+                      displayCrypto();
+                    },
+                    child: IconPillButton(
+                      chosenColor: Colors.greenAccent,
+                      icon: Ionicons.cash_outline,
+                      label: "Crypto",
+                      chosen: (currentSearchPage == 3 ? true : false),
+                    ),
                   ),
-                ),
+                  SizedBox(width: 8.0),
+
+                  GestureDetector(
+                    onTap: () {
+                      // displayCrypto();
+                    },
+                    child: IconPillButton(
+                      chosenColor: Colors.greenAccent,
+                      icon: Ionicons.book_outline,
+                      label: "Books",
+                      chosen: (currentSearchPage == 4 ? true : false),
+                    ),
+                  ),
+                  SizedBox(width: 8.0),
+
+                  IconButton(
+                    onPressed: () {
+                      searchCategories();
+                    },
+                    icon: Icon(
+                      Ionicons.settings_outline,
+                      size: 18.0,
+                    ),
+                  ),
+
+                  // ElevatedButton(
+                  //   style: ButtonStyle(
+                  //     fixedSize: MaterialStateProperty.all(
+                  //       Size(120.0, 40.0),
+                  //     ),
+                  //     backgroundColor: MaterialStateProperty.all(
+                  //       currentSearchPage == 1
+                  //           ? Colors.lightBlue
+                  //           : Colors.grey[900],
+                  //     ),
+                  //   ),
+                  //   onPressed: () {
+                  //     displayNews();
+                  //   },
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //     children: [
+                  //       Icon(
+                  //         Ionicons.newspaper_outline,
+                  //         size: 18.0,
+                  //         color:
+                  //             currentSearchPage == 1 ? Colors.black : Colors.white,
+                  //       ),
+                  //       Text(
+                  //         "News",
+                  //         style: TextStyle(
+                  //           color: currentSearchPage == 1
+                  //               ? Colors.black
+                  //               : Colors.white,
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  //   ElevatedButton(
+                  //     style: ButtonStyle(
+                  //       fixedSize: MaterialStateProperty.all(
+                  //         Size(120.0, 40.0),
+                  //       ),
+                  //       backgroundColor: MaterialStateProperty.all(
+                  //         currentSearchPage == 2
+                  //             ? Colors.amberAccent
+                  //             : Colors.grey[900],
+                  //       ),
+                  //     ),
+                  //     onPressed: () {
+                  //       displayMovies();
+                  //     },
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //       children: [
+                  //         Icon(
+                  //           Ionicons.film_outline,
+                  //           size: 18.0,
+                  //           color:
+                  //               currentSearchPage == 2 ? Colors.black : Colors.white,
+                  //         ),
+                  //         Text(
+                  //           "Movies",
+                  //           style: TextStyle(
+                  //             color: currentSearchPage == 2
+                  //                 ? Colors.black
+                  //                 : Colors.white,
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  //   ElevatedButton(
+                  //     style: ButtonStyle(
+                  //       fixedSize: MaterialStateProperty.all(
+                  //         Size(120.0, 40.0),
+                  //       ),
+                  //       backgroundColor: MaterialStateProperty.all(
+                  //         currentSearchPage == 3
+                  //             ? Colors.greenAccent
+                  //             : Colors.grey[900],
+                  //       ),
+                  //     ),
+                  //     onPressed: () {
+                  //       displayCrypto();
+                  //     },
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //       children: [
+                  //         Icon(
+                  //           Ionicons.cash_outline,
+                  //           size: 18.0,
+                  //           color:
+                  //               currentSearchPage == 3 ? Colors.black : Colors.white,
+                  //         ),
+                  //         Text(
+                  //           "Crypto",
+                  //           style: TextStyle(
+                  //             color: currentSearchPage == 3
+                  //                 ? Colors.black
+                  //                 : Colors.white,
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                ],
               ),
-              // ElevatedButton(
-              //   style: ButtonStyle(
-              //     fixedSize: MaterialStateProperty.all(
-              //       Size(120.0, 40.0),
-              //     ),
-              //     backgroundColor: MaterialStateProperty.all(
-              //       currentSearchPage == 1
-              //           ? Colors.lightBlue
-              //           : Colors.grey[900],
-              //     ),
-              //   ),
-              //   onPressed: () {
-              //     displayNews();
-              //   },
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //     children: [
-              //       Icon(
-              //         Ionicons.newspaper_outline,
-              //         size: 18.0,
-              //         color:
-              //             currentSearchPage == 1 ? Colors.black : Colors.white,
-              //       ),
-              //       Text(
-              //         "News",
-              //         style: TextStyle(
-              //           color: currentSearchPage == 1
-              //               ? Colors.black
-              //               : Colors.white,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              //   ElevatedButton(
-              //     style: ButtonStyle(
-              //       fixedSize: MaterialStateProperty.all(
-              //         Size(120.0, 40.0),
-              //       ),
-              //       backgroundColor: MaterialStateProperty.all(
-              //         currentSearchPage == 2
-              //             ? Colors.amberAccent
-              //             : Colors.grey[900],
-              //       ),
-              //     ),
-              //     onPressed: () {
-              //       displayMovies();
-              //     },
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //       children: [
-              //         Icon(
-              //           Ionicons.film_outline,
-              //           size: 18.0,
-              //           color:
-              //               currentSearchPage == 2 ? Colors.black : Colors.white,
-              //         ),
-              //         Text(
-              //           "Movies",
-              //           style: TextStyle(
-              //             color: currentSearchPage == 2
-              //                 ? Colors.black
-              //                 : Colors.white,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              //   ElevatedButton(
-              //     style: ButtonStyle(
-              //       fixedSize: MaterialStateProperty.all(
-              //         Size(120.0, 40.0),
-              //       ),
-              //       backgroundColor: MaterialStateProperty.all(
-              //         currentSearchPage == 3
-              //             ? Colors.greenAccent
-              //             : Colors.grey[900],
-              //       ),
-              //     ),
-              //     onPressed: () {
-              //       displayCrypto();
-              //     },
-              //     child: Row(
-              //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //       children: [
-              //         Icon(
-              //           Ionicons.cash_outline,
-              //           size: 18.0,
-              //           color:
-              //               currentSearchPage == 3 ? Colors.black : Colors.white,
-              //         ),
-              //         Text(
-              //           "Crypto",
-              //           style: TextStyle(
-              //             color: currentSearchPage == 3
-              //                 ? Colors.black
-              //                 : Colors.white,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
             ],
           ),
         ),
 
-        SizedBox(height: 20.0),
+        SizedBox(height: 10.0),
 
         // Search Results
         searchScreens[currentSearchPage],

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
@@ -16,6 +17,7 @@ class MusicPlayerPage extends StatefulWidget {
     required this.getDeviceAudioFiles,
     required this.changeMusicTitle,
     required this.currentSong,
+    required this.albumArt,
   });
 
   final AssetsAudioPlayer audioPlayer;
@@ -24,6 +26,7 @@ class MusicPlayerPage extends StatefulWidget {
   final Function getDeviceAudioFiles;
   final Function changeMusicTitle;
   final String currentSong;
+  final String albumArt;
 
   @override
   State<MusicPlayerPage> createState() => _MusicPlayerPageState();
@@ -82,7 +85,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                 ? BoxDecoration(
                     color: Colors.black,
                     image: DecorationImage(
-                      image: AssetImage("assets/images/INR.jpg"),
+                      image: NetworkImage(widget.albumArt),
                       fit: BoxFit.cover,
                       opacity: 0.6,
                     ),
@@ -136,8 +139,8 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                           Radius.circular(15.0),
                         ),
                       ),
-                      child: Image.asset(
-                        "assets/images/INR.jpg",
+                      child: Image.network(
+                        widget.albumArt,
                         width: isFullScreen == true ? 360.0 : 310.0,
                       ),
                     ),
