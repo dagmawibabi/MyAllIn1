@@ -29,6 +29,7 @@ class ChatRoomPage extends StatefulWidget {
 
 class _ChatRoomPageState extends State<ChatRoomPage> {
   List texts = [];
+  List oldTexts = [];
   bool textsLoading = true;
   bool editTexts = false;
   List selectedTexts = [];
@@ -61,10 +62,14 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       }
     }
 
-    // texts = resultJSON.reversed.toList();
-    // print(texts);
+    // if (texts.length != oldTexts.length) {
+    //   oldTexts = texts;
+    // }
     textsLoading = false;
     setState(() {});
+
+    // texts = resultJSON.reversed.toList();
+    // print(texts);
   }
 
   // Get Texts Polling

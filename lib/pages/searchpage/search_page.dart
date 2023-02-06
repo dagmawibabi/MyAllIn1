@@ -5,7 +5,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/config/config.dart';
+import 'package:myallin1/pages/APOTDpage/aPOTD_page.dart';
 import 'package:myallin1/pages/bottomsheets/search_categories_bottom_sheet.dart';
+import 'package:myallin1/pages/components/each_APOTD.dart';
 import 'package:myallin1/pages/components/each_crypto.dart';
 import 'package:myallin1/pages/components/each_movie.dart';
 import 'package:myallin1/pages/components/each_news.dart';
@@ -37,14 +39,21 @@ class _SearchPageState extends State<SearchPage> {
   List news = [];
   List movies = [];
   List cryptos = [];
+  List aPOTDs = [];
+  Map aPOTDToday = {};
+  dynamic aPOTDWeek = [];
+
   Map searchResults = {};
   int currentSearchPage = 0;
   List<Widget> eachNewsWidget = [];
   List<Widget> eachMovieWidget = [];
   List<Widget> eachCryptoWidget = [];
+
   bool newsLoading = true;
   bool moviesLoading = true;
   bool cryptoLoading = true;
+  bool aPOTDLoading = true;
+
   bool isSeries = false;
   bool isDaily = false;
   TextEditingController searchTextController = TextEditingController();
@@ -196,7 +205,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
         ),
       );
-    currentSearchPage = 3;
+    currentSearchPage = 4;
     setState(() {});
   }
 
@@ -221,6 +230,57 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
+  // Space
+  Future<void> getAPOTD() async {
+    // Today APOTDs
+    var url =
+        "https://api.nasa.gov/planetary/apod?api_key=" + Config.aPOTDAPIKey;
+
+    var uri = Uri.parse(url);
+    var result = await http.get(uri);
+    dynamic resultJSON = jsonDecode(result.body);
+    aPOTDToday = resultJSON;
+
+    // This Week
+    dynamic startDate =
+        DateTime.now().subtract(Duration(days: 7)).toString().substring(0, 10);
+    url = "https://api.nasa.gov/planetary/apod?api_key=" +
+        Config.aPOTDAPIKey +
+        "&start_date=" +
+        startDate;
+    uri = Uri.parse(url);
+    result = await http.get(uri);
+    resultJSON = jsonDecode(result.body);
+    aPOTDWeek = resultJSON;
+
+    // Random APOTDs
+    url = "https://api.nasa.gov/planetary/apod?api_key=" +
+        Config.aPOTDAPIKey +
+        "&count=10";
+    uri = Uri.parse(url);
+    result = await http.get(uri);
+    resultJSON = jsonDecode(result.body);
+    aPOTDs = resultJSON;
+
+    aPOTDLoading = false;
+  }
+
+  void displayAPOTD() async {
+    for (var eachCrypto in cryptos)
+      eachCryptoWidget.add(
+        GestureDetector(
+          onTap: () {
+            // showCryptoDetails(eachCrypto);
+          },
+          child: EachCrypto(
+            cryptoObject: eachCrypto,
+          ),
+        ),
+      );
+    currentSearchPage = 3;
+    setState(() {});
+  }
+
   // Search
   void search(String searchTerm) async {
     curSearchTerm = searchTerm;
@@ -240,6 +300,7 @@ class _SearchPageState extends State<SearchPage> {
     getNews();
     getMovies();
     getCrypto();
+    getAPOTD();
   }
 
   // Search Categories
@@ -272,159 +333,280 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     List searchScreens = [
       // Sample
-      Container(
-        // width: double.infinity,
-        // height: 280.0,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            newsLoading == true
-                ? Container()
-                : Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: 10.0, bottom: 5.0, left: 20.0),
-                              child: Text(
-                                "Headlines",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.0,
+      searchResults.isEmpty == false
+          ? searchResults["accountResults"].isEmpty == true &&
+                  searchResults["postResults"].isEmpty == true
+              ? Container(
+                  height: 200.0,
+                  margin:
+                      EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+                  padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 5.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[900]!.withOpacity(0.1),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20.0),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "No Results Found",
+                      style: TextStyle(
+                        color: Colors.grey[500]!,
+                      ),
+                    ),
+                  ),
+                )
+              : Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      searchResults["accountResults"].length == 0
+                          ? Container()
+                          : Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 4.0),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 5.0),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[900]!.withOpacity(0.1),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10.0),
                                 ),
                               ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                currentSearchPage = 1;
-                                displayNews();
-                                setState(() {});
-                              },
-                              icon: Icon(
-                                Icons.keyboard_arrow_right_outlined,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 10.0, bottom: 15.0),
+                                    child: Text(
+                                      "Accounts",
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        // fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  for (var eachAccountResult
+                                      in searchResults["accountResults"])
+                                    Chats(
+                                      chatObject: eachAccountResult,
+                                      currentUsername:
+                                          eachAccountResult["username"],
+                                      backgroundColor: Colors.grey[900]!,
+                                      currentUser: widget.currentUser,
+                                    ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                        for (var eachNews in [0, 2, 3, 4, 5])
-                          EachNews(
-                            newsObject: news[eachNews],
-                            extended: false,
-                          ),
-                      ],
-                    ),
-                  ),
-
-            cryptoLoading == true
-                ? Container()
-                : Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: 20.0, bottom: 10.0, left: 15.0),
-                              child: Text(
-                                "Top Cryptos",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.0,
+                      searchResults["postResults"].length == 0
+                          ? Container()
+                          : Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 4.0, vertical: 4.0),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 5.0),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[900]!.withOpacity(0.1),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10.0),
                                 ),
                               ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                currentSearchPage = 2;
-                                displayCrypto();
-                                setState(() {});
-                              },
-                              icon: Icon(
-                                Icons.keyboard_arrow_right_outlined,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 10.0, bottom: 15.0),
+                                    child: Text(
+                                      "Posts",
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        // fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                  for (var eachPostResult
+                                      in searchResults["postResults"])
+                                    Posts(
+                                      post: eachPostResult,
+                                      currentUser: widget.currentUser,
+                                    ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                        for (var eachCrypto in [0, 2, 3, 4, 5])
-                          GestureDetector(
-                            onTap: () {
-                              showCryptoDetails(cryptos[eachCrypto]);
-                            },
-                            child: EachCrypto(
-                              cryptoObject: cryptos[eachCrypto],
-                            ),
-                          ),
-                      ],
-                    ),
+                    ],
                   ),
-
-            moviesLoading == true
-                ? Container()
-                : Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: 25.0, bottom: 15.0, left: 15.0),
-                              child: Text(
-                                "Trending Movies",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18.0,
+                )
+          : Container(
+              // width: double.infinity,
+              // height: 280.0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  newsLoading == true
+                      ? Container()
+                      : Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 10.0, bottom: 5.0, left: 20.0),
+                                    child: Text(
+                                      "Headlines",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18.0,
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      currentSearchPage = 1;
+                                      displayNews();
+                                      setState(() {});
+                                    },
+                                    icon: Icon(
+                                      Icons.keyboard_arrow_right_outlined,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              for (var eachNews in [0, 2, 3, 4, 5])
+                                EachNews(
+                                  newsObject: news[eachNews],
+                                  extended: false,
                                 ),
-                              ),
-                            ),
-                            IconButton(
-                              onPressed: () {
-                                currentSearchPage = 3;
-                                displayMovies();
-                                setState(() {});
-                              },
-                              icon: Icon(
-                                Icons.keyboard_arrow_right_outlined,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-            moviesLoading == true
-                ? Container()
-                : Container(
-                    width: double.infinity,
-                    height: 280.0,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        for (var eachMovie in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
-                          GestureDetector(
-                            onTap: () {
-                              showMovieDetails(movies[eachMovie]);
-                            },
-                            child: EachMovie(
-                              movieObject: movies[eachMovie],
-                            ),
+                            ],
                           ),
-                      ],
-                    ),
-                  ),
+                        ),
 
-            // EOP
-            SizedBox(height: 200.0),
-          ],
-        ),
-      ),
+                  cryptoLoading == true
+                      ? Container()
+                      : Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 20.0, bottom: 10.0, left: 15.0),
+                                    child: Text(
+                                      "Top Cryptos",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18.0,
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      currentSearchPage = 2;
+                                      displayCrypto();
+                                      setState(() {});
+                                    },
+                                    icon: Icon(
+                                      Icons.keyboard_arrow_right_outlined,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              for (var eachCrypto in [0, 2, 3, 4, 5])
+                                GestureDetector(
+                                  onTap: () {
+                                    showCryptoDetails(cryptos[eachCrypto]);
+                                  },
+                                  child: EachCrypto(
+                                    cryptoObject: cryptos[eachCrypto],
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+
+                  moviesLoading == true
+                      ? Container()
+                      : Container(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 25.0, bottom: 15.0, left: 15.0),
+                                    child: Text(
+                                      "Trending Movies",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18.0,
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      currentSearchPage = 3;
+                                      displayMovies();
+                                      setState(() {});
+                                    },
+                                    icon: Icon(
+                                      Icons.keyboard_arrow_right_outlined,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                  moviesLoading == true
+                      ? Container()
+                      : Container(
+                          width: double.infinity,
+                          height: 280.0,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              for (var eachMovie in [
+                                0,
+                                1,
+                                2,
+                                3,
+                                4,
+                                5,
+                                6,
+                                7,
+                                8,
+                                9
+                              ])
+                                GestureDetector(
+                                  onTap: () {
+                                    showMovieDetails(movies[eachMovie]);
+                                  },
+                                  child: EachMovie(
+                                    movieObject: movies[eachMovie],
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+
+                  // EOP
+                  SizedBox(height: 200.0),
+                ],
+              ),
+            ),
       // Container(
       //   child: Column(
       //     children: [
@@ -657,6 +839,7 @@ class _SearchPageState extends State<SearchPage> {
       //   ),
       // ),
       // News
+
       newsLoading
           ? Container(
               width: double.infinity,
@@ -790,6 +973,143 @@ class _SearchPageState extends State<SearchPage> {
                 ),
               ],
             ),
+
+      // Space
+      aPOTDLoading
+          ? Container(
+              width: double.infinity,
+              height: 200.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    color: Colors.grey,
+                    strokeWidth: 1.0,
+                  ),
+                  SizedBox(height: 15.0),
+                  Text(
+                    "Exploring the Stars",
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : Column(
+              children: [
+                // Today
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.only(top: 10.0, bottom: 6.0, left: 25.0),
+                      child: Text(
+                        "Today",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => APOTDPage(
+                          aPOTDObj: aPOTDToday,
+                          tag: aPOTDToday["hdurl"].toString(),
+                        ),
+                      ),
+                    );
+                  },
+                  child: EachAPOTD(
+                    aPOTDObj: aPOTDToday,
+                    tag: aPOTDToday["hdurl"].toString(),
+                  ),
+                ),
+                SizedBox(height: 5.0),
+
+                // This Week
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.only(top: 10.0, bottom: 6.0, left: 25.0),
+                      child: Text(
+                        "This Week",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                for (var eachAPOTD in aPOTDWeek)
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => APOTDPage(
+                            aPOTDObj: eachAPOTD,
+                            tag: eachAPOTD["date"].toString(),
+                          ),
+                        ),
+                      );
+                    },
+                    child: EachAPOTD(
+                      aPOTDObj: eachAPOTD,
+                      tag: eachAPOTD["date"].toString(),
+                    ),
+                  ),
+                SizedBox(height: 5.0),
+
+                // Other Days
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.only(top: 10.0, bottom: 6.0, left: 25.0),
+                      child: Text(
+                        "Other Days",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                for (var eachAPOTD in aPOTDs)
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => APOTDPage(
+                            aPOTDObj: eachAPOTD,
+                            tag: eachAPOTD["explanation"].toString(),
+                          ),
+                        ),
+                      );
+                    },
+                    child: EachAPOTD(
+                      aPOTDObj: eachAPOTD,
+                      tag: eachAPOTD["explanation"].toString(),
+                    ),
+                  ),
+                SizedBox(height: 200.0),
+              ],
+            ),
+
       // Cryto
       cryptoLoading
           ? Container(
@@ -874,13 +1194,13 @@ class _SearchPageState extends State<SearchPage> {
 
                   GestureDetector(
                     onTap: () {
-                      // displayCrypto();
+                      displayAPOTD();
                     },
                     child: IconPillButton(
-                      chosenColor: Colors.white,
+                      chosenColor: Colors.grey[300]!,
                       icon: Ionicons.sparkles_outline,
                       label: "Space",
-                      chosen: (currentSearchPage == 4 ? true : false),
+                      chosen: (currentSearchPage == 3 ? true : false),
                     ),
                   ),
                   SizedBox(width: 8.0),
@@ -893,7 +1213,7 @@ class _SearchPageState extends State<SearchPage> {
                       chosenColor: Colors.greenAccent,
                       icon: Ionicons.cash_outline,
                       label: "Crypto",
-                      chosen: (currentSearchPage == 3 ? true : false),
+                      chosen: (currentSearchPage == 4 ? true : false),
                     ),
                   ),
                   SizedBox(width: 8.0),
@@ -906,7 +1226,7 @@ class _SearchPageState extends State<SearchPage> {
                       chosenColor: Colors.greenAccent,
                       icon: Ionicons.book_outline,
                       label: "Books",
-                      chosen: (currentSearchPage == 4 ? true : false),
+                      chosen: (currentSearchPage == 5 ? true : false),
                     ),
                   ),
                   SizedBox(width: 8.0),

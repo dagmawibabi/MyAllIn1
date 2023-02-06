@@ -49,6 +49,9 @@ class _EachTextState extends State<EachText> {
           children: [
             Container(
               width: MediaQuery.of(context).size.width * 0.5,
+              // constraints: BoxConstraints(
+              //   maxWidth: MediaQuery.of(context).size.width * 0.5,
+              // ),
 
               // height: 50.0,
               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),

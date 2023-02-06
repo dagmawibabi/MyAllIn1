@@ -78,10 +78,12 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
                   width: 45.0,
                   height: 46.0,
                   padding:
-                      EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-                  child: CircularProgressIndicator(
-                    color: Colors.grey[400]!,
-                    strokeWidth: 3.0,
+                      EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.blueAccent,
+                      strokeWidth: 1.0,
+                    ),
                   ),
                 )
               : Container(

@@ -27,6 +27,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  bool savedLogins = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -97,12 +99,18 @@ class _LoginPageState extends State<LoginPage> {
             },
           ),
           SizedBox(height: 0.0),
-          TextButton(
-            onPressed: () {},
-            child: Text(
-              "Browse Anonymously",
-              style: TextStyle(
-                color: Colors.orange,
+          GestureDetector(
+            onLongPress: () {
+              savedLogins = !savedLogins;
+              setState(() {});
+            },
+            child: TextButton(
+              onPressed: () {},
+              child: Text(
+                "Browse Anonymously",
+                style: TextStyle(
+                  color: Colors.orange,
+                ),
               ),
             ),
           ),
@@ -120,58 +128,61 @@ class _LoginPageState extends State<LoginPage> {
           // ),
           Spacer(),
           Spacer(),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
-            decoration: BoxDecoration(
-              color: Colors.grey[900]!.withOpacity(0.3),
-              borderRadius: BorderRadius.all(
-                Radius.circular(20.0),
-              ),
-            ),
-            child: Column(
-              children: [
-                Text(
-                  "Saved Login",
-                  style: TextStyle(
-                    color: Colors.white,
+          savedLogins == false
+              ? Container()
+              : Container(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[900]!.withOpacity(0.3),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20.0),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Saved Login",
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      SizedBox(height: 5.0),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          fixedSize: MaterialStateProperty.all(
+                            Size(200.0, 20.0),
+                          ),
+                          backgroundColor: MaterialStateProperty.all(
+                            Colors.grey[900]!,
+                          ),
+                        ),
+                        child: Text(
+                          "Dagmawi Babi",
+                        ),
+                        onPressed: () {
+                          widget.loginAccount("dagmawibabi", "dagmawibabi");
+                        },
+                      ),
+                      ElevatedButton(
+                        style: ButtonStyle(
+                          fixedSize: MaterialStateProperty.all(
+                            Size(200.0, 20.0),
+                          ),
+                          backgroundColor: MaterialStateProperty.all(
+                            Colors.grey[900]!,
+                          ),
+                        ),
+                        child: Text(
+                          "Anne Leone",
+                        ),
+                        onPressed: () {
+                          widget.loginAccount("anne", "anne");
+                        },
+                      ),
+                    ],
                   ),
                 ),
-                SizedBox(height: 5.0),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(
-                      Size(200.0, 20.0),
-                    ),
-                    backgroundColor: MaterialStateProperty.all(
-                      Colors.grey[900]!,
-                    ),
-                  ),
-                  child: Text(
-                    "Dagmawi Babi",
-                  ),
-                  onPressed: () {
-                    widget.loginAccount("dagmawibabi", "dagmawibabi");
-                  },
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    fixedSize: MaterialStateProperty.all(
-                      Size(200.0, 20.0),
-                    ),
-                    backgroundColor: MaterialStateProperty.all(
-                      Colors.grey[900]!,
-                    ),
-                  ),
-                  child: Text(
-                    "Anne Leone",
-                  ),
-                  onPressed: () {
-                    widget.loginAccount("anne", "anne");
-                  },
-                ),
-              ],
-            ),
-          ),
           SizedBox(height: 100.0),
         ],
       ),
