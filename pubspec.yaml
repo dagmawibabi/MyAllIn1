@@ -49,6 +49,8 @@ dependencies:
   share_plus: ^6.3.0
   flutter_linkify: ^5.0.2
   flutter_link_previewer: ^3.2.0
+  google_fonts: ^4.0.3
+  cr_file_saver: ^0.0.2
 
 
   # The following adds the Cupertino Icons font to your application.

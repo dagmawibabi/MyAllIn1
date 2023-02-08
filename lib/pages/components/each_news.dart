@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:myallin1/pages/imageViewerPage/image_viewer_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EachNews extends StatefulWidget {
@@ -27,15 +28,33 @@ class _EachNewsState extends State<EachNews> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
         margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 8.0),
-        decoration: BoxDecoration(
-          color: Colors.grey[900]!.withOpacity(0.4),
-          border: Border.all(
-            color: Colors.grey[900]!,
-          ),
-          borderRadius: BorderRadius.all(
-            Radius.circular(10.0),
-          ),
-        ),
+        decoration: widget.newsObject["urlToImage"] == "" ||
+                widget.newsObject["urlToImage"] == null
+            ? BoxDecoration(
+                color: Colors.grey[900]!.withOpacity(0.2),
+                border: Border.all(
+                  color: Colors.grey[900]!,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10.0),
+                ),
+              )
+            : BoxDecoration(
+                color: Colors.grey[900]!.withOpacity(0.2),
+                border: Border.all(
+                  color: Colors.grey[900]!,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10.0),
+                ),
+                image: DecorationImage(
+                  opacity: 0.1,
+                  image: NetworkImage(
+                    widget.newsObject["urlToImage"],
+                  ),
+                  fit: BoxFit.cover,
+                ),
+              ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -61,18 +80,35 @@ class _EachNewsState extends State<EachNews> {
                         Radius.circular(5.0),
                       ),
                     ),
-                    child: CachedNetworkImage(
-                      imageUrl: widget.newsObject["urlToImage"],
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) => Center(
-                        child: CircularProgressIndicator(
-                          value: downloadProgress.progress,
-                          color: Colors.grey[800]!,
-                          strokeWidth: 2.0,
+                    child: GestureDetector(
+                      onLongPress: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ImageViewerPage(
+                              isNetworkImage: true,
+                              networkImage: widget.newsObject["urlToImage"],
+                              title: widget.newsObject["source"]["name"],
+                            ),
+                          ),
+                        );
+                      },
+                      child: Hero(
+                        tag: widget.newsObject["title"],
+                        child: CachedNetworkImage(
+                          imageUrl: widget.newsObject["urlToImage"],
+                          progressIndicatorBuilder:
+                              (context, url, downloadProgress) => Center(
+                            child: CircularProgressIndicator(
+                              value: downloadProgress.progress,
+                              color: Colors.grey[800]!,
+                              strokeWidth: 2.0,
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Icon(
+                            Icons.error_outline,
+                          ),
                         ),
-                      ),
-                      errorWidget: (context, url, error) => Icon(
-                        Icons.error_outline,
                       ),
                     ),
                     // Image.network(

@@ -345,9 +345,17 @@ class _HomePageState extends State<HomePage>
     PermissionStatus storagePermissionStatus = await Permission.storage.status;
     if (storagePermissionStatus.isGranted == false) {
       await Permission.storage.request();
+      await Permission.photos.request();
+      await Permission.videos.request();
+      await Permission.audio.request();
+      // await Permission.manageExternalStorage.request();
+      print(
+          "---------------____________________++++++++++++++++==================");
     } else {
+      print("[[[[[[[[[[[[[[[[[[{{{{{{{{{{{{}}}}}}}}}}}}]]]]]]]]]]]]]]]]]]");
       getDeviceAudioFiles();
     }
+    print(storagePermissionStatus.isGranted);
     // Ask Location Permission
     loc.Location location = await new loc.Location();
     PermissionStatus locationPermissionStatus =
@@ -439,7 +447,7 @@ class _HomePageState extends State<HomePage>
         ),
         actions: [
           IconButton(
-            onPressed: () {
+            onPressed: () async {
               getFeed();
             },
             icon: Icon(

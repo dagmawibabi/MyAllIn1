@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_downloader/image_downloader.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:cr_file_saver/file_saver.dart' as cr;
 
 import '../../config/config.dart';
 
@@ -32,6 +33,12 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
   void downloadMoviePoster(String url) async {
     isDownloading = true;
     setState(() {});
+    // await cr.CRFileSaver.saveFile('/storage/emulated/0/Download');
+    // await cr.SaveFileDialogParams()
+    // isDownloading = false;
+    // isDownloadDone = true;
+    // setState(() {});
+
     try {
       // Saved with this method.
       var imageId = await ImageDownloader.downloadImage(url);

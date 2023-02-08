@@ -18,9 +18,9 @@ class _EachCryptoState extends State<EachCrypto> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+      margin: EdgeInsets.symmetric(horizontal: 6.0, vertical: 4.0),
       decoration: BoxDecoration(
-        color: Colors.grey[900]!.withOpacity(0.4),
+        color: Colors.grey[900]!.withOpacity(0.15),
         borderRadius: BorderRadius.all(
           Radius.circular(10.0),
         ),
@@ -32,18 +32,22 @@ class _EachCryptoState extends State<EachCrypto> {
           Container(
             child: Row(
               children: [
-                CachedNetworkImage(
-                  width: 40.0,
-                  height: 40.0,
-                  imageUrl: widget.cryptoObject["image"],
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      CircularProgressIndicator(
-                    value: downloadProgress.progress,
-                    color: Colors.grey[800]!,
-                    strokeWidth: 2.0,
-                  ),
-                  errorWidget: (context, url, error) => Icon(
-                    Icons.error_outline,
+                Hero(
+                  tag: widget.cryptoObject["name"],
+                  child: CachedNetworkImage(
+                    width: 40.0,
+                    height: 40.0,
+                    imageUrl: widget.cryptoObject["image"],
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) =>
+                            CircularProgressIndicator(
+                      value: downloadProgress.progress,
+                      color: Colors.grey[800]!,
+                      strokeWidth: 2.0,
+                    ),
+                    errorWidget: (context, url, error) => Icon(
+                      Icons.error_outline,
+                    ),
                   ),
                 ), // Image.network(
                 //   widget.cryptoObject["image"],

@@ -49,7 +49,7 @@ class _CryptoStatType2State extends State<CryptoStatType2> {
           Container(
             // padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
             decoration: BoxDecoration(
-              // color: Colors.grey[900]!.withOpacity(0.4),
+              color: Colors.grey[900]!.withOpacity(0.2),
               // borderRadius: BorderRadius.only(
               //   bottomLeft: Radius.circular(15.0),
               //   bottomRight: Radius.circular(15.0),
@@ -70,7 +70,7 @@ class _CryptoStatType2State extends State<CryptoStatType2> {
                       height: 58.0,
                       padding: EdgeInsets.only(left: 15.0),
                       decoration: BoxDecoration(
-                        color: Colors.grey[900]!.withOpacity(0.4),
+                        // color: Colors.grey[900]!.withOpacity(0.4),
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(15.0),
                           bottomLeft: Radius.circular(15.0),
@@ -101,7 +101,7 @@ class _CryptoStatType2State extends State<CryptoStatType2> {
                           // Title and Value 1
                           Container(
                             width: 120.0,
-                            color: Colors.grey[900]!.withOpacity(0.2),
+                            // color: Colors.grey[900]!.withOpacity(0.2),
                             padding: EdgeInsets.only(
                                 right: 10.0, left: 6, top: 10.0, bottom: 10.0),
                             child: Column(
@@ -132,7 +132,7 @@ class _CryptoStatType2State extends State<CryptoStatType2> {
                           Container(
                             width: 125.0,
                             decoration: BoxDecoration(
-                              color: Colors.grey[900]!.withOpacity(0.3),
+                              // color: Colors.grey[900]!.withOpacity(0.3),
                               borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(15.0),
                                 bottomRight: Radius.circular(15.0),

@@ -7,6 +7,7 @@ import 'package:myallin1/pages/likeslistpage/likes_list_page.dart';
 import 'package:myallin1/pages/notificationpage/notificationpage.dart';
 import 'package:myallin1/pages/repostslistpage/reposts_list_page.dart';
 import 'package:myallin1/pages/signuppage/loginsignup.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(MyApp());
@@ -77,6 +78,8 @@ class _MyAppState extends State<MyApp> {
         iconTheme: IconThemeData(
           color: Colors.white,
         ),
+        textTheme: TextTheme(),
+        fontFamily: GoogleFonts.roboto().fontFamily,
       ),
     );
   }

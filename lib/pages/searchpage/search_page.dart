@@ -14,6 +14,8 @@ import 'package:myallin1/pages/components/each_news.dart';
 import 'package:myallin1/pages/components/icon_pill_button.dart';
 import 'package:myallin1/pages/components/movie_detail_bottom_sheet.dart';
 import 'package:myallin1/pages/components/rounded_icon_labeled_button.dart';
+import 'package:myallin1/pages/cryptoDetailPage/crypto_detail_page.dart';
+import 'package:myallin1/pages/movieDetailPage/movie_detail_page.dart';
 
 import '../chatpage/chats.dart';
 import '../components/crypto_detail_bottom_sheet.dart';
@@ -130,6 +132,7 @@ class _SearchPageState extends State<SearchPage> {
         "/" +
         time +
         "?api_key=38d6559cd7b9ccdd0dd57ccca36e49fb&page=1";
+    print(url);
     var uri = Uri.parse(url);
     var result = await http.get(uri);
     dynamic resultJSON = jsonDecode(result.body);
@@ -146,7 +149,16 @@ class _SearchPageState extends State<SearchPage> {
       eachMovieWidget.add(
         GestureDetector(
           onTap: () {
-            showMovieDetails(eachMovie);
+            // showMovieDetails(eachMovie);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => MovieDetailPage(
+                  movieObject: eachMovie,
+                  isSeries: isSeries,
+                ),
+              ),
+            );
           },
           child: EachMovie(
             movieObject: eachMovie,
@@ -198,7 +210,15 @@ class _SearchPageState extends State<SearchPage> {
       eachCryptoWidget.add(
         GestureDetector(
           onTap: () {
-            showCryptoDetails(eachCrypto);
+            // showCryptoDetails(eachCrypto);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CryptoDetailPage(
+                  cryptoObject: eachCrypto,
+                ),
+              ),
+            );
           },
           child: EachCrypto(
             cryptoObject: eachCrypto,
