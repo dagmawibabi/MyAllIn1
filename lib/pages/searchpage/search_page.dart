@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/config/config.dart';
 import 'package:myallin1/pages/APOTDpage/aPOTD_page.dart';
+import 'package:myallin1/pages/bookDetailPage/book_detail_page.dart';
 import 'package:myallin1/pages/bottomsheets/search_categories_bottom_sheet.dart';
+import 'package:myallin1/pages/components/eachBook.dart';
 import 'package:myallin1/pages/components/each_APOTD.dart';
 import 'package:myallin1/pages/components/each_crypto.dart';
 import 'package:myallin1/pages/components/each_movie.dart';
@@ -43,6 +45,7 @@ class _SearchPageState extends State<SearchPage> {
   List cryptos = [];
   List aPOTDs = [];
   Map aPOTDToday = {};
+  List books = [];
   dynamic aPOTDWeek = [];
 
   Map searchResults = {};
@@ -50,11 +53,13 @@ class _SearchPageState extends State<SearchPage> {
   List<Widget> eachNewsWidget = [];
   List<Widget> eachMovieWidget = [];
   List<Widget> eachCryptoWidget = [];
+  List<Widget> eachBookWidget = [];
 
   bool newsLoading = true;
   bool moviesLoading = true;
   bool cryptoLoading = true;
   bool aPOTDLoading = true;
+  bool booksLoading = true;
 
   bool isSeries = false;
   bool isDaily = false;
@@ -301,19 +306,68 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {});
   }
 
+  // Books
+  Future<void> getBooks(curSearchTerm) async {
+    booksLoading = true;
+    setState(() {});
+    var curSearchedBook = "";
+    if (curSearchTerm == "" || curSearchTerm == " " || curSearchTerm == null) {
+      curSearchedBook = "harry+potter";
+    } else {
+      curSearchedBook = curSearchTerm.toString().trim();
+    }
+    var url =
+        "https://www.googleapis.com/books/v1/volumes?q=${curSearchedBook}";
+    var uri = Uri.parse(url);
+    var result = await http.get(uri);
+    dynamic resultJSON = jsonDecode(result.body);
+    // books = [];
+    books = resultJSON["items"] ?? [];
+    eachBookWidget = [];
+    booksLoading = false;
+  }
+
+  void displayBooks() {
+    for (var eachBook in books)
+      eachBookWidget.add(
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BookDetailPage(
+                  bookObject: eachBook,
+                ),
+              ),
+            );
+          },
+          child: EachBook(
+            bookObject: eachBook,
+          ),
+        ),
+      );
+    currentSearchPage = 5;
+    setState(() {});
+  }
+
   // Search
   void search(String searchTerm) async {
     curSearchTerm = searchTerm;
-    if (searchTerm != "" && searchTerm != " ") {
-      var url = Config.baseUrl + "/search/" + searchTerm;
-      var uri = Uri.parse(url);
-      var result = await http.get(uri);
-      dynamic resultJSON = jsonDecode(result.body);
-      searchResults = resultJSON;
-      print(searchResults);
-      currentSearchPage = 0;
+    if (currentSearchPage == 5) {
+      await getBooks(curSearchTerm);
+      displayBooks();
+    } else {
+      if (searchTerm != "" && searchTerm != " ") {
+        var url = Config.baseUrl + "/search/" + searchTerm;
+        var uri = Uri.parse(url);
+        var result = await http.get(uri);
+        dynamic resultJSON = jsonDecode(result.body);
+        searchResults = resultJSON;
+        print(searchResults);
+        currentSearchPage = 0;
+      }
+      setState(() {});
     }
-    setState(() {});
   }
 
   void getContent() {
@@ -321,6 +375,7 @@ class _SearchPageState extends State<SearchPage> {
     getMovies();
     getCrypto();
     getAPOTD();
+    getBooks("");
   }
 
   // Search Categories
@@ -1157,9 +1212,55 @@ class _SearchPageState extends State<SearchPage> {
                 SizedBox(height: 200.0),
               ],
             ),
+
+      // Books
+      booksLoading
+          ? Container(
+              width: double.infinity,
+              height: 200.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    color: Colors.grey,
+                    strokeWidth: 1.0,
+                  ),
+                  SizedBox(height: 15.0),
+                  Text(
+                    "Going Through Shelves",
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : Container(
+              child: books.length == 0
+                  ? Column(
+                      children: [
+                        SizedBox(height: 100.0),
+                        Container(
+                          child: Text(
+                            "No Books Found",
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Column(
+                      children: [
+                        for (var eachBook in eachBookWidget) eachBook,
+                        SizedBox(height: 200.0),
+                      ],
+                    ),
+            ),
     ];
     return ListView(
       children: [
+        // Search Box
         RoundedSearchInputBox(
           textEditingController: searchTextController,
           onChangedFunction: search,
@@ -1240,7 +1341,7 @@ class _SearchPageState extends State<SearchPage> {
 
                   GestureDetector(
                     onTap: () {
-                      // displayCrypto();
+                      displayBooks();
                     },
                     child: IconPillButton(
                       chosenColor: Colors.greenAccent,
