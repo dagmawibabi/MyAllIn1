@@ -5,8 +5,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:myallin1/config/config.dart';
+import 'package:myallin1/pages/commentspage/comments_page.dart';
 import 'package:myallin1/pages/notificationpage/notifications.dart';
 import 'package:http/http.dart' as http;
+import 'package:myallin1/pages/postspage/posts.dart';
+import 'package:myallin1/pages/postspage/posts_page.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({
@@ -67,6 +70,25 @@ class _NotificationPageState extends State<NotificationPage> {
       body: jsonFormat,
     );
     getNotifications();
+  }
+
+  // Get notification content
+  void getNotificationContent(String notificationID) async {
+    var route =
+        "$baseURL/notifications/getNotificationContent/" + notificationID;
+    var url = Uri.parse(route);
+    var result = await http.get(url);
+    dynamic post = jsonDecode(result.body);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CommentsPage(
+          currentUser: widget.currentUser,
+          post: post,
+        ),
+      ),
+    );
+    print(result.body);
   }
 
   // Get Feed Polling
@@ -168,8 +190,10 @@ class _NotificationPageState extends State<NotificationPage> {
                           ),
                           for (var eachNotification in notifications)
                             GestureDetector(
-                              onTap: () =>
-                                  {readNotifications(eachNotification["_id"])},
+                              onTap: () {
+                                // readNotifications(eachNotification["_id"]);
+                                getNotificationContent(eachNotification["_id"]);
+                              },
                               child: Notifications(
                                 type: 0,
                                 notificationObject: eachNotification,

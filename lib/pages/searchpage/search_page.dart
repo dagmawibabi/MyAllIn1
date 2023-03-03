@@ -542,6 +542,34 @@ class _SearchPageState extends State<SearchPage> {
                                       ),
                                     ),
                                   ),
+                                  // IconButton(
+                                  //   onPressed: () {
+                                  //     currentSearchPage = 1;
+                                  //     displayNews();
+                                  //     setState(() {});
+                                  //   },
+                                  //   icon: Icon(
+                                  //     Icons.keyboard_arrow_right_outlined,
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                              for (var eachNews in [0, 2, 3, 4, 5])
+                                EachNews(
+                                  newsObject: news[eachNews],
+                                  extended: false,
+                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "Read More",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14.0,
+                                    ),
+                                  ),
+                                  // SizedBox(width: 15.0),
                                   IconButton(
                                     onPressed: () {
                                       currentSearchPage = 1;
@@ -550,15 +578,11 @@ class _SearchPageState extends State<SearchPage> {
                                     },
                                     icon: Icon(
                                       Icons.keyboard_arrow_right_outlined,
+                                      size: 20.0,
                                     ),
                                   ),
                                 ],
                               ),
-                              for (var eachNews in [0, 2, 3, 4, 5])
-                                EachNews(
-                                  newsObject: news[eachNews],
-                                  extended: false,
-                                ),
                             ],
                           ),
                         ),
@@ -584,16 +608,16 @@ class _SearchPageState extends State<SearchPage> {
                                       ),
                                     ),
                                   ),
-                                  IconButton(
-                                    onPressed: () {
-                                      currentSearchPage = 2;
-                                      displayCrypto();
-                                      setState(() {});
-                                    },
-                                    icon: Icon(
-                                      Icons.keyboard_arrow_right_outlined,
-                                    ),
-                                  ),
+                                  // IconButton(
+                                  //   onPressed: () {
+                                  //     currentSearchPage = 2;
+                                  //     displayCrypto();
+                                  //     setState(() {});
+                                  //   },
+                                  //   icon: Icon(
+                                  //     Icons.keyboard_arrow_right_outlined,
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                               for (var eachCrypto in [0, 2, 3, 4, 5])
@@ -605,6 +629,30 @@ class _SearchPageState extends State<SearchPage> {
                                     cryptoObject: cryptos[eachCrypto],
                                   ),
                                 ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    "List More",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14.0,
+                                    ),
+                                  ),
+                                  // SizedBox(width: 15.0),
+                                  IconButton(
+                                    onPressed: () {
+                                      currentSearchPage = 2;
+                                      displayCrypto();
+                                      setState(() {});
+                                    },
+                                    icon: Icon(
+                                      Icons.keyboard_arrow_right_outlined,
+                                      size: 20.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),
@@ -630,16 +678,16 @@ class _SearchPageState extends State<SearchPage> {
                                       ),
                                     ),
                                   ),
-                                  IconButton(
-                                    onPressed: () {
-                                      currentSearchPage = 3;
-                                      displayMovies();
-                                      setState(() {});
-                                    },
-                                    icon: Icon(
-                                      Icons.keyboard_arrow_right_outlined,
-                                    ),
-                                  ),
+                                  // IconButton(
+                                  //   onPressed: () {
+                                  //     currentSearchPage = 3;
+                                  //     displayMovies();
+                                  //     setState(() {});
+                                  //   },
+                                  //   icon: Icon(
+                                  //     Icons.keyboard_arrow_right_outlined,
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ],
@@ -676,6 +724,30 @@ class _SearchPageState extends State<SearchPage> {
                             ],
                           ),
                         ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        "Checkout More",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      // SizedBox(width: 15.0),
+                      IconButton(
+                        onPressed: () {
+                          currentSearchPage = 3;
+                          displayMovies();
+                          setState(() {});
+                        },
+                        icon: Icon(
+                          Icons.keyboard_arrow_right_outlined,
+                          size: 20.0,
+                        ),
+                      ),
+                    ],
+                  ),
 
                   // EOP
                   SizedBox(height: 200.0),
