@@ -12,6 +12,7 @@ class RoundedInputBox extends StatefulWidget {
     this.hintText,
     this.hintTextColor,
     this.controller,
+    this.marginHorizontal = 10.0,
   });
 
   final dynamic prefixIcon;
@@ -21,6 +22,7 @@ class RoundedInputBox extends StatefulWidget {
   final dynamic hintText;
   final dynamic hintTextColor;
   final dynamic controller;
+  final double marginHorizontal;
 
   @override
   State<RoundedInputBox> createState() => _RoundedInputBoxState();
@@ -31,7 +33,8 @@ class _RoundedInputBoxState extends State<RoundedInputBox> {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: 0.0, left: 18.0, right: 5.0),
-      margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+      margin: EdgeInsets.symmetric(
+          horizontal: widget.marginHorizontal, vertical: 5.0),
       decoration: BoxDecoration(
         color: Colors.grey[900],
         borderRadius: BorderRadius.all(

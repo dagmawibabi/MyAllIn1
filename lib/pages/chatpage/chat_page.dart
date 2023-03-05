@@ -11,9 +11,12 @@ import 'package:myallin1/config/config.dart';
 import 'package:myallin1/pages/bottomsheets/accounts_list_bottom_sheet.dart';
 import 'package:myallin1/pages/chatpage/chat_room_page.dart';
 import 'package:myallin1/pages/chatpage/community_info_bottom_sheet.dart';
+import 'package:myallin1/pages/chatpage/community_overview.dart';
+import 'package:myallin1/pages/chatpage/createCommunityDialog.dart';
 import 'package:myallin1/pages/components/chat_sidebar_buttons.dart';
 import 'package:myallin1/pages/components/community_info_bars.dart';
 import 'package:myallin1/pages/components/error_messages.dart';
+import 'package:myallin1/pages/components/rounded_input_box.dart';
 
 import '../components/rounded_search_input_box.dart';
 import 'package:http/http.dart' as http;
@@ -41,6 +44,7 @@ class _ChatPageState extends State<ChatPage> {
   List availableChats = [];
   String baseURL = Config.baseUrl;
   bool gettingChats = true;
+  bool gettingCommunities = true;
   int currentChatPage = 1;
 
   void getChats() async {
@@ -63,6 +67,61 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
+  void getCommunities() async {
+    var route =
+        "$baseURL/community/getMyCommunities/" + widget.currentUser["username"];
+    var url = Uri.parse(route);
+    dynamic results = await http.get(url);
+    dynamic resultsJSON = jsonDecode(results.body);
+    communities = resultsJSON;
+    gettingCommunities = false;
+    setState(() {});
+  }
+
+  void getCommunitiesPolling() async {
+    Timer.periodic(
+      Duration(seconds: 5),
+      (timer) {
+        getCommunities();
+      },
+    );
+  }
+
+  void leaveCommunity() async {
+    var chosenCommunityObjectUsername = chosenCommunityObject["username"];
+    gettingCommunities = true;
+    chosenCommunity = "";
+    chosenCommunityObject = {};
+    currentChatPage = 1;
+    setState(() {});
+
+    var route = "$baseURL/community/leaveCommunity/" +
+        chosenCommunityObjectUsername +
+        "/" +
+        widget.currentUser["username"];
+    var url = Uri.parse(route);
+    await http.get(url);
+
+    getCommunities();
+  }
+
+  void deleteCommunity() async {
+    var chosenCommunityObjectUsername = chosenCommunityObject["username"];
+    gettingCommunities = true;
+    chosenCommunity = "";
+    chosenCommunityObject = {};
+    currentChatPage = 1;
+    setState(() {});
+    var route = "$baseURL/community/deleteCommunity/" +
+        chosenCommunityObjectUsername +
+        "/" +
+        widget.currentUser["username"];
+    var url = Uri.parse(route);
+    await http.get(url);
+
+    getCommunities();
+  }
+
   void communityInfoBottomSheet(title, information, communityObject) {
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
@@ -78,9 +137,45 @@ class _ChatPageState extends State<ChatPage> {
       builder: (context) => CommunityInfoBottomSheet(
         title: title,
         information: information,
-        banner: communityObject["banner"],
+        banner: communityObject["bannerPic"],
       ),
     );
+  }
+
+  void createNewCommunityBottomSheet() {
+    showModalBottomSheet(
+      // backgroundColor: Color.fromARGB(255, 18, 18, 18),
+      backgroundColor: Colors.transparent,
+
+      anchorPoint: Offset(0, 0),
+      constraints: BoxConstraints(
+        // minHeight: MediaQuery.of(context).size.height * 0.6,
+        maxHeight: (MediaQuery.of(context).size.height * 0.8),
+      ),
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      context: context,
+      builder: (context) {
+        return CreateCommunityDialog(
+          createNewCommunity: createNewCommunity,
+          currentUser: widget.currentUser,
+        );
+      },
+    );
+  }
+
+  void createNewCommunity(Map newCommunity) async {
+    var route = "$baseURL/community/createCommunity";
+
+    var url = Uri.parse(route);
+    var jsonFormat = jsonEncode(newCommunity);
+    var result = await http.post(
+      url,
+      headers: {"Content-Type": "application/json"},
+      body: jsonFormat,
+    );
+    print(result);
   }
 
   @override
@@ -89,6 +184,8 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
     getChats();
     getChatsPolling();
+    getCommunities();
+    getCommunitiesPolling();
   }
 
   @override
@@ -99,146 +196,146 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    communities = [
-      {
-        "fullname": "NASA",
-        "username": "nasa",
-        "bio": "Go Beyond!",
-        "profilepic":
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/NASA_logo.svg/2449px-NASA_logo.svg.png",
-        "banner":
-            "https://64.media.tumblr.com/719ddcf66d9a9542cd7549f9f04d2b91/tumblr_p2rwrtsRw71w5jef7o9_1280.png",
-        "members": 864613,
-      },
-      {
-        "fullname": "Mr.Beast",
-        "username": "mrbeast",
-        "bio": "Featables?",
-        "profilepic":
-            "https://i.pinimg.com/736x/fb/dc/f4/fbdcf4b9742a55e3434de52b6cba87fb.jpg",
-        "banner":
-            "https://pbs.twimg.com/media/EjQAPfdXsAE6KNZ?format=jpg&name=large",
-        "members": 13831361,
-      },
-      {
-        "fullname": "Open AI",
-        "username": "openai",
-        "bio": "Opensource AI Projects",
-        "profilepic":
-            "https://openai.com/content/images/2022/05/openai-avatar.png",
-        "banner":
-            "https://miro.medium.com/max/1400/1*qPao_uBbHlzHIzOL7ejI8w.png",
-        "members": 1246,
-      },
-      {
-        "fullname": "Tesla",
-        "username": "tesla",
-        "bio": "Smart Electric Vehicles",
-        "profilepic":
-            "https://storage.googleapis.com/webdesignledger.pub.network/WDL/12f213e1-t1.jpg",
-        "banner":
-            "https://cdn.motor1.com/images/mgl/WPOoO/s3/travel-retail-norway-places-order-for-tesla-semi.jpg",
-        "members": 6421,
-      },
-      {
-        "fullname": "DHMIS",
-        "username": "DHMIS",
-        "bio": "Think Different",
-        "profilepic":
-            "https://i.pinimg.com/originals/1b/5b/fe/1b5bfe2395ba2cb78523b660bb9597da.jpg",
-        "banner":
-            "https://ic.c4assets.com/brands/dont-hug-me-im-scared/0e3d3efa-ed95-482e-9b95-32c2cd32b9bc.jpg?interpolation=progressive-bicubic&output-format=jpeg&output-quality=90{&resize}",
-        "members": 23143,
-      },
-      {
-        "fullname": "Google",
-        "username": "google",
-        "bio": "Search Anything",
-        "profilepic":
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/480px-Google_%22G%22_Logo.svg.png",
-        "banner":
-            "https://storage.googleapis.com/gd-wagtail-prod-assets/original_images/Design-Guide-IO_3X2.png",
-        "members": 46812,
-      },
-      {
-        "fullname": "Veritasium",
-        "username": "veritasium",
-        "bio": "The Element of Truth",
-        "profilepic":
-            "https://static.wikia.nocookie.net/youtube/images/7/7d/Veritasium_Italia.jpg/revision/latest?cb=20210909083234",
-        "banner":
-            "https://c10.patreonusercontent.com/4/patreon-media/p/campaign/70092/ca593903846542c7b6c49d9f3f5b5751/eyJ3IjoxOTIwLCJ3ZSI6MX0%3D/1.jpg?token-time=1675468800&token-hash=RLtZPK8FKNzWOuK6CrN4oCIODjFyqKVp8qIXJkcrfPk%3D",
-        "members": 246842,
-      },
-      {
-        "fullname": "Boston Dynamics",
-        "username": "bostondynamics",
-        "bio": "Robots helping Humans",
-        "profilepic":
-            "https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/v1478269890/yeffwbmsn7bmg1gwesrk.png",
-        "banner":
-            "https://www.rightpoint.com/-/media/boston%20dynamics%20case%20study%20banner.png",
-        "members": 4676,
-      },
-      {
-        "fullname": "Godot",
-        "username": "godot",
-        "bio": "Think Different",
-        "profilepic":
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Godot_icon.svg/2048px-Godot_icon.svg.png",
-        "banner":
-            "https://user-images.githubusercontent.com/1103897/34840206-e7adbb50-f6c9-11e7-84bc-08e4b7d9b661.png",
-        "members": 16834,
-      },
-      {
-        "fullname": "Void Pet",
-        "username": "voidpet",
-        "bio": "A feelings game",
-        "profilepic":
-            "https://assets.change.org/photos/3/fq/bv/dqFQbvEvLeEketH-800x450-noPad.jpg",
-        "banner": "https://voidpet.com/ogimage.png",
-        "members": 46842,
-      },
-      {
-        "fullname": "Serenity OS",
-        "username": "serenityos",
-        "bio": "Vintage Linux OS",
-        "profilepic":
-            "https://avatars.githubusercontent.com/u/50811782?s=200&v=4",
-        "banner": "https://i.ytimg.com/vi/puTsBKAQzk4/maxresdefault.jpg",
-        "members": 1342,
-      },
-      {
-        "fullname": "Flutter",
-        "username": "flutter",
-        "bio": "Build Apps Fast",
-        "profilepic":
-            "https://res.cloudinary.com/teepublic/image/private/s--lxNXHPN3--/c_fit,g_north_west,h_840,w_679/co_ffffff,e_outline:40/co_ffffff,e_outline:inner_fill:1/co_ffffff,e_outline:40/co_ffffff,e_outline:inner_fill:1/co_bbbbbb,e_outline:3:1000/c_mpad,g_center,h_1260,w_1260/b_rgb:eeeeee/c_limit,f_jpg,h_630,q_90,w_630/v1585726530/production/designs/8796655_0.jpg",
-        "banner":
-            "https://mobiosolutions.com/wp-content/uploads/2020/07/Group-3.png",
-        "members": 7315,
-      },
-      {
-        "fullname": "The Simpsons",
-        "username": "thesimpsons",
-        "bio": "Think Different",
-        "profilepic":
-            "https://m.media-amazon.com/images/M/MV5BYjFkMTlkYWUtZWFhNy00M2FmLThiOTYtYTRiYjVlZWYxNmJkXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_FMjpg_UX1000_.jpg",
-        "banner":
-            "https://static.posters.cz/image/1300/affiches-et-posters/the-simpsons-stars-i8081.jpg",
-        "members": 612134,
-      },
-      {
-        "fullname": "Apple",
-        "username": "apple",
-        "bio": "Think Different",
-        "profilepic":
-            "https://1000logos.net/wp-content/uploads/2016/10/apple-emblem.jpg",
-        "banner":
-            "https://www.applestore.pk/wp-content/uploads/2020/03/iPhone-11-Pro-Inner-Banner-1920-X-710-Website.jpg",
-        "members": 46842,
-      },
-    ];
+    // communities = [
+    //   {
+    //     "fullname": "NASA",
+    //     "username": "nasa",
+    //     "bio": "Go Beyond!",
+    //     "profilepic":
+    //         "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/NASA_logo.svg/2449px-NASA_logo.svg.png",
+    //     "banner":
+    //         "https://64.media.tumblr.com/719ddcf66d9a9542cd7549f9f04d2b91/tumblr_p2rwrtsRw71w5jef7o9_1280.png",
+    //     "members": 864613,
+    //   },
+    //   {
+    //     "fullname": "Mr.Beast",
+    //     "username": "mrbeast",
+    //     "bio": "Featables?",
+    //     "profilepic":
+    //         "https://i.pinimg.com/736x/fb/dc/f4/fbdcf4b9742a55e3434de52b6cba87fb.jpg",
+    //     "banner":
+    //         "https://pbs.twimg.com/media/EjQAPfdXsAE6KNZ?format=jpg&name=large",
+    //     "members": 13831361,
+    //   },
+    //   {
+    //     "fullname": "Open AI",
+    //     "username": "openai",
+    //     "bio": "Opensource AI Projects",
+    //     "profilepic":
+    //         "https://openai.com/content/images/2022/05/openai-avatar.png",
+    //     "banner":
+    //         "https://miro.medium.com/max/1400/1*qPao_uBbHlzHIzOL7ejI8w.png",
+    //     "members": 1246,
+    //   },
+    //   {
+    //     "fullname": "Tesla",
+    //     "username": "tesla",
+    //     "bio": "Smart Electric Vehicles",
+    //     "profilepic":
+    //         "https://storage.googleapis.com/webdesignledger.pub.network/WDL/12f213e1-t1.jpg",
+    //     "banner":
+    //         "https://cdn.motor1.com/images/mgl/WPOoO/s3/travel-retail-norway-places-order-for-tesla-semi.jpg",
+    //     "members": 6421,
+    //   },
+    //   {
+    //     "fullname": "DHMIS",
+    //     "username": "DHMIS",
+    //     "bio": "Think Different",
+    //     "profilepic":
+    //         "https://i.pinimg.com/originals/1b/5b/fe/1b5bfe2395ba2cb78523b660bb9597da.jpg",
+    //     "banner":
+    //         "https://ic.c4assets.com/brands/dont-hug-me-im-scared/0e3d3efa-ed95-482e-9b95-32c2cd32b9bc.jpg?interpolation=progressive-bicubic&output-format=jpeg&output-quality=90{&resize}",
+    //     "members": 23143,
+    //   },
+    //   {
+    //     "fullname": "Google",
+    //     "username": "google",
+    //     "bio": "Search Anything",
+    //     "profilepic":
+    //         "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/480px-Google_%22G%22_Logo.svg.png",
+    //     "banner":
+    //         "https://storage.googleapis.com/gd-wagtail-prod-assets/original_images/Design-Guide-IO_3X2.png",
+    //     "members": 46812,
+    //   },
+    //   {
+    //     "fullname": "Veritasium",
+    //     "username": "veritasium",
+    //     "bio": "The Element of Truth",
+    //     "profilepic":
+    //         "https://static.wikia.nocookie.net/youtube/images/7/7d/Veritasium_Italia.jpg/revision/latest?cb=20210909083234",
+    //     "banner":
+    //         "https://c10.patreonusercontent.com/4/patreon-media/p/campaign/70092/ca593903846542c7b6c49d9f3f5b5751/eyJ3IjoxOTIwLCJ3ZSI6MX0%3D/1.jpg?token-time=1675468800&token-hash=RLtZPK8FKNzWOuK6CrN4oCIODjFyqKVp8qIXJkcrfPk%3D",
+    //     "members": 246842,
+    //   },
+    //   {
+    //     "fullname": "Boston Dynamics",
+    //     "username": "bostondynamics",
+    //     "bio": "Robots helping Humans",
+    //     "profilepic":
+    //         "https://res.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/v1478269890/yeffwbmsn7bmg1gwesrk.png",
+    //     "banner":
+    //         "https://www.rightpoint.com/-/media/boston%20dynamics%20case%20study%20banner.png",
+    //     "members": 4676,
+    //   },
+    //   {
+    //     "fullname": "Godot",
+    //     "username": "godot",
+    //     "bio": "Think Different",
+    //     "profilepic":
+    //         "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Godot_icon.svg/2048px-Godot_icon.svg.png",
+    //     "banner":
+    //         "https://user-images.githubusercontent.com/1103897/34840206-e7adbb50-f6c9-11e7-84bc-08e4b7d9b661.png",
+    //     "members": 16834,
+    //   },
+    //   {
+    //     "fullname": "Void Pet",
+    //     "username": "voidpet",
+    //     "bio": "A feelings game",
+    //     "profilepic":
+    //         "https://assets.change.org/photos/3/fq/bv/dqFQbvEvLeEketH-800x450-noPad.jpg",
+    //     "banner": "https://voidpet.com/ogimage.png",
+    //     "members": 46842,
+    //   },
+    //   {
+    //     "fullname": "Serenity OS",
+    //     "username": "serenityos",
+    //     "bio": "Vintage Linux OS",
+    //     "profilepic":
+    //         "https://avatars.githubusercontent.com/u/50811782?s=200&v=4",
+    //     "banner": "https://i.ytimg.com/vi/puTsBKAQzk4/maxresdefault.jpg",
+    //     "members": 1342,
+    //   },
+    //   {
+    //     "fullname": "Flutter",
+    //     "username": "flutter",
+    //     "bio": "Build Apps Fast",
+    //     "profilepic":
+    //         "https://res.cloudinary.com/teepublic/image/private/s--lxNXHPN3--/c_fit,g_north_west,h_840,w_679/co_ffffff,e_outline:40/co_ffffff,e_outline:inner_fill:1/co_ffffff,e_outline:40/co_ffffff,e_outline:inner_fill:1/co_bbbbbb,e_outline:3:1000/c_mpad,g_center,h_1260,w_1260/b_rgb:eeeeee/c_limit,f_jpg,h_630,q_90,w_630/v1585726530/production/designs/8796655_0.jpg",
+    //     "banner":
+    //         "https://mobiosolutions.com/wp-content/uploads/2020/07/Group-3.png",
+    //     "members": 7315,
+    //   },
+    //   {
+    //     "fullname": "The Simpsons",
+    //     "username": "thesimpsons",
+    //     "bio": "Think Different",
+    //     "profilepic":
+    //         "https://m.media-amazon.com/images/M/MV5BYjFkMTlkYWUtZWFhNy00M2FmLThiOTYtYTRiYjVlZWYxNmJkXkEyXkFqcGdeQXVyNTAyODkwOQ@@._V1_FMjpg_UX1000_.jpg",
+    //     "banner":
+    //         "https://static.posters.cz/image/1300/affiches-et-posters/the-simpsons-stars-i8081.jpg",
+    //     "members": 612134,
+    //   },
+    //   {
+    //     "fullname": "Apple",
+    //     "username": "apple",
+    //     "bio": "Think Different",
+    //     "profilepic":
+    //         "https://1000logos.net/wp-content/uploads/2016/10/apple-emblem.jpg",
+    //     "banner":
+    //         "https://www.applestore.pk/wp-content/uploads/2020/03/iPhone-11-Pro-Inner-Banner-1920-X-710-Website.jpg",
+    //     "members": 46842,
+    //   },
+    // ];
     return ListView(
       children: [
         // SizedBox(height: 15.0),
@@ -265,6 +362,7 @@ class _ChatPageState extends State<ChatPage> {
                   Column(
                     children: [
                       SizedBox(height: 10.0),
+                      // Chats
                       GestureDetector(
                         onTap: () {
                           currentChatPage = 1;
@@ -291,29 +389,69 @@ class _ChatPageState extends State<ChatPage> {
                         endIndent: 20.0,
                         height: 25.0,
                       ),
-                      for (var eachCommunity in communities)
-                        GestureDetector(
-                          onTap: () {
-                            chosenCommunity = eachCommunity["username"];
-                            chosenCommunityObject = eachCommunity;
-                            currentChatPage = 2;
-                            setState(() {});
-                          },
-                          child: ChatSidebarButton(
-                            netPic: eachCommunity["profilepic"],
-                            radius: chosenCommunity == eachCommunity["username"]
-                                ? 100.0
-                                : 10.0,
-                            borderColor:
-                                chosenCommunity == eachCommunity["username"]
-                                    ? Colors.greenAccent
-                                    : Colors.transparent,
-                          ),
+                      // Community List
+                      gettingCommunities == true
+                          ? Container(
+                              height: 400.0,
+                              width: double.infinity,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  CircularProgressIndicator(
+                                    color: Colors.grey[700]!,
+                                    strokeWidth: 1.0,
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Column(
+                              children: [
+                                for (var eachCommunity in communities)
+                                  GestureDetector(
+                                    onTap: () {
+                                      chosenCommunity =
+                                          eachCommunity["username"];
+                                      chosenCommunityObject = eachCommunity;
+                                      currentChatPage = 2;
+                                      setState(() {});
+                                    },
+                                    child: ChatSidebarButton(
+                                      netPic: eachCommunity["profilePic"],
+                                      radius: chosenCommunity ==
+                                              eachCommunity["username"]
+                                          ? 100.0
+                                          : 10.0,
+                                      borderColor: chosenCommunity ==
+                                              eachCommunity["username"]
+                                          ? Colors.greenAccent
+                                          : Colors.transparent,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                      communities.isEmpty == false
+                          ? Column(
+                              children: [
+                                SizedBox(height: 5.0),
+                                Divider(
+                                  color: Colors.grey[700]!,
+                                  indent: 20.0,
+                                  endIndent: 20.0,
+                                  height: 25.0,
+                                ),
+                              ],
+                            )
+                          : Container(),
+                      GestureDetector(
+                        onTap: () {
+                          createNewCommunityBottomSheet();
+                        },
+                        child: ChatSidebarButton(
+                          icon: Icons.add,
+                          radius: 100.0,
                         ),
-                      ChatSidebarButton(
-                        icon: Icons.add,
-                        radius: 100.0,
                       ),
+                      SizedBox(height: 200.0),
                     ],
                   ),
                 ],
@@ -484,315 +622,46 @@ class _ChatPageState extends State<ChatPage> {
                         color: Colors.black.withOpacity(0.2),
                         image: DecorationImage(
                           image: NetworkImage(
-                            chosenCommunityObject["banner"],
+                            chosenCommunityObject["bannerPic"],
                           ),
                           fit: BoxFit.cover,
-                          opacity: 0.03,
+                          opacity: 0.04,
                         ),
                       ),
 
-                      child: ListView(
-                        children: [
-                          Column(
-                            children: [
-                              Column(
-                                children: [
-                                  // Header
-                                  Container(
-                                    // height: 200.0,
-                                    width: double.infinity,
-                                    margin: EdgeInsets.symmetric(
-                                        vertical: 10.0, horizontal: 10.0),
-                                    clipBehavior: Clip.hardEdge,
-
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[850]!,
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(20.0),
-                                      ),
-                                    ),
-                                    child: Stack(
-                                      alignment: Alignment.bottomCenter,
-                                      children: [
-                                        // Banner
-                                        Container(
-                                          height: 180.0,
-                                          width: double.infinity,
-                                          child: CachedNetworkImage(
-                                            fit: BoxFit.cover,
-                                            imageUrl:
-                                                chosenCommunityObject["banner"],
-                                            progressIndicatorBuilder: (context,
-                                                    url, downloadProgress) =>
-                                                Center(
-                                              child: CircularProgressIndicator(
-                                                value:
-                                                    downloadProgress.progress,
-                                                color: Colors.grey[800]!,
-                                                strokeWidth: 2.0,
-                                              ),
-                                            ),
-                                            errorWidget:
-                                                (context, url, error) => Icon(
-                                              Icons.error_outline,
-                                            ),
-                                          ),
-                                          // Image.network(
-                                          //   chosenCommunityObject["banner"],
-                                          //   fit: BoxFit.cover,
-                                          // ),
-                                        ),
-                                        // Community Name
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 5.0, horizontal: 20.0),
-                                          decoration: BoxDecoration(
-                                            color:
-                                                Colors.black.withOpacity(0.8),
-                                            borderRadius: BorderRadius.only(
-                                              bottomLeft: Radius.circular(20.0),
-                                              bottomRight:
-                                                  Radius.circular(20.0),
-                                            ),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    width: 250.0,
-                                                    clipBehavior: Clip.hardEdge,
-                                                    decoration: BoxDecoration(),
-                                                    child: Row(
-                                                      children: [
-                                                        Text(
-                                                          chosenCommunityObject[
-                                                              "fullname"],
-                                                          style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 14.0,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                        ),
-                                                        SizedBox(width: 4.0),
-                                                        Expanded(
-                                                          child: Text(
-                                                            "@" +
-                                                                chosenCommunityObject[
-                                                                    "username"],
-                                                            style: TextStyle(
-                                                              color: Colors
-                                                                  .grey[500]!,
-                                                              fontSize: 12.0,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 3.0),
-                                                  Text(
-                                                    chosenCommunityObject[
-                                                        "bio"],
-                                                    style: TextStyle(
-                                                      color: Colors.grey[300]!,
-                                                      fontSize: 13.0,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Icon(
-                                                Icons.public_outlined,
-                                                size: 22.0,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  // Members
-                                  Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: 10.0, vertical: 2.0),
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 10.0, horizontal: 10.0),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[900]!.withOpacity(0.5),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10.0),
-                                      ),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Icon(
-                                              Icons.group_outlined,
-                                            ),
-                                            SizedBox(width: 10.0),
-                                            Text(
-                                              "Members",
-                                              style: TextStyle(
-                                                color: Colors.grey[300]!,
-                                                fontSize: 15.0,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Text(
-                                          chosenCommunityObject["members"]
-                                              .toString(),
-                                          style: TextStyle(
-                                            // color: Colors.lightBlue,
-                                            color: Colors.white,
-                                            fontSize: 15.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(height: 8.0),
-
-                                  // FAQ HELP GENERAL
-                                  GestureDetector(
-                                    onTap: () {
-                                      var commName =
-                                          chosenCommunityObject["fullname"];
-                                      var intro = "Welcome to  $commName!";
-                                      communityInfoBottomSheet("Introduction",
-                                          intro, chosenCommunityObject);
-                                    },
-                                    child: CommunityInfoBar(
-                                      leadingIcon: Ionicons.book_outline,
-                                      title: "Introduction",
-                                      trailingIcon:
-                                          Icons.keyboard_arrow_right_outlined,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      var commName =
-                                          chosenCommunityObject["fullname"];
-                                      var intro = "Welcome to  $commName!";
-                                      communityInfoBottomSheet("Rules", intro,
-                                          chosenCommunityObject);
-                                    },
-                                    child: CommunityInfoBar(
-                                      leadingIcon: Ionicons.warning_outline,
-                                      title: "Rules",
-                                      trailingIcon:
-                                          Icons.keyboard_arrow_right_outlined,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      var commName =
-                                          chosenCommunityObject["fullname"];
-                                      var intro = "Welcome to  $commName!";
-                                      communityInfoBottomSheet(
-                                          "FAQ", intro, chosenCommunityObject);
-                                    },
-                                    child: CommunityInfoBar(
-                                      leadingIcon: Icons.question_mark_outlined,
-                                      title: "FAQ",
-                                      trailingIcon:
-                                          Icons.keyboard_arrow_right_outlined,
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              SizedBox(height: 20.0),
-
-                              // Leave or Join
-                              Row(
+                      child: gettingCommunities == true
+                          ? Container(
+                              height: 400.0,
+                              width: double.infinity,
+                              child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Expanded(
-                                    child: Container(
-                                      margin: EdgeInsets.only(left: 10.0),
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 10.0, horizontal: 10.0),
-                                      decoration: BoxDecoration(
-                                        color:
-                                            Colors.redAccent.withOpacity(0.8),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0),
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Ionicons.log_out_outline,
-                                          ),
-                                          SizedBox(width: 5.0),
-                                          Text(
-                                            "Leave",
-                                            style: TextStyle(
-                                              color: Colors.grey[300]!,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                  CircularProgressIndicator(
+                                    color: Colors.grey[700]!,
+                                    strokeWidth: 2.0,
                                   ),
-                                  SizedBox(width: 8.0),
-                                  Expanded(
-                                    child: Container(
-                                      margin: EdgeInsets.only(right: 10.0),
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 10.0, horizontal: 10.0),
-                                      decoration: BoxDecoration(
-                                        color:
-                                            Colors.greenAccent.withOpacity(0.8),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10.0),
-                                        ),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Ionicons.log_in_outline,
-                                            color: Colors.black,
-                                          ),
-                                          SizedBox(width: 5.0),
-                                          Text(
-                                            "Browse",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                  SizedBox(height: 15.0),
+                                  Text(
+                                    "Getting Communities",
+                                    style: TextStyle(
+                                      color: Colors.grey[700]!,
                                     ),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 8.0),
-                            ],
-                          ),
-                        ],
-                      ),
+                            )
+                          : ListView(
+                              children: [
+                                CommunityOverview(
+                                  community: chosenCommunityObject,
+                                  communityInfoBottomSheet:
+                                      communityInfoBottomSheet,
+                                  leaveCommunity: leaveCommunity,
+                                  currentUser: widget.currentUser,
+                                  deleteCommunity: deleteCommunity,
+                                ),
+                              ],
+                            ),
                     ),
                   ),
           ],

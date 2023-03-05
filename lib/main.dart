@@ -79,6 +79,7 @@ class _MyAppState extends State<MyApp> {
         ),
         textTheme: TextTheme(),
         fontFamily: GoogleFonts.roboto().fontFamily,
+        // dialogBackgroundColor: primaryColor,
       ),
     );
   }
