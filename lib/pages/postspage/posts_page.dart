@@ -291,6 +291,7 @@ class _PostsPageState extends State<PostsPage> {
                 body:
                     "Create your first post by clicking on the pencil icon on the bottom right corner.",
                 color: Colors.grey[500]!,
+                height: 130.0,
               )
             : Container(
                 child: Column(

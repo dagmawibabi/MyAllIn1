@@ -132,7 +132,7 @@ class _NotificationPageState extends State<NotificationPage> {
             margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 2.0),
             padding: EdgeInsets.symmetric(vertical: 5.0),
             decoration: BoxDecoration(
-              color: Colors.grey[900]!.withOpacity(0.2),
+              // color: Colors.grey[900]!.withOpacity(0.2),
               borderRadius: BorderRadius.all(
                 Radius.circular(20.0),
               ),
@@ -159,7 +159,7 @@ class _NotificationPageState extends State<NotificationPage> {
                   )
                 : notifications.length == 0
                     ? Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 100.0),
+                        padding: const EdgeInsets.symmetric(vertical: 150.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

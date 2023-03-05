@@ -1,7 +1,13 @@
+import 'dart:convert';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:myallin1/config/config.dart';
+import 'package:myallin1/pages/bottomsheets/accounts_list_bottom_sheet.dart';
+import 'package:myallin1/pages/chatpage/community_room_page.dart';
 import 'package:myallin1/pages/components/community_info_bars.dart';
+import 'package:http/http.dart' as http;
 
 class CommunityOverview extends StatefulWidget {
   const CommunityOverview({
@@ -11,6 +17,8 @@ class CommunityOverview extends StatefulWidget {
     required this.leaveCommunity,
     required this.deleteCommunity,
     required this.currentUser,
+    required this.communityChat,
+    required this.gettingCommunityChat,
   });
 
   final Map community;
@@ -18,12 +26,57 @@ class CommunityOverview extends StatefulWidget {
   final dynamic communityInfoBottomSheet;
   final Function leaveCommunity;
   final Function deleteCommunity;
+  final List communityChat;
+  final bool gettingCommunityChat;
 
   @override
   State<CommunityOverview> createState() => _CommunityOverviewState();
 }
 
 class _CommunityOverviewState extends State<CommunityOverview> {
+  String baseURL = Config.baseUrl;
+
+  bool gettingMembers = true;
+  List members = [];
+
+  void getMembers() async {
+    var route = "$baseURL/community/getCommunityMembers/" +
+        widget.community["username"];
+    var url = Uri.parse(route);
+    dynamic results = await http.get(url);
+    dynamic resultsJSON = jsonDecode(results.body);
+    members = resultsJSON;
+    gettingMembers = false;
+    setState(() {});
+  }
+
+  void showMembersList() {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      anchorPoint: Offset(0, 0),
+      constraints: BoxConstraints(
+        // minHeight: MediaQuery.of(context).size.height * 0.6,
+        maxHeight: (MediaQuery.of(context).size.height * 0.8),
+      ),
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      context: context,
+      builder: (context) => AccountsListBottomSheet(
+        listOfAccounts: members,
+        currentUser: widget.currentUser,
+        listTitle: "Members",
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getMembers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -140,42 +193,48 @@ class _CommunityOverviewState extends State<CommunityOverview> {
                 ),
               ),
               // Members
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
-                padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey[900]!.withOpacity(0.5),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10.0),
+              GestureDetector(
+                onTap: () {
+                  showMembersList();
+                },
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[900]!.withOpacity(0.5),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10.0),
+                    ),
                   ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.group_outlined,
-                        ),
-                        SizedBox(width: 10.0),
-                        Text(
-                          "Members",
-                          style: TextStyle(
-                            color: Colors.grey[300]!,
-                            fontSize: 15.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.group_outlined,
                           ),
-                        ),
-                      ],
-                    ),
-                    Text(
-                      widget.community["members"].length.toString(),
-                      style: TextStyle(
-                        // color: Colors.lightBlue,
-                        color: Colors.white,
-                        fontSize: 15.0,
+                          SizedBox(width: 10.0),
+                          Text(
+                            "Members",
+                            style: TextStyle(
+                              color: Colors.grey[300]!,
+                              fontSize: 15.0,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      Text(
+                        widget.community["members"].length.toString(),
+                        style: TextStyle(
+                          // color: Colors.lightBlue,
+                          color: Colors.white,
+                          fontSize: 15.0,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
               SizedBox(height: 8.0),
@@ -276,32 +335,47 @@ class _CommunityOverviewState extends State<CommunityOverview> {
               ),
               SizedBox(width: 8.0),
               Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(right: 10.0),
-                  padding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                  decoration: BoxDecoration(
-                    color: Colors.greenAccent.withOpacity(0.8),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10.0),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Ionicons.log_in_outline,
-                        color: Colors.black,
-                      ),
-                      SizedBox(width: 5.0),
-                      Text(
-                        "Browse",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 15.0,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CommunityRoomPage(
+                          currentUser: widget.currentUser,
+                          community: widget.community,
+                          communityChat: widget.communityChat,
+                          gettingCommunityChat: widget.gettingCommunityChat,
                         ),
                       ),
-                    ],
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(right: 10.0),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.greenAccent.withOpacity(0.8),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Ionicons.log_in_outline,
+                          color: Colors.black,
+                        ),
+                        SizedBox(width: 5.0),
+                        Text(
+                          "Browse",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

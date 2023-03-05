@@ -46,7 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
     var url = Uri.parse(route);
     dynamic results = await http.get(url);
     dynamic resultsJSON = jsonDecode(results.body);
-    following = resultsJSON;
+    followers = resultsJSON;
   }
 
   void getFollowers() async {
@@ -55,7 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
     var url = Uri.parse(route);
     dynamic results = await http.get(url);
     dynamic resultsJSON = jsonDecode(results.body);
-    followers = resultsJSON;
+    following = resultsJSON;
   }
 
   void showFollowingOrFollowers(title, accountList) {

@@ -13,6 +13,7 @@ import 'package:myallin1/pages/chatpage/chat_room_page.dart';
 import 'package:myallin1/pages/chatpage/community_info_bottom_sheet.dart';
 import 'package:myallin1/pages/chatpage/community_overview.dart';
 import 'package:myallin1/pages/chatpage/createCommunityDialog.dart';
+import 'package:myallin1/pages/chatpage/each_discovered_community.dart';
 import 'package:myallin1/pages/components/chat_sidebar_buttons.dart';
 import 'package:myallin1/pages/components/community_info_bars.dart';
 import 'package:myallin1/pages/components/error_messages.dart';
@@ -42,10 +43,14 @@ class _ChatPageState extends State<ChatPage> {
   List chats = [];
   List communities = [];
   List availableChats = [];
+  List communityChat = [];
   String baseURL = Config.baseUrl;
   bool gettingChats = true;
   bool gettingCommunities = true;
+  bool gettingCommunityChat = true;
   int currentChatPage = 1;
+  List<Widget> eachCommunityWidget = [];
+  bool discoveringCommunities = true;
 
   void getChats() async {
     var route =
@@ -85,6 +90,21 @@ class _ChatPageState extends State<ChatPage> {
         getCommunities();
       },
     );
+  }
+
+  void getCommunityChat(String chosenCommunity) async {
+    gettingCommunityChat = true;
+    setState(() {});
+
+    var route =
+        "$baseURL/community/getCommunityChat/" + widget.currentUser["username"];
+    var url = Uri.parse(route);
+    dynamic results = await http.get(url);
+    dynamic resultsJSON = jsonDecode(results.body);
+    communityChat = resultsJSON;
+
+    gettingCommunityChat = false;
+    setState(() {});
   }
 
   void leaveCommunity() async {
@@ -175,7 +195,39 @@ class _ChatPageState extends State<ChatPage> {
       headers: {"Content-Type": "application/json"},
       body: jsonFormat,
     );
-    print(result);
+
+    // chosenCommunity = newCommunity["username"];
+    // chosenCommunityObject = newCommunity;
+    // currentChatPage = 2;
+    // setState(() {});
+    getCommunityChat(chosenCommunity);
+    getCommunities();
+  }
+
+  void discoverCommunities() async {
+    var route = "$baseURL/community/discoverCommunities";
+    var url = Uri.parse(route);
+    dynamic results = await http.get(url);
+    dynamic resultsJSON = jsonDecode(results.body);
+    List discoveredCommunities = resultsJSON;
+    for (var eachCommunity in discoveredCommunities)
+      eachCommunityWidget.add(
+        GestureDetector(
+          onTap: () {
+            chosenCommunity = eachCommunity["username"];
+            chosenCommunityObject = eachCommunity;
+            currentChatPage = 2;
+            getCommunityChat(chosenCommunity);
+            setState(() {});
+          },
+          child: EachDiscoveredCommunity(
+            community: eachCommunity,
+          ),
+        ),
+      );
+    print(discoveredCommunities);
+    discoveringCommunities = false;
+    setState(() {});
   }
 
   @override
@@ -186,6 +238,7 @@ class _ChatPageState extends State<ChatPage> {
     getChatsPolling();
     getCommunities();
     getCommunitiesPolling();
+    discoverCommunities();
   }
 
   @override
@@ -383,6 +436,8 @@ class _ChatPageState extends State<ChatPage> {
                           //     : Colors.transparent,
                         ),
                       ),
+                      SizedBox(height: 4.0),
+
                       Divider(
                         color: Colors.grey[700]!,
                         indent: 20.0,
@@ -413,6 +468,7 @@ class _ChatPageState extends State<ChatPage> {
                                           eachCommunity["username"];
                                       chosenCommunityObject = eachCommunity;
                                       currentChatPage = 2;
+                                      getCommunityChat(chosenCommunity);
                                       setState(() {});
                                     },
                                     child: ChatSidebarButton(
@@ -442,12 +498,29 @@ class _ChatPageState extends State<ChatPage> {
                               ],
                             )
                           : Container(),
+
+                      // Discover Communities
+                      GestureDetector(
+                        onTap: () {
+                          currentChatPage = 3;
+                          chosenCommunity = " ";
+                          setState(() {});
+                        },
+                        child: ChatSidebarButton(
+                          icon: Ionicons.compass_outline,
+                          iconColor: Colors.deepPurpleAccent,
+                          radius: 100.0,
+                        ),
+                      ),
+
+                      // Create New Community
                       GestureDetector(
                         onTap: () {
                           createNewCommunityBottomSheet();
                         },
                         child: ChatSidebarButton(
                           icon: Icons.add,
+                          iconColor: Colors.greenAccent,
                           radius: 100.0,
                         ),
                       ),
@@ -473,13 +546,13 @@ class _ChatPageState extends State<ChatPage> {
                                 children: [
                                   CircularProgressIndicator(
                                     color: Colors.grey[700]!,
-                                    strokeWidth: 2.0,
+                                    strokeWidth: 1.0,
                                   ),
                                   SizedBox(height: 15.0),
                                   Text(
                                     "Getting Chats",
                                     style: TextStyle(
-                                      color: Colors.grey[700]!,
+                                      color: Colors.grey[800]!,
                                     ),
                                   ),
                                 ],
@@ -487,12 +560,97 @@ class _ChatPageState extends State<ChatPage> {
                             )
                           : Container(
                               child: chats.length <= 1
-                                  ? ErrorMessages(
-                                      title: "There are no chats yet",
-                                      body:
-                                          "Start a conversation by clicking on the bottom right button and choosing a friend from the list.",
-                                      color: Colors.grey[500]!,
-                                      marginHorizontal: 40.0,
+                                  ? Column(
+                                      children: [
+                                        // Saved Messages
+                                        for (var eachChat in chats)
+                                          eachChat["username"] ==
+                                                  widget.currentUser["username"]
+                                              ? GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ChatRoomPage(
+                                                          currentUsername:
+                                                              widget.currentUser[
+                                                                  "username"],
+                                                          chatObject: eachChat,
+                                                          savedMessages: true,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                  child: Container(
+                                                    // width: double.infinity,
+                                                    margin:
+                                                        EdgeInsets.symmetric(
+                                                            horizontal: 8.0),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 10.0,
+                                                            horizontal: 10.0),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.grey[900]!
+                                                          .withOpacity(0.2),
+                                                      border: Border.all(
+                                                        color: Colors.blue
+                                                            .withOpacity(0.1),
+                                                      ),
+                                                      // color: Colors.blue
+                                                      //     .withOpacity(0.4),
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                        Radius.circular(10.0),
+                                                      ),
+                                                    ),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Icon(
+                                                              Icons
+                                                                  .bookmark_outline,
+                                                              size: 20.0,
+                                                              color:
+                                                                  Colors.blue,
+                                                            ),
+                                                            SizedBox(
+                                                                width: 5.0),
+                                                            Text(
+                                                              "Saved Messages",
+                                                              style: TextStyle(
+                                                                color:
+                                                                    Colors.blue,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        Icon(
+                                                          Ionicons
+                                                              .pencil_outline,
+                                                          size: 18.0,
+                                                          color: Colors.blue,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
+                                              : Container(),
+                                        SizedBox(height: 10.0),
+                                        ErrorMessages(
+                                          title: "There are no chats yet",
+                                          body:
+                                              "Start a conversation by clicking on the bottom right button and choosing a friend from the list.",
+                                          color: Colors.grey[500]!,
+                                          marginHorizontal: 30.0,
+                                          height: 130.0,
+                                        ),
+                                      ],
                                     )
                                   : Column(
                                       mainAxisAlignment:
@@ -614,56 +772,116 @@ class _ChatPageState extends State<ChatPage> {
                   )
 
                 // Communities
-                : Expanded(
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.85,
-                      // width: MediaQuery.of(context).size.height * 0.85,
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.2),
-                        image: DecorationImage(
-                          image: NetworkImage(
-                            chosenCommunityObject["bannerPic"],
+                : currentChatPage == 2
+                    ? Expanded(
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.85,
+                          // width: MediaQuery.of(context).size.height * 0.85,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.2),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                chosenCommunityObject["bannerPic"],
+                              ),
+                              fit: BoxFit.cover,
+                              opacity: 0.04,
+                            ),
                           ),
-                          fit: BoxFit.cover,
-                          opacity: 0.04,
-                        ),
-                      ),
 
-                      child: gettingCommunities == true
-                          ? Container(
-                              height: 400.0,
-                              width: double.infinity,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CircularProgressIndicator(
-                                    color: Colors.grey[700]!,
-                                    strokeWidth: 2.0,
+                          child: gettingCommunities == true
+                              ? Container(
+                                  height: 400.0,
+                                  width: double.infinity,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircularProgressIndicator(
+                                        color: Colors.grey[700]!,
+                                        strokeWidth: 2.0,
+                                      ),
+                                      SizedBox(height: 15.0),
+                                      Text(
+                                        "Getting Communities",
+                                        style: TextStyle(
+                                          color: Colors.grey[700]!,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(height: 15.0),
-                                  Text(
-                                    "Getting Communities",
+                                )
+                              : ListView(
+                                  children: [
+                                    CommunityOverview(
+                                      community: chosenCommunityObject,
+                                      communityInfoBottomSheet:
+                                          communityInfoBottomSheet,
+                                      leaveCommunity: leaveCommunity,
+                                      currentUser: widget.currentUser,
+                                      deleteCommunity: deleteCommunity,
+                                      communityChat: communityChat,
+                                      gettingCommunityChat:
+                                          gettingCommunityChat,
+                                    ),
+                                  ],
+                                ),
+                        ),
+                      )
+                    :
+                    // Discover Communities
+                    discoveringCommunities == true
+                        ? Expanded(
+                            child: Container(
+                              height: 300.0,
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.grey[300]!,
+                                  strokeWidth: 1.0,
+                                ),
+                              ),
+                            ),
+                          )
+                        : Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: 5.0),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0, horizontal: 12.0),
+                                  child: Text(
+                                    "Discover Communities ...",
                                     style: TextStyle(
-                                      color: Colors.grey[700]!,
+                                      color: Colors.white,
+                                      fontSize: 18.0,
                                     ),
                                   ),
-                                ],
-                              ),
-                            )
-                          : ListView(
-                              children: [
-                                CommunityOverview(
-                                  community: chosenCommunityObject,
-                                  communityInfoBottomSheet:
-                                      communityInfoBottomSheet,
-                                  leaveCommunity: leaveCommunity,
-                                  currentUser: widget.currentUser,
-                                  deleteCommunity: deleteCommunity,
+                                ),
+                                Container(
+                                  // color: Colors.blue,
+                                  height: MediaQuery.of(context).size.height,
+                                  child: ListView(
+                                    children: [
+                                      Container(
+                                        // color: Colors.grey[900],
+                                        // width: 00.0,
+                                        // width: double.infinity,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.8,
+                                        child: GridView.count(
+                                          primary: true,
+                                          shrinkWrap: true,
+                                          crossAxisCount: 2,
+                                          childAspectRatio: 0.8,
+                                          children: eachCommunityWidget,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
-                    ),
-                  ),
+                          ),
           ],
         ),
       ],

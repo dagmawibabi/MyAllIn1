@@ -131,11 +131,11 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
                 // clipBehavior: Clip.hardEdge,
                 margin: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                 decoration: BoxDecoration(
-                  color: Colors.grey[900]!.withOpacity(0.2),
-                  // borderRadius: BorderRadius.circular(
-                  //   20.0,
-                  // ),
-                ),
+                    // color: Colors.grey[900]!.withOpacity(0.2),
+                    // borderRadius: BorderRadius.circular(
+                    //   20.0,
+                    // ),
+                    ),
                 alignment: Alignment.center,
                 child: PhotoView(
                   tightMode: true,

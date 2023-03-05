@@ -27,7 +27,7 @@ class _CreateCommunityDialogState extends State<CreateCommunityDialog> {
     Map newCommunity = {
       "name": communityNameController.text.trim(),
       "username": communityUsernameController.text.toLowerCase().trim(),
-      "bio": communityBioController.text.toLowerCase().trim(),
+      "bio": communityBioController.text.trim(),
       "private": false,
       "owner": widget.currentUser["username"],
     };

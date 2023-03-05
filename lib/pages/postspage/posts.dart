@@ -67,8 +67,10 @@ class _PostsState extends State<Posts> {
   String? fileName = " ";
   bool isGeneratingVideoThumbnail = false;
 
+  bool liked = false;
+
   // Like Displie Posts
-  void likeDislikePosts(String postID) async {
+  Future<void> likeDislikePosts(String postID) async {
     var postReq = {
       "postID": postID,
       "likedBy": widget.currentUser["username"],
@@ -154,6 +156,7 @@ class _PostsState extends State<Posts> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    liked = widget.post["likers"].contains(widget.currentUser["username"]);
     videoThumbnail();
   }
 
@@ -739,17 +742,17 @@ class _PostsState extends State<Posts> {
                             Row(
                               children: [
                                 IconButton(
-                                  onPressed: () {
-                                    likeDislikePosts(widget.post["_id"]);
+                                  onPressed: () async {
+                                    liked = !liked;
+                                    setState(() {});
+                                    await likeDislikePosts(widget.post["_id"]);
                                   },
                                   icon: Icon(
-                                    widget.post["likers"].contains(
-                                            widget.currentUser["username"])
+                                    liked
                                         ? Ionicons.heart
                                         : Ionicons.heart_outline,
                                     size: 20.0,
-                                    color: widget.post["likers"].contains(
-                                            widget.currentUser["username"])
+                                    color: liked
                                         ? Colors.pinkAccent
                                         : Colors.white,
                                   ),
@@ -812,7 +815,7 @@ class _PostsState extends State<Posts> {
                                     ),
                                   ),
                                   Text(
-                                    widget.post["comments"].toString(),
+                                    widget.post["commentCount"].toString(),
                                     style: TextStyle(
                                       fontSize: 11.0,
                                       color: Colors.white,
