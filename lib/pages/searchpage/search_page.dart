@@ -1,13 +1,15 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/config/config.dart';
 import 'package:myallin1/pages/APOTDpage/aPOTD_page.dart';
 import 'package:myallin1/pages/bookDetailPage/book_detail_page.dart';
-import 'package:myallin1/pages/bottomsheets/search_categories_bottom_sheet.dart';
+import 'package:myallin1/pages/components/each_subreddit_post.dart';
+import 'package:myallin1/pages/searchpage/search_categories_bottom_sheet.dart';
 import 'package:myallin1/pages/components/eachBook.dart';
 import 'package:myallin1/pages/components/each_APOTD.dart';
 import 'package:myallin1/pages/components/each_crypto.dart';
@@ -18,6 +20,7 @@ import 'package:myallin1/pages/components/movie_detail_bottom_sheet.dart';
 import 'package:myallin1/pages/components/rounded_icon_labeled_button.dart';
 import 'package:myallin1/pages/cryptoDetailPage/crypto_detail_page.dart';
 import 'package:myallin1/pages/movieDetailPage/movie_detail_page.dart';
+import 'package:myallin1/pages/searchpage/sort_subreddit_posts_bottom_sheet.dart';
 
 import '../chatpage/chats.dart';
 import '../components/crypto_detail_bottom_sheet.dart';
@@ -44,6 +47,7 @@ class _SearchPageState extends State<SearchPage> {
   List movies = [];
   List cryptos = [];
   List aPOTDs = [];
+  List subRedditPosts = [];
   Map aPOTDToday = {};
   List books = [];
   dynamic aPOTDWeek = [];
@@ -54,17 +58,69 @@ class _SearchPageState extends State<SearchPage> {
   List<Widget> eachMovieWidget = [];
   List<Widget> eachCryptoWidget = [];
   List<Widget> eachBookWidget = [];
+  List<Widget> subRedditPostsWidget = [];
 
   bool newsLoading = true;
   bool moviesLoading = true;
   bool cryptoLoading = true;
   bool aPOTDLoading = true;
   bool booksLoading = true;
+  bool redditLoading = true;
 
   bool isSeries = false;
   bool isDaily = false;
   TextEditingController searchTextController = TextEditingController();
   String curSearchTerm = "";
+  List subredditList = [
+    "wholesomeMemes",
+    "pics",
+    "meme",
+    "whitePeopleTwitter",
+    "funny",
+    "damnThatsInteresting",
+    "cats",
+    "dataIsBeautiful",
+    "comics",
+    "madeMeSmile",
+    "sketchPad",
+    "illustration",
+    "artProgressPics",
+    "pixelArt",
+    "logoDesign",
+    "typography",
+    "humansForScale",
+    "imaginaryCharacters",
+    "imaginaryCityscapes",
+    "imaginaryCyberpunk",
+    "art",
+    "artefactPorn",
+    "quotesPorn",
+    "aww",
+    "movies",
+    "earthPorn",
+    "food",
+    "mildlyInteresting",
+    "space",
+    "campingAndHiking",
+    "100YearsAgo",
+    "awwducational",
+    "cozyPlaces",
+    "programmingHumor",
+    "getMotivated",
+    "nostalgia",
+    "designPorn",
+    "cringePics",
+    "creepy",
+    "historyPorn",
+    "verticalWallpapers",
+    "militaryPorn",
+    "skyPorn",
+    "abandonedPorn",
+    "noTitle",
+    "iTookAPicture",
+    "roomPorn",
+    "me_IRL"
+  ];
 
   // News
   Future<void> getNews() async {
@@ -350,33 +406,111 @@ class _SearchPageState extends State<SearchPage> {
     setState(() {});
   }
 
-  // Search
-  void search(String searchTerm) async {
-    curSearchTerm = searchTerm;
-    if (currentSearchPage == 5) {
-      await getBooks(curSearchTerm);
-      displayBooks();
-    } else {
-      if (searchTerm != "" && searchTerm != " ") {
-        var url = Config.baseUrl + "/search/" + searchTerm;
-        var uri = Uri.parse(url);
-        var result = await http.get(uri);
-        dynamic resultJSON = jsonDecode(result.body);
-        searchResults = resultJSON;
-        print(searchResults);
-        currentSearchPage = 0;
-      }
-      setState(() {});
-    }
+  // Reddit
+  String chosenSubreddit = "";
+  int subRedditSortTime = 1;
+  int subRedditSortListing = 1;
+  Future<void> getSubreddit(String subreddit) async {
+    chosenSubreddit = subreddit;
+    // https://www.reddit.com/r/askscience/top/.json?sort=top
+    // https://www.reddit.com/r/todayilearned/top.json?limit=10
+    /*
+      timeframe = 'month' # hour, day, week, month, year, all
+      listing = 'top' # controversial, best, hot, new, random, rising, top
+      https://www.reddit.com/r/{subreddit}/{listing}.json?limit={limit}&t={timeframe} 
+    */
+    var timeFrame = ["hour", "day", "week", "month", "year", "all"];
+    var chosenTime = timeFrame[subRedditSortTime];
+    var listings = ["new", "hot", "rising", "best", "random", "top"];
+    var chosenListing = listings[subRedditSortListing];
+
+    var url = "https://www.reddit.com/r/" +
+        subreddit +
+        "/" +
+        chosenListing +
+        ".json?t=" +
+        chosenTime +
+        "&limit=100";
+    debugPrint("abcbbcbcbcbcbcbcbbccbc");
+    print(chosenTime);
+    print(chosenListing);
+    debugPrint("abcbbcbcbcbcbcbcbbccbc");
+    var uri = Uri.parse(url);
+    var result = await http.get(uri);
+    dynamic resultJSON = jsonDecode(result.body);
+    subRedditPosts = resultJSON["data"]["children"];
+    redditLoading = false;
   }
 
-  void getContent() {
-    getNews();
-    getMovies();
-    getCrypto();
-    getAPOTD();
-    getBooks("");
+  void sortRedditPosts(int time, int listing) async {
+    subRedditSortTime = time;
+    subRedditSortListing = listing;
+    await getSubreddit(chosenSubreddit);
+    displaySubreddit();
   }
+
+  void displaySubreddit() {
+    subRedditPostsWidget = [];
+    for (var eachSubredditPost in subRedditPosts)
+      subRedditPostsWidget.add(
+        GestureDetector(
+          onTap: () {
+            // showCryptoDetails(eachCrypto);
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => Text(eachSubredditPost),
+            //   ),
+            // );
+          },
+          child: EachSubredditPost(
+            subredditPost: eachSubredditPost["data"],
+          ),
+        ),
+      );
+    currentSearchPage = 8;
+    setState(() {});
+  }
+
+  void sortSubredditPostsBottomSheet() {
+    showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      anchorPoint: Offset(0, 0),
+      constraints: BoxConstraints(
+        // minHeight: MediaQuery.of(context).size.height * 0.7,
+        maxHeight: MediaQuery.of(context).size.height * 0.5,
+      ),
+      isScrollControlled: true,
+      isDismissible: true,
+      enableDrag: true,
+      context: context,
+      builder: (context) {
+        return SortSubredditBottomSheet(
+          sortRedditPosts: sortRedditPosts,
+        );
+      },
+    );
+  }
+
+  //!
+  // Choose Search Categories
+  void setChosenCategories(List chosenCategories) {
+    chosenSearchCategories = chosenCategories;
+    setState(() {});
+  }
+
+  // Search Categories
+  List chosenSearchCategories = [
+    "Books",
+    "Crypto",
+    "Github",
+    "Memes",
+    "Movies",
+    "News",
+    "Reddit",
+    "Space",
+    "Wikis",
+  ];
 
   // Search Categories
   void searchCategories() {
@@ -392,9 +526,45 @@ class _SearchPageState extends State<SearchPage> {
       enableDrag: true,
       context: context,
       builder: (context) {
-        return SearchCategoriesBottomSheet();
+        return SearchCategoriesBottomSheet(
+          setChosenCategories: setChosenCategories,
+          chosenSearchCategories: chosenSearchCategories,
+        );
       },
     );
+  }
+
+  // Search
+  void search(String searchTerm) async {
+    curSearchTerm = searchTerm;
+    if (currentSearchPage == 5) {
+      await getBooks(curSearchTerm);
+      displayBooks();
+    } else if (currentSearchPage == 8) {
+      print("hereeeee");
+      await getSubreddit(curSearchTerm);
+      displaySubreddit();
+    } else {
+      if (searchTerm != "" && searchTerm != " ") {
+        var url = Config.baseUrl + "/search/" + searchTerm;
+        var uri = Uri.parse(url);
+        var result = await http.get(uri);
+        dynamic resultJSON = jsonDecode(result.body);
+        searchResults = resultJSON;
+        currentSearchPage = 0;
+      }
+      setState(() {});
+    }
+  }
+
+  void getContent() {
+    getNews();
+    getMovies();
+    getCrypto();
+    getAPOTD();
+    getBooks("");
+    var randomSubredditIndex = Random().nextInt(subredditList.length);
+    getSubreddit(subredditList[randomSubredditIndex]);
   }
 
   @override
@@ -406,8 +576,75 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
+    List searchCategoriesWidgets = [
+      {
+        "label": "News",
+        "searchPageIndex": 1,
+        "onClickFunction": displayNews,
+        "chosenColor": Colors.lightBlue,
+        "pillIcon": Ionicons.newspaper_outline,
+      },
+      {
+        "label": "Movies",
+        "searchPageIndex": 2,
+        "onClickFunction": displayMovies,
+        "chosenColor": Colors.amberAccent,
+        "pillIcon": Ionicons.newspaper_outline,
+      },
+      {
+        "label": "Space",
+        "searchPageIndex": 3,
+        "onClickFunction": displayAPOTD,
+        "chosenColor": Colors.grey[300]!,
+        "pillIcon": Ionicons.sparkles_outline,
+      },
+      {
+        "label": "Crypto",
+        "searchPageIndex": 4,
+        "onClickFunction": displayCrypto,
+        "chosenColor": Colors.greenAccent,
+        "pillIcon": Ionicons.cash_outline,
+      },
+      {
+        "label": "Books",
+        "searchPageIndex": 5,
+        "onClickFunction": displayBooks,
+        "chosenColor": Colors.limeAccent,
+        "pillIcon": Ionicons.book_outline,
+      },
+      // Undone
+      {
+        "label": "Github",
+        "searchPageIndex": 6,
+        "onClickFunction": displayBooks,
+        "chosenColor": Colors.white,
+        "pillIcon": Ionicons.git_branch_outline,
+      },
+      {
+        "label": "Memes",
+        "searchPageIndex": 7,
+        "onClickFunction": displayBooks,
+        "chosenColor": Colors.limeAccent,
+        "pillIcon": Icons.photo_outlined,
+      },
+      {
+        "label": "Reddit",
+        "searchPageIndex": 8,
+        "onClickFunction": displaySubreddit,
+        "chosenColor": Colors.deepOrange,
+        "pillIcon": Ionicons.logo_reddit,
+      },
+      {
+        "label": "Wikis",
+        "searchPageIndex": 9,
+        "onClickFunction": displayBooks,
+        "chosenColor": Color.fromARGB(255, 255, 110, 158),
+        "pillIcon": Icons.library_books_outlined,
+      },
+    ];
+
     List searchScreens = [
-      // Sample
+      // Search Results
       searchResults.isEmpty == false
           ? searchResults["accountResults"].isEmpty == true &&
                   searchResults["postResults"].isEmpty == true
@@ -724,30 +961,32 @@ class _SearchPageState extends State<SearchPage> {
                             ],
                           ),
                         ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        "Checkout More",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14.0,
+                  moviesLoading == true
+                      ? Container()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              "Checkout More",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14.0,
+                              ),
+                            ),
+                            // SizedBox(width: 15.0),
+                            IconButton(
+                              onPressed: () {
+                                currentSearchPage = 3;
+                                displayMovies();
+                                setState(() {});
+                              },
+                              icon: Icon(
+                                Icons.keyboard_arrow_right_outlined,
+                                size: 20.0,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      // SizedBox(width: 15.0),
-                      IconButton(
-                        onPressed: () {
-                          currentSearchPage = 3;
-                          displayMovies();
-                          setState(() {});
-                        },
-                        icon: Icon(
-                          Icons.keyboard_arrow_right_outlined,
-                          size: 20.0,
-                        ),
-                      ),
-                    ],
-                  ),
 
                   // EOP
                   SizedBox(height: 200.0),
@@ -987,6 +1226,7 @@ class _SearchPageState extends State<SearchPage> {
       // ),
       // News
 
+      // News
       newsLoading
           ? Container(
               width: double.infinity,
@@ -1329,7 +1569,117 @@ class _SearchPageState extends State<SearchPage> {
                       ],
                     ),
             ),
+      // Github
+      Container(),
+
+      // Memes
+      Container(),
+
+      // Reddit
+      redditLoading == true
+          ? Container(
+              width: double.infinity,
+              height: 200.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    color: Colors.grey,
+                    strokeWidth: 1.0,
+                  ),
+                  SizedBox(height: 15.0),
+                  Text(
+                    "Loading Subreddit",
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : Column(
+              children: [
+                Container(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onHorizontalDragEnd: (value) async {
+                            var randomSubredditIndex =
+                                Random().nextInt(subredditList.length);
+                            chosenSubreddit =
+                                subredditList[randomSubredditIndex];
+                            redditLoading = true;
+                            subRedditPostsWidget = [];
+                            setState(() {});
+                            await getSubreddit(
+                                subredditList[randomSubredditIndex]);
+                            displaySubreddit();
+                          },
+                          child: Container(
+                            // width: double.infinity,
+                            margin: EdgeInsets.symmetric(
+                                horizontal: 25.0, vertical: 5.0),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15.0, vertical: 10.0),
+                            decoration: BoxDecoration(
+                              color: Colors.deepOrange.withOpacity(0.5),
+                              border: Border.all(
+                                color: Colors.deepOrange.withOpacity(0.5),
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(20.0),
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                "r/" + chosenSubreddit.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          sortSubredditPostsBottomSheet();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 8.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.deepOrange.withOpacity(0.5),
+                            ),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(100.0),
+                            ),
+                          ),
+                          child: Icon(
+                            Icons.sort,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 30.0),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Container(
+                  child: Column(
+                    children: [
+                      for (var eachSubredditPost in subRedditPostsWidget)
+                        eachSubredditPost,
+                      SizedBox(height: 200.0),
+                    ],
+                  ),
+                ),
+              ],
+            ),
     ];
+
     return ListView(
       children: [
         // Search Box
@@ -1359,71 +1709,33 @@ class _SearchPageState extends State<SearchPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      displayNews();
-                    },
-                    child: IconPillButton(
-                      chosenColor: Colors.lightBlue,
-                      icon: Ionicons.newspaper_outline,
-                      label: "News",
-                      chosen: (currentSearchPage == 1 ? true : false),
-                    ),
-                  ),
-                  SizedBox(width: 8.0),
+                  for (var eachSearchCategory in searchCategoriesWidgets)
+                    chosenSearchCategories
+                                .contains(eachSearchCategory["label"]) ==
+                            true
+                        ? Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  eachSearchCategory["onClickFunction"]();
+                                },
+                                child: IconPillButton(
+                                  chosenColor:
+                                      eachSearchCategory["chosenColor"],
+                                  icon: eachSearchCategory["pillIcon"],
+                                  label: eachSearchCategory["label"],
+                                  chosen: (currentSearchPage ==
+                                          eachSearchCategory["searchPageIndex"]
+                                      ? true
+                                      : false),
+                                ),
+                              ),
+                              SizedBox(width: 8.0),
+                            ],
+                          )
+                        : Container(),
 
-                  GestureDetector(
-                    onTap: () {
-                      displayMovies();
-                    },
-                    child: IconPillButton(
-                      chosenColor: Colors.amberAccent,
-                      icon: Ionicons.film_outline,
-                      label: "Movies",
-                      chosen: (currentSearchPage == 2 ? true : false),
-                    ),
-                  ),
-                  SizedBox(width: 8.0),
-
-                  GestureDetector(
-                    onTap: () {
-                      displayAPOTD();
-                    },
-                    child: IconPillButton(
-                      chosenColor: Colors.grey[300]!,
-                      icon: Ionicons.sparkles_outline,
-                      label: "Space",
-                      chosen: (currentSearchPage == 3 ? true : false),
-                    ),
-                  ),
-                  SizedBox(width: 8.0),
-
-                  GestureDetector(
-                    onTap: () {
-                      displayCrypto();
-                    },
-                    child: IconPillButton(
-                      chosenColor: Colors.greenAccent,
-                      icon: Ionicons.cash_outline,
-                      label: "Crypto",
-                      chosen: (currentSearchPage == 4 ? true : false),
-                    ),
-                  ),
-                  SizedBox(width: 8.0),
-
-                  GestureDetector(
-                    onTap: () {
-                      displayBooks();
-                    },
-                    child: IconPillButton(
-                      chosenColor: Colors.greenAccent,
-                      icon: Ionicons.book_outline,
-                      label: "Books",
-                      chosen: (currentSearchPage == 5 ? true : false),
-                    ),
-                  ),
-                  SizedBox(width: 8.0),
-
+                  // Search Category Options
                   IconButton(
                     onPressed: () {
                       searchCategories();

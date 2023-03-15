@@ -128,11 +128,11 @@ class _PostsPageState extends State<PostsPage> {
                   children: [
                     CircularProgressIndicator(
                       color: Colors.grey[800]!,
-                      strokeWidth: 2.0,
+                      strokeWidth: 1.0,
                     ),
                     SizedBox(height: 8.0),
                     Text(
-                      "Loading Weather Data",
+                      "Gazing at the skies",
                       style: TextStyle(
                         color: Colors.grey[700]!,
                       ),
@@ -176,7 +176,7 @@ class _PostsPageState extends State<PostsPage> {
                                     child: CircularProgressIndicator(
                                       value: downloadProgress.progress,
                                       color: Colors.grey[800]!,
-                                      strokeWidth: 2.0,
+                                      strokeWidth: 1.0,
                                     ),
                                   ),
                                   errorWidget: (context, url, error) => Icon(
@@ -191,11 +191,19 @@ class _PostsPageState extends State<PostsPage> {
                                 // ),
                               ),
                             ),
-                            Text(
-                              widget.weatherData["current"]["condition"]["text"]
-                                  .toString(),
-                              style: TextStyle(
-                                color: Colors.white,
+                            Container(
+                              height: 40.0,
+                              width: 140.0,
+                              // color: Colors.red,
+                              child: Text(
+                                widget.weatherData["current"]["condition"]
+                                        ["text"]
+                                    .toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  height: 1.3,
+                                  // fontSize: 12.0,
+                                ),
                               ),
                             ),
                           ],

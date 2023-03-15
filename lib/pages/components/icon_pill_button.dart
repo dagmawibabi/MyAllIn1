@@ -5,11 +5,13 @@ class IconPillButton extends StatefulWidget {
   const IconPillButton({
     super.key,
     this.chosen = false,
-    required this.icon,
+    this.icon = Icons.abc,
     required this.label,
     this.chosenColor = Colors.white,
     this.backgroundColor = Colors.black,
     this.border = 0.0,
+    this.boldLabel = false,
+    this.iconOff = false,
   });
 
   final bool chosen;
@@ -18,6 +20,8 @@ class IconPillButton extends StatefulWidget {
   final Color chosenColor;
   final Color backgroundColor;
   final double border;
+  final bool boldLabel;
+  final bool iconOff;
 
   @override
   State<IconPillButton> createState() => _IconPillButtonState();
@@ -48,16 +52,20 @@ class _IconPillButtonState extends State<IconPillButton> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            widget.icon,
-            size: 18.0,
-            color: widget.chosen == true ? Colors.black : Colors.white,
-          ),
+          widget.iconOff == true
+              ? Container()
+              : Icon(
+                  widget.icon,
+                  size: 18.0,
+                  color: widget.chosen == true ? Colors.black : Colors.white,
+                ),
           SizedBox(width: 8.0),
           Text(
             widget.label,
             style: TextStyle(
               color: widget.chosen == true ? Colors.black : Colors.white,
+              fontWeight:
+                  widget.boldLabel ? FontWeight.bold : FontWeight.normal,
             ),
           ),
         ],
