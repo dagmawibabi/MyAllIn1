@@ -194,7 +194,7 @@ class _HomePageState extends State<HomePage>
   // Get Feed Polling
   void getFeedPolling() async {
     Timer.periodic(Duration(seconds: 10), (time) {
-      getFeed();
+      pageIndex == 1 ? getFeed() : () {};
     });
   }
 

@@ -436,6 +436,8 @@ class _PostsState extends State<Posts> {
                                   .replaceAll(RegExp(r" "), "X")
                                   .replaceAll(RegExp(r"[^X]"), "*")
                                   .replaceAll(RegExp(r"X"), " "),
+                      maxLines: widget.extended == true ? 100 : 10,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontSize: widget.extended == true ? 16.5 : 16.0,
                         color: widget.extended == true

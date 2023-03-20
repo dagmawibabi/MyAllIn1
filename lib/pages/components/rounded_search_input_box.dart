@@ -19,6 +19,8 @@ class RoundedSearchInputBox extends StatefulWidget {
 }
 
 class _RoundedSearchInputBoxState extends State<RoundedSearchInputBox> {
+  dynamic currentTerm;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,11 +34,18 @@ class _RoundedSearchInputBoxState extends State<RoundedSearchInputBox> {
       ),
       child: TextField(
         focusNode: widget.focusNode,
-        onChanged: (change) => {
+        keyboardType: TextInputType.url,
+        onEditingComplete: () => {
           widget.onChangedFunction(
-            change,
+            currentTerm,
           ),
           // print(change),
+        },
+        onChanged: (change) => {
+          currentTerm = change,
+          // widget.onChangedFunction(
+          //   change,
+          // ),
         },
         decoration: InputDecoration(
           border: InputBorder.none,

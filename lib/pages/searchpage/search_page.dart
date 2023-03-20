@@ -408,8 +408,8 @@ class _SearchPageState extends State<SearchPage> {
 
   // Reddit
   String chosenSubreddit = "";
-  int subRedditSortTime = 1;
-  int subRedditSortListing = 1;
+  int subRedditSortTime = 5;
+  int subRedditSortListing = 5;
   Future<void> getSubreddit(String subreddit) async {
     chosenSubreddit = subreddit;
     // https://www.reddit.com/r/askscience/top/.json?sort=top
@@ -430,21 +430,23 @@ class _SearchPageState extends State<SearchPage> {
         chosenListing +
         ".json?t=" +
         chosenTime +
-        "&limit=100";
-    debugPrint("abcbbcbcbcbcbcbcbbccbc");
-    print(chosenTime);
-    print(chosenListing);
-    debugPrint("abcbbcbcbcbcbcbcbbccbc");
+        "&limit=20";
     var uri = Uri.parse(url);
     var result = await http.get(uri);
     dynamic resultJSON = jsonDecode(result.body);
     subRedditPosts = resultJSON["data"]["children"];
+    debugPrint(
+        "------------------------------------------------------------------");
+    debugPrint(resultJSON["data"].toString());
+    debugPrint(resultJSON["data"]["children"].toString());
+    debugPrint(
+        "------------------------------------------------------------------");
     redditLoading = false;
   }
 
   void sortRedditPosts(int time, int listing) async {
-    subRedditSortTime = time;
-    subRedditSortListing = listing;
+    subRedditSortTime = time - 1;
+    subRedditSortListing = listing - 1;
     await getSubreddit(chosenSubreddit);
     displaySubreddit();
   }
@@ -487,6 +489,8 @@ class _SearchPageState extends State<SearchPage> {
       builder: (context) {
         return SortSubredditBottomSheet(
           sortRedditPosts: sortRedditPosts,
+          timeSort: subRedditSortTime,
+          postListing: subRedditSortListing,
         );
       },
     );
@@ -541,7 +545,6 @@ class _SearchPageState extends State<SearchPage> {
       await getBooks(curSearchTerm);
       displayBooks();
     } else if (currentSearchPage == 8) {
-      print("hereeeee");
       await getSubreddit(curSearchTerm);
       displaySubreddit();
     } else {
@@ -563,8 +566,35 @@ class _SearchPageState extends State<SearchPage> {
     getCrypto();
     getAPOTD();
     getBooks("");
-    var randomSubredditIndex = Random().nextInt(subredditList.length);
-    getSubreddit(subredditList[randomSubredditIndex]);
+
+    List initialSubredditList = [
+      "wholesomeMemes",
+      "pics",
+      "dataIsBeautiful",
+      "comics",
+      "illustration",
+      "pixelArt",
+      "humansForScale",
+      "imaginaryCharacters",
+      "imaginaryCityscapes",
+      "imaginaryCyberpunk",
+      "art",
+      "artefactPorn",
+      "earthPorn",
+      "space",
+      "designPorn",
+      "creepy",
+      "historyPorn",
+      "verticalWallpapers",
+      "skyPorn",
+      "abandonedPorn",
+      "iTookAPicture",
+      "roomPorn",
+    ];
+
+    var randomSubredditIndex = Random().nextInt(initialSubredditList.length);
+    getSubreddit(initialSubredditList[randomSubredditIndex]);
+    // getSubreddit("imaginaryCyberpunk");
   }
 
   @override
@@ -1576,108 +1606,110 @@ class _SearchPageState extends State<SearchPage> {
       Container(),
 
       // Reddit
-      redditLoading == true
-          ? Container(
-              width: double.infinity,
-              height: 200.0,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    color: Colors.grey,
-                    strokeWidth: 1.0,
-                  ),
-                  SizedBox(height: 15.0),
-                  Text(
-                    "Loading Subreddit",
-                    style: TextStyle(
-                      color: Colors.grey[700],
+      Column(
+        children: [
+          Container(
+            child: Row(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onHorizontalDragEnd: (value) async {
+                      var randomSubredditIndex =
+                          Random().nextInt(subredditList.length);
+                      chosenSubreddit = subredditList[randomSubredditIndex];
+                      redditLoading = true;
+                      subRedditPostsWidget = [];
+                      setState(() {});
+                      await getSubreddit(subredditList[randomSubredditIndex]);
+                      displaySubreddit();
+                    },
+                    child: Container(
+                      // width: double.infinity,
+                      margin:
+                          EdgeInsets.symmetric(horizontal: 25.0, vertical: 5.0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 15.0, vertical: 10.0),
+                      decoration: BoxDecoration(
+                        color: Colors.deepOrange.withOpacity(0.5),
+                        border: Border.all(
+                          color: Colors.deepOrange.withOpacity(0.5),
+                        ),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20.0),
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "r/" + chosenSubreddit.toString(),
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ],
-              ),
-            )
-          : Column(
-              children: [
-                Container(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onHorizontalDragEnd: (value) async {
-                            var randomSubredditIndex =
-                                Random().nextInt(subredditList.length);
-                            chosenSubreddit =
-                                subredditList[randomSubredditIndex];
-                            redditLoading = true;
-                            subRedditPostsWidget = [];
-                            setState(() {});
-                            await getSubreddit(
-                                subredditList[randomSubredditIndex]);
-                            displaySubreddit();
-                          },
-                          child: Container(
-                            // width: double.infinity,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 25.0, vertical: 5.0),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 15.0, vertical: 10.0),
-                            decoration: BoxDecoration(
-                              color: Colors.deepOrange.withOpacity(0.5),
-                              border: Border.all(
-                                color: Colors.deepOrange.withOpacity(0.5),
-                              ),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(20.0),
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                "r/" + chosenSubreddit.toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    sortSubredditPostsBottomSheet();
+                  },
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.deepOrange.withOpacity(0.5),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          sortSubredditPostsBottomSheet();
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 8.0),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.deepOrange.withOpacity(0.5),
-                            ),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(100.0),
-                            ),
-                          ),
-                          child: Icon(
-                            Icons.sort,
-                          ),
-                        ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(100.0),
                       ),
-                      SizedBox(width: 30.0),
-                    ],
+                    ),
+                    child: Icon(
+                      Icons.sort,
+                    ),
                   ),
                 ),
-                SizedBox(height: 10.0),
-                Container(
-                  child: Column(
-                    children: [
-                      for (var eachSubredditPost in subRedditPostsWidget)
-                        eachSubredditPost,
-                      SizedBox(height: 200.0),
-                    ],
-                  ),
-                ),
+                SizedBox(width: 30.0),
               ],
             ),
+          ),
+          SizedBox(height: 10.0),
+          redditLoading == true
+              ? Container(
+                  width: double.infinity,
+                  height: 250.0,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(
+                        color: Colors.grey,
+                        strokeWidth: 1.0,
+                      ),
+                      SizedBox(height: 15.0),
+                      Text(
+                        "Loading Subreddit",
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              : Column(
+                  children: [
+                    Container(
+                      child: Column(
+                        children: [
+                          for (var eachSubredditPost in subRedditPostsWidget)
+                            eachSubredditPost,
+                          SizedBox(height: 200.0),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+        ],
+      ),
     ];
 
     return ListView(

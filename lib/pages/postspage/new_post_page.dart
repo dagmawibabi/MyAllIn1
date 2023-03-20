@@ -230,7 +230,7 @@ class _NewPostPageState extends State<NewPostPage> {
             ),
             child: TextField(
               controller: postContentController,
-              maxLength: 1000,
+              maxLength: 2000,
               maxLines: 100,
               enabled: isPosting == true ? false : true,
               style: TextStyle(

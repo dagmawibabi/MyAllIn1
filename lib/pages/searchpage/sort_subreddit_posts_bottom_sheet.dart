@@ -5,9 +5,13 @@ class SortSubredditBottomSheet extends StatefulWidget {
   const SortSubredditBottomSheet({
     super.key,
     required this.sortRedditPosts,
+    required this.timeSort,
+    required this.postListing,
   });
 
   final Function sortRedditPosts;
+  final int timeSort;
+  final int postListing;
 
   @override
   State<SortSubredditBottomSheet> createState() =>
@@ -17,6 +21,14 @@ class SortSubredditBottomSheet extends StatefulWidget {
 class _SortSubredditBottomSheetState extends State<SortSubredditBottomSheet> {
   int timeSort = 1;
   int postListing = 1;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    timeSort = widget.timeSort + 1;
+    postListing = widget.postListing + 1;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -232,13 +244,13 @@ class _SortSubredditBottomSheetState extends State<SortSubredditBottomSheet> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    postListing = 4;
+                    postListing = 5;
                     setState(() {});
                   },
                   child: IconPillButton(
                     label: "Random",
                     iconOff: true,
-                    chosen: postListing == 4 ? true : false,
+                    chosen: postListing == 5 ? true : false,
                     chosenColor: Colors.grey[400]!,
                   ),
                 ),
@@ -262,7 +274,7 @@ class _SortSubredditBottomSheetState extends State<SortSubredditBottomSheet> {
               padding: EdgeInsets.only(left: 15.0),
               child: ElevatedButton(
                 onPressed: () {
-                  widget.sortRedditPosts(timeSort - 1, postListing - 1);
+                  widget.sortRedditPosts(timeSort, postListing);
                   Navigator.pop(context);
                 },
                 style: ButtonStyle(

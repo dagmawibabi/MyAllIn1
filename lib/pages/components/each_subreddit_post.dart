@@ -68,16 +68,26 @@ class _EachSubredditPostState extends State<EachSubredditPost> {
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(height: 5.0),
+                      SizedBox(height: 3.0),
+                      // subreddit_name_prefixed
                       Text(
-                        DateTime.fromMillisecondsSinceEpoch(
-                                (widget.subredditPost["created_utc"]).toInt())
+                        widget.subredditPost["subreddit_name_prefixed"]
                             .toString(),
                         style: TextStyle(
-                          color: Colors.grey[200]!,
-                          fontSize: 10.0,
+                          fontSize: 12.0,
+                          color: Colors.grey[300]!,
                         ),
                       ),
+                      // Text(
+                      //   DateTime.fromMicrosecondsSinceEpoch(
+                      //           (widget.subredditPost["created_utc"].toInt()),
+                      //           isUtc: true)
+                      //       .toString(),
+                      //   style: TextStyle(
+                      //     color: Colors.grey[200]!,
+                      //     fontSize: 10.0,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ],

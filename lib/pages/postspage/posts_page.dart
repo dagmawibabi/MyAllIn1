@@ -192,13 +192,14 @@ class _PostsPageState extends State<PostsPage> {
                               ),
                             ),
                             Container(
-                              height: 40.0,
-                              width: 140.0,
+                              // height: 40.0,
+                              width: 125.0,
                               // color: Colors.red,
                               child: Text(
                                 widget.weatherData["current"]["condition"]
                                         ["text"]
                                     .toString(),
+                                textAlign: TextAlign.start,
                                 style: TextStyle(
                                   color: Colors.white,
                                   height: 1.3,
