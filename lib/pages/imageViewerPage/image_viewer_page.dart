@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_downloader/image_downloader.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:cr_file_saver/file_saver.dart' as cr;
 
@@ -38,24 +43,43 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
     // isDownloading = false;
     // isDownloadDone = true;
     // setState(() {});
-
+    var directory = Directory('/storage/emulated/0/Philomena');
+    var root;
     try {
-      // Saved with this method.
-      var imageId = await ImageDownloader.downloadImage(url);
-      if (imageId == null) {
-        return;
+      if (await Directory('/storage/emulated/0/Philomena').exists() == false) {
+        root = await getTemporaryDirectory();
+        Directory('/storage/emulated/0/Philomena').createSync();
+      } else {
+        directory = await Directory('/storage/emulated/0/Philomena');
       }
+      var filename = basename(url);
+
+      var dio = await Dio();
+      await dio.download(
+        url,
+        directory.path + '/' + filename,
+      );
+
+      // Saved with this method.
+      // var imageId = await ImageDownloader.downloadImage(url);
+
+      // if (imageId == null) {
+      //   print("Image ID Still NULL");
+      //   isDownloading = false;
+      //   setState(() {});
+      //   return;
+      // }
 
       // Below is a method of obtaining saved image information.
-      var fileName = await ImageDownloader.findName(imageId);
-      var path = await ImageDownloader.findPath(imageId);
-      var size = await ImageDownloader.findByteSize(imageId);
-      var mimeType = await ImageDownloader.findMimeType(imageId);
+      // var fileName = await ImageDownloader.findName(imageId);
+      // var path = await ImageDownloader.findPath(imageId);
+      // var size = await ImageDownloader.findByteSize(imageId);
+      // var mimeType = await ImageDownloader.findMimeType(imageId);
+
       isDownloading = false;
       isDownloadDone = true;
       setState(() {});
     } on PlatformException catch (error) {
-      print("error");
       isDownloading = false;
       isDownloadDone = true;
       setState(() {});
@@ -82,7 +106,7 @@ class _ImageViewerPageState extends State<ImageViewerPage> {
           ),
           isDownloading == true
               ? Container(
-                  width: 45.0,
+                  width: 48.0,
                   height: 46.0,
                   padding:
                       EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
