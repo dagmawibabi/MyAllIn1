@@ -64,6 +64,20 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
     );
   }
 
+  final assetsAudioPlayer = AssetsAudioPlayer();
+  void streamMusic() async {
+    // https://modest-carson-3aa7ad.netlify.app/Latch.mp3
+
+    try {
+      await assetsAudioPlayer.open(
+        Audio.network("https://modest-carson-3aa7ad.netlify.app/Latch.mp3"),
+      );
+    } catch (t) {
+      //mp3 unreachable
+      print("some error");
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -335,12 +349,15 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                                   SizedBox(width: 10.0),
                                   GestureDetector(
                                     onTap: () {
-                                      setState(() {});
-                                      isMusicPlaying =
-                                          widget.audioPlayer.isPlaying.value;
-                                      widget.audioPlayer.isPlaying.value
-                                          ? widget.audioPlayer.pause()
-                                          : widget.audioPlayer.play();
+                                      print("here");
+                                      // streamMusic();
+                                      assetsAudioPlayer.stop();
+                                      // setState(() {});
+                                      // isMusicPlaying =
+                                      //     widget.audioPlayer.isPlaying.value;
+                                      // widget.audioPlayer.isPlaying.value
+                                      //     ? widget.audioPlayer.pause()
+                                      //     : widget.audioPlayer.play();
                                     },
                                     child: Container(
                                       padding: EdgeInsets.all(8.0),

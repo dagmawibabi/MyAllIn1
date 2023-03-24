@@ -11,6 +11,7 @@ import 'package:myallin1/main.dart';
 import 'package:myallin1/pages/bottomsheets/accounts_list_bottom_sheet.dart';
 import 'package:myallin1/pages/chatpage/chat_page.dart';
 import 'package:myallin1/pages/components/small_pfp.dart';
+import 'package:myallin1/pages/musicStreamingPage/music_streaming_page.dart';
 import 'package:myallin1/pages/musicplayerpage/music_player_page.dart';
 import 'package:myallin1/pages/notificationpage/notificationpage.dart';
 import 'package:myallin1/pages/postspage/new_post_page.dart';
@@ -432,9 +433,17 @@ class _HomePageState extends State<HomePage>
             ),
             SizedBox(width: 10.0),
             GestureDetector(
-              onTap: () {
+              onLongPress: () {
                 isMusicPlaying = !isMusicPlaying;
                 setState(() {});
+              },
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MusicStreamingPage(),
+                  ),
+                );
               },
               child: Text(
                 "Philomena",
