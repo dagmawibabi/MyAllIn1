@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ArtistsContainer extends StatefulWidget {
@@ -24,9 +25,20 @@ class _ArtistsContainerState extends State<ArtistsContainer> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(500.0),
           ),
-          child: Image.network(
-            widget.artistsData["albumArt"]!,
+          child: CachedNetworkImage(
             fit: BoxFit.cover,
+            imageUrl: widget.artistsData["albumArt"]!,
+            progressIndicatorBuilder: (context, url, downloadProgress) =>
+                Center(
+              child: CircularProgressIndicator(
+                value: downloadProgress.progress,
+                color: Colors.white,
+                strokeWidth: 1.0,
+              ),
+            ),
+            errorWidget: (context, url, error) => Icon(
+              Icons.error_outline,
+            ),
           ),
         ),
         SizedBox(height: 10.0),

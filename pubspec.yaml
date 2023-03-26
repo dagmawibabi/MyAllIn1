@@ -52,6 +52,7 @@ dependencies:
   google_fonts: ^4.0.3
   cr_file_saver: ^0.0.2
   dio: ^5.0.3
+  palette_generator: ^0.3.3+2
 
 
   # The following adds the Cupertino Icons font to your application.

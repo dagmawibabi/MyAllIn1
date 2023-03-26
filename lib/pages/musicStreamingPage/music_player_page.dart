@@ -1,9 +1,12 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/config/config.dart';
+import 'package:palette_generator/palette_generator.dart';
 
 class MusicPlayerPage extends StatefulWidget {
   const MusicPlayerPage({
@@ -28,6 +31,13 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
   bool isFavorite = false;
   List playlist = [];
   int playlistIndex = 0;
+  Color inactiveSliderColor = Colors.grey[900]!.withOpacity(0.5);
+  // Colors.primaries[(Random().nextInt(Colors.primaries.length - 1))];
+  Color? primaryBackdropColor = Colors.grey[900];
+  List<Color> colors = [
+    Colors.transparent,
+    Colors.transparent,
+  ];
 
   void streamMusic() async {
     // https://modest-carson-3aa7ad.netlify.app/Latch.mp3
@@ -96,6 +106,33 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
     await assetsAudioPlayer.next();
   }
 
+  void getImagePalette() async {
+    ImageProvider imageProvider = NetworkImage(
+      widget.musicData["albumArt"],
+    );
+    PaletteGenerator paletteGenerator =
+        await PaletteGenerator.fromImageProvider(imageProvider);
+    primaryBackdropColor = paletteGenerator.dominantColor!.color;
+    colors = [
+      paletteGenerator.vibrantColor!.color,
+      paletteGenerator.darkVibrantColor!.color,
+      paletteGenerator.dominantColor!.color,
+
+      // paletteGenerator.dominantColor!.color,
+      // paletteGenerator.lightVibrantColor!.color,
+      // paletteGenerator.vibrantColor!.color,
+
+      // paletteGenerator.darkMutedColor!.color,
+      // paletteGenerator.darkVibrantColor!.color,
+      // paletteGenerator.dominantColor!.color,
+
+      // paletteGenerator.colors.last,
+      // paletteGenerator.colors.first,
+    ];
+    inactiveSliderColor = paletteGenerator.vibrantColor!.color;
+    setState(() {});
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -111,7 +148,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
     playlistIndex = widget.isPlaylist == true
         ? widget.musicData["songs"].indexOf(widget.currentSong)
         : 0;
-
+    getImagePalette();
     streamMusic();
   }
 
@@ -121,12 +158,19 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
       extendBody: true,
       body: Container(
         decoration: BoxDecoration(
+          // color: primaryBackdropColor,
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: colors,
+          ),
           image: DecorationImage(
             image: NetworkImage(
               widget.musicData["albumArt"],
             ),
             fit: BoxFit.cover,
-            opacity: 0.2,
+            opacity: 0.4,
+            colorFilter: ColorFilter.srgbToLinearGamma(),
           ),
         ),
         child: BackdropFilter(
@@ -163,24 +207,40 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                   ],
                 ),
               ),
-              SizedBox(height: 50.0),
+              SizedBox(height: 20.0),
 
               // Album Art
-              Container(
-                width: double.infinity,
-                height: 360.0,
-                margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
-                clipBehavior: Clip.hardEdge,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(20.0),
+              Hero(
+                tag: widget.musicData["albumArt"],
+                child: Container(
+                  width: double.infinity,
+                  height: 380.0,
+                  margin:
+                      EdgeInsets.symmetric(horizontal: 15.0, vertical: 30.0),
+                  clipBehavior: Clip.hardEdge,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20.0),
+                    ),
+                  ),
+                  child: CachedNetworkImage(
+                    fit: BoxFit.cover,
+                    imageUrl: widget.musicData["albumArt"],
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
+                      child: CircularProgressIndicator(
+                        value: downloadProgress.progress,
+                        color: Colors.white,
+                        strokeWidth: 1.0,
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Icon(
+                      Icons.error_outline,
+                    ),
                   ),
                 ),
-                child: Image.network(
-                  widget.musicData["albumArt"],
-                  fit: BoxFit.cover,
-                ),
               ),
+              SizedBox(height: 00.0),
 
               // Title
               Container(
@@ -220,6 +280,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                             ),
                           ),
                         ),
+                        SizedBox(height: 5.0),
                         Container(
                           width: 300.0,
                           child: Text(
@@ -267,6 +328,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                             .current.value!.audio.duration.inSeconds
                             .toDouble(),
                     activeColor: Colors.grey[300],
+                    inactiveColor: inactiveSliderColor.withOpacity(0.3),
                     onChanged: (change) => {
                       assetsAudioPlayer.seek(
                         Duration(seconds: change.toInt()),

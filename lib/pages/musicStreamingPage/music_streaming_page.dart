@@ -1,8 +1,10 @@
 import 'dart:math';
 
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myallin1/pages/musicStreamingPage/album_songs_list_page.dart';
+import 'package:myallin1/pages/musicStreamingPage/albums_container.dart';
 import 'package:myallin1/pages/musicStreamingPage/artists_container.dart';
 import 'package:myallin1/pages/musicStreamingPage/music_player_page.dart';
 
@@ -307,19 +309,40 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Container(
-                                              width: 300.0,
-                                              height: 150.0,
-                                              clipBehavior: Clip.hardEdge,
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                  20.0,
+                                            Hero(
+                                              tag: eachSong["albumArt"]!,
+                                              child: Container(
+                                                width: 300.0,
+                                                height: 150.0,
+                                                clipBehavior: Clip.hardEdge,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    20.0,
+                                                  ),
                                                 ),
-                                              ),
-                                              child: Image.network(
-                                                eachSong["albumArt"]!,
-                                                fit: BoxFit.cover,
+                                                child: CachedNetworkImage(
+                                                  fit: BoxFit.cover,
+                                                  imageUrl:
+                                                      eachSong["albumArt"]!,
+                                                  progressIndicatorBuilder:
+                                                      (context, url,
+                                                              downloadProgress) =>
+                                                          Center(
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      value: downloadProgress
+                                                          .progress,
+                                                      color: Colors.white,
+                                                      strokeWidth: 1.0,
+                                                    ),
+                                                  ),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Icon(
+                                                    Icons.error_outline,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                             SizedBox(height: 5.0),
@@ -356,69 +379,8 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
                                                 ),
                                               );
                                             },
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Stack(
-                                                  children: [
-                                                    Container(
-                                                      width: 150.0,
-                                                      height: 150.0,
-                                                      margin: EdgeInsets.only(
-                                                        left: 5.0,
-                                                        top: 5.0,
-                                                      ),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.accents[
-                                                            random.nextInt(
-                                                                Colors.accents
-                                                                    .length)],
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(
-                                                            10.0,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      width: 150.0,
-                                                      height: 150.0,
-                                                      clipBehavior:
-                                                          Clip.hardEdge,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.black,
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(
-                                                            10.0,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      child: Image.network(
-                                                        eachSong["albumArt"]!,
-                                                        fit: BoxFit.cover,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(height: 5.0),
-                                                Text(
-                                                  eachSong["album"]!,
-                                                  style: TextStyle(
-                                                    fontSize: 15.0,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  eachSong["artist"]!,
-                                                  style: TextStyle(
-                                                    fontSize: 14.0,
-                                                    color: Colors.grey[500],
-                                                  ),
-                                                ),
-                                              ],
+                                            child: AlbumsContainer(
+                                              currentAlbum: eachSong,
                                             ),
                                           )
                                         : GestureDetector(
@@ -438,12 +400,34 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Container(
-                                                  width: 150.0,
-                                                  height: 150.0,
-                                                  child: Image.network(
-                                                    eachSong["albumArt"]!,
-                                                    fit: BoxFit.cover,
+                                                Hero(
+                                                  tag: eachSong["albumArt"]!,
+                                                  child: Container(
+                                                    width: 150.0,
+                                                    height: 150.0,
+                                                    child: CachedNetworkImage(
+                                                      fit: BoxFit.cover,
+                                                      imageUrl:
+                                                          eachSong["albumArt"]!,
+                                                      progressIndicatorBuilder:
+                                                          (context, url,
+                                                                  downloadProgress) =>
+                                                              Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          value:
+                                                              downloadProgress
+                                                                  .progress,
+                                                          color: Colors.white,
+                                                          strokeWidth: 1.0,
+                                                        ),
+                                                      ),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Icon(
+                                                        Icons.error_outline,
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                                 SizedBox(height: 5.0),
