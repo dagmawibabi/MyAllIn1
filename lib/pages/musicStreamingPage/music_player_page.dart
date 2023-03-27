@@ -14,11 +14,27 @@ class MusicPlayerPage extends StatefulWidget {
     required this.musicData,
     required this.isPlaylist,
     this.currentSong = "",
+    required this.streamMusic,
+    required this.pauseOrPlay,
+    required this.nextInPlaylist,
+    required this.previousInPlaylist,
+    required this.assetsAudioPlayer,
+    required this.isMusicPlaying,
+    this.justDisplay = false,
   });
 
   final Map musicData;
   final bool isPlaylist;
   final String currentSong;
+
+  final Function streamMusic;
+  final Function pauseOrPlay;
+  final Function nextInPlaylist;
+  final Function previousInPlaylist;
+  final AssetsAudioPlayer assetsAudioPlayer;
+  final bool isMusicPlaying;
+
+  final bool justDisplay;
 
   @override
   State<MusicPlayerPage> createState() => _MusicPlayerPageState();
@@ -26,7 +42,7 @@ class MusicPlayerPage extends StatefulWidget {
 
 class _MusicPlayerPageState extends State<MusicPlayerPage> {
   String musicRoot = Config.musicLibraryRoot + "/";
-  final assetsAudioPlayer = AssetsAudioPlayer();
+  // final assetsAudioPlayer = AssetsAudioPlayer();
   bool isMusicPlaying = true;
   bool isFavorite = false;
   List playlist = [];
@@ -39,48 +55,48 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
     Colors.transparent,
   ];
 
-  void streamMusic() async {
-    // https://modest-carson-3aa7ad.netlify.app/Latch.mp3
-    try {
-      if (widget.isPlaylist == false) {
-        await assetsAudioPlayer.open(
-          Audio.network(
-            musicRoot + widget.musicData["link"],
-          ),
-        );
-      } else {
-        List<Audio> playlist = [];
-        for (var eachSong in widget.musicData["songs"]) {
-          playlist.add(
-            Audio.network(
-              musicRoot +
-                  widget.musicData["artist"] +
-                  "/" +
-                  widget.musicData["album"] +
-                  "/" +
-                  eachSong,
-            ),
-          );
-        }
-        await assetsAudioPlayer.open(
-          Playlist(
-            audios: playlist,
-          ),
-          loopMode: LoopMode.playlist,
-        );
-        await assetsAudioPlayer.playlistPlayAtIndex(playlistIndex);
-      }
-    } catch (t) {
-      print("some error");
-    }
-  }
+  // void streamMusic() async {
+  //   // https://modest-carson-3aa7ad.netlify.app/Latch.mp3
+  //   try {
+  //     if (widget.isPlaylist == false) {
+  //       await assetsAudioPlayer.open(
+  //         Audio.network(
+  //           musicRoot + widget.musicData["link"],
+  //         ),
+  //       );
+  //     } else {
+  //       List<Audio> playlist = [];
+  //       for (var eachSong in widget.musicData["songs"]) {
+  //         playlist.add(
+  //           Audio.network(
+  //             musicRoot +
+  //                 widget.musicData["artist"] +
+  //                 "/" +
+  //                 widget.musicData["album"] +
+  //                 "/" +
+  //                 eachSong,
+  //           ),
+  //         );
+  //       }
+  //       await assetsAudioPlayer.open(
+  //         Playlist(
+  //           audios: playlist,
+  //         ),
+  //         loopMode: LoopMode.playlist,
+  //       );
+  //       await assetsAudioPlayer.playlistPlayAtIndex(playlistIndex);
+  //     }
+  //   } catch (t) {
+  //     print("some error");
+  //   }
+  // }
 
   void pauseOrPlay() {
     if (isMusicPlaying == true) {
-      assetsAudioPlayer.pause();
+      // assetsAudioPlayer.pause();
       isMusicPlaying = false;
     } else {
-      assetsAudioPlayer.play();
+      // assetsAudioPlayer.play();
       isMusicPlaying = true;
     }
     setState(() {});
@@ -92,8 +108,8 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
       playlistIndex = playlist.length - 1;
     }
     setState(() {});
-    await assetsAudioPlayer.stop();
-    await assetsAudioPlayer.previous();
+    // await assetsAudioPlayer.stop();
+    // await assetsAudioPlayer.previous();
   }
 
   void nextInPlaylist() async {
@@ -102,8 +118,8 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
       playlistIndex = 0;
     }
     setState(() {});
-    await assetsAudioPlayer.stop();
-    await assetsAudioPlayer.next();
+    // await assetsAudioPlayer.stop();
+    // await assetsAudioPlayer.next();
   }
 
   void getImagePalette() async {
@@ -137,7 +153,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    assetsAudioPlayer.dispose();
+    // assetsAudioPlayer.dispose();
   }
 
   @override
@@ -149,7 +165,15 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
         ? widget.musicData["songs"].indexOf(widget.currentSong)
         : 0;
     getImagePalette();
-    streamMusic();
+    // widget.justDisplay == true ? () {} : widget.assetsAudioPlayer.stop();
+    // print(playlistIndex.toString() +
+    //     " ====== " +
+    //     widget.musicData["songs"][playlistIndex]);
+    widget.justDisplay == true
+        ? () {}
+        : widget.streamMusic(
+            widget.isPlaylist, widget.musicData, playlistIndex);
+    // pauseOrPlay();
   }
 
   @override
@@ -314,23 +338,24 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
               SizedBox(height: 10.0),
 
               // Seeker
-              assetsAudioPlayer.builderCurrentPosition(
+              widget.assetsAudioPlayer.builderCurrentPosition(
                 builder: (context, duration) => Container(
                   width: double.infinity,
                   height: 32.0,
                   child: Slider(
-                    value: assetsAudioPlayer.currentPosition.value.inSeconds
+                    value: widget
+                        .assetsAudioPlayer.currentPosition.value.inSeconds
                         .toDouble(),
                     min: 0,
-                    max: assetsAudioPlayer.current.valueOrNull == null
+                    max: widget.assetsAudioPlayer.current.valueOrNull == null
                         ? 100.0
-                        : assetsAudioPlayer
-                            .current.value!.audio.duration.inSeconds
+                        : widget.assetsAudioPlayer.current.value!.audio.duration
+                            .inSeconds
                             .toDouble(),
                     activeColor: Colors.grey[300],
                     inactiveColor: inactiveSliderColor.withOpacity(0.3),
                     onChanged: (change) => {
-                      assetsAudioPlayer.seek(
+                      widget.assetsAudioPlayer.seek(
                         Duration(seconds: change.toInt()),
                       ),
                     },
@@ -351,7 +376,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
               //     )),
 
               // Current Postion and Duration
-              assetsAudioPlayer.builderCurrentPosition(
+              widget.assetsAudioPlayer.builderCurrentPosition(
                 builder: (context, duration) => Container(
                   width: double.infinity,
                   height: 20.0,
@@ -371,15 +396,15 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                         ),
                       ),
                       Text(
-                        assetsAudioPlayer.current.valueOrNull == null
+                        widget.assetsAudioPlayer.current.valueOrNull == null
                             ? "00:00"
-                            : (assetsAudioPlayer.current.value!.audio.duration
-                                            .inSeconds ~/
+                            : (widget.assetsAudioPlayer.current.value!.audio
+                                            .duration.inSeconds ~/
                                         60)
                                     .toString()
                                     .padLeft(2, '0') +
                                 ":" +
-                                ((assetsAudioPlayer.current.value!.audio
+                                ((widget.assetsAudioPlayer.current.value!.audio
                                                 .duration.inSeconds %
                                             60)
                                         .toInt())
@@ -416,6 +441,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                             : IconButton(
                                 onPressed: () async {
                                   previousInPlaylist();
+                                  widget.previousInPlaylist();
                                 },
                                 icon: Icon(
                                   Icons.skip_previous,
@@ -423,9 +449,10 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                                 ),
                               ),
                         SizedBox(width: 8.0),
-                        assetsAudioPlayer.builderCurrentPosition(
+                        widget.assetsAudioPlayer.builderCurrentPosition(
                           builder: (context, duration) =>
-                              assetsAudioPlayer.current.valueOrNull == null
+                              widget.assetsAudioPlayer.current.valueOrNull ==
+                                      null
                                   ? Container(
                                       padding: EdgeInsets.all(8.0),
                                       decoration: BoxDecoration(
@@ -440,8 +467,13 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                                       ),
                                     )
                                   : GestureDetector(
-                                      onTap: () {
-                                        pauseOrPlay();
+                                      onTap: () async {
+                                        print(isMusicPlaying);
+                                        isMusicPlaying = !isMusicPlaying;
+                                        // pauseOrPlay();
+                                        setState(() {});
+
+                                        await widget.pauseOrPlay();
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(8.0),
@@ -466,6 +498,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                             : IconButton(
                                 onPressed: () async {
                                   nextInPlaylist();
+                                  widget.nextInPlaylist();
                                 },
                                 icon: Icon(
                                   Icons.skip_next,

@@ -96,7 +96,7 @@ class _AlbumsContainerState extends State<AlbumsContainer> {
                 height: 150.0,
                 clipBehavior: Clip.hardEdge,
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: Colors.grey[900]!.withOpacity(0.4),
                   borderRadius: BorderRadius.all(
                     Radius.circular(
                       10.0,
@@ -117,7 +117,7 @@ class _AlbumsContainerState extends State<AlbumsContainer> {
                       Center(
                     child: CircularProgressIndicator(
                       value: downloadProgress.progress,
-                      color: Colors.white,
+                      color: randomContainerColor, // Colors.white,
                       strokeWidth: 1.0,
                     ),
                   ),

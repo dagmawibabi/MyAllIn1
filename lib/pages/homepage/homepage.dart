@@ -11,8 +11,9 @@ import 'package:myallin1/main.dart';
 import 'package:myallin1/pages/bottomsheets/accounts_list_bottom_sheet.dart';
 import 'package:myallin1/pages/chatpage/chat_page.dart';
 import 'package:myallin1/pages/components/small_pfp.dart';
+import 'package:myallin1/pages/musicStreamingPage/music_player_page.dart';
 import 'package:myallin1/pages/musicStreamingPage/music_streaming_page.dart';
-import 'package:myallin1/pages/musicplayerpage/music_player_page.dart';
+// import 'package:myallin1/pages/musicplayerpage/music_player_page.dart';
 import 'package:myallin1/pages/notificationpage/notificationpage.dart';
 import 'package:myallin1/pages/postspage/new_post_page.dart';
 import 'package:myallin1/pages/postspage/posts_page.dart';
@@ -288,6 +289,131 @@ class _HomePageState extends State<HomePage>
     albumArtIndex = random.nextInt(albumArts.length - 1);
   }
 
+  // Music Streaming
+  AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
+  String musicRoot = Config.musicLibraryRoot + "/";
+  int playlistIndex = 0;
+  // List playlist = [];
+  bool isPlaylist = false;
+  bool isMusicStopped = true;
+  Map currentPlayingSong = {};
+  String currentPlaylistSong = "";
+  List<Audio> playlist = [];
+  List playlistStrings = [];
+  List entireMusicData = [];
+
+  void streamMusic(isPlaylist, musicData, currentSongIndex) async {
+    currentPlayingSong = musicData;
+    // playlistIndexParam = playlistIndex;
+    await assetsAudioPlayer.stop();
+    // await assetsAudioPlayer.dispose();
+    // assetsAudioPlayer = AssetsAudioPlayer();
+    // isMusicPlaying = false;
+    // setState(() {});
+    // https://modest-carson-3aa7ad.netlify.app/Latch.mp3
+    try {
+      if (isPlaylist == false) {
+        await assetsAudioPlayer.open(
+          Audio.network(
+            musicRoot + musicData["link"],
+          ),
+          autoStart: true,
+        );
+      } else {
+        print("========================== here");
+        playlist = [];
+        playlistStrings = musicData["songs"];
+        // entireMusicData = musicData;
+        print("========================== here2");
+        for (var eachSong in musicData["songs"]) {
+          playlist.add(
+            Audio.network(
+              musicRoot +
+                  musicData["artist"] +
+                  "/" +
+                  musicData["album"] +
+                  "/" +
+                  eachSong,
+            ),
+          );
+        }
+        print("========================== here3");
+
+        await assetsAudioPlayer.open(
+          Playlist(
+            audios: playlist,
+          ),
+          loopMode: LoopMode.playlist,
+          autoStart: true,
+        );
+
+        print("========================== here4");
+
+        isPlaylist = true;
+        playlistIndex = currentSongIndex;
+        currentPlaylistSong = musicData["songs"][currentSongIndex].toString();
+        print(playlistIndex.toString() +
+            " ========== " +
+            currentPlaylistSong +
+            " ======== " +
+            currentSongIndex.toString());
+
+        setState(() {});
+        await assetsAudioPlayer.playlistPlayAtIndex(playlistIndex);
+      }
+      isMusicPlaying = true;
+      isMusicStopped = false;
+      // pauseOrPlay();
+    } catch (t) {
+      print("some error");
+      isMusicPlaying = false;
+      isMusicStopped = true;
+      setState(() {});
+    }
+  }
+
+  void pauseOrPlay() {
+    if (isMusicPlaying == true) {
+      assetsAudioPlayer.pause();
+      isMusicPlaying = false;
+    } else {
+      assetsAudioPlayer.play();
+      isMusicPlaying = true;
+    }
+    isMusicStopped = false;
+    setState(() {});
+  }
+
+  void previousInPlaylist() async {
+    playlistIndex--;
+    if (playlistIndex < 0) {
+      playlistIndex = playlist.length - 1;
+    }
+    currentPlaylistSong = playlistStrings[playlistIndex].toString();
+    // print(playlist[playlistIndex]);
+    setState(() {});
+    await assetsAudioPlayer.stop();
+    await assetsAudioPlayer.previous();
+  }
+
+  void nextInPlaylist() async {
+    playlistIndex++;
+    if (playlistIndex >= playlist.length) {
+      playlistIndex = 0;
+    }
+    currentPlaylistSong = playlistStrings[playlistIndex].toString();
+    // print(playlist[playlistIndex]);
+    setState(() {});
+    await assetsAudioPlayer.stop();
+    await assetsAudioPlayer.next();
+  }
+
+  void stopMusic() async {
+    isMusicStopped = true;
+    await assetsAudioPlayer.stop();
+    setState(() {});
+  }
+
   // Get Weather
   late loc.LocationData locationData;
   Future<void> getWeather() async {
@@ -351,7 +477,7 @@ class _HomePageState extends State<HomePage>
       await Permission.videos.request();
       await Permission.audio.request();
     } else {
-      getDeviceAudioFiles();
+      // getDeviceAudioFiles();
     }
     print(storagePermissionStatus.isGranted);
     // Ask Location Permission
@@ -373,6 +499,13 @@ class _HomePageState extends State<HomePage>
     getFeed();
     getFeedPolling();
     getAvailableChats();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    audioPlayer.dispose();
   }
 
   // initState
@@ -434,14 +567,21 @@ class _HomePageState extends State<HomePage>
             SizedBox(width: 10.0),
             GestureDetector(
               onLongPress: () {
-                isMusicPlaying = !isMusicPlaying;
+                isMusicStopped = !isMusicStopped;
                 setState(() {});
               },
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MusicStreamingPage(),
+                    builder: (context) => MusicStreamingPage(
+                      streamMusic: streamMusic,
+                      pauseOrPlay: pauseOrPlay,
+                      nextInPlaylist: nextInPlaylist,
+                      previousInPlaylist: previousInPlaylist,
+                      assetsAudioPlayer: assetsAudioPlayer,
+                      isMusicPlaying: isMusicPlaying,
+                    ),
                   ),
                 );
               },
@@ -567,7 +707,7 @@ class _HomePageState extends State<HomePage>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            isMusicPlaying == false
+            isMusicStopped == true
                 ? Container(
                     color: Colors.transparent,
                     height: 0.0,
@@ -587,45 +727,67 @@ class _HomePageState extends State<HomePage>
                         ),
                       ),
                       image: DecorationImage(
-                        image: NetworkImage(albumArts[albumArtIndex]),
+                        image: NetworkImage(
+                          currentPlayingSong["albumArt"] ??
+                              albumArts[albumArtIndex],
+                        ),
                         fit: BoxFit.cover,
-                        opacity: 0.05,
+                        opacity: 0.1,
                       ),
                     ),
                     margin: EdgeInsets.only(left: 30.0),
                     // padding: EdgeInsets.symmetric(vertical: 2.0),
                     child: Row(
                       children: [
-                        SizedBox(width: 10.0),
+                        SizedBox(width: 6.0),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MusicPlayerPage(
-                                  audioPlayer: audioPlayer,
-                                  deviceMusicList: deviceMusicList,
-                                  loadDeviceMusicFile: loadDeviceMusicFile,
-                                  getDeviceAudioFiles: getDeviceAudioFiles,
-                                  changeMusicTitle: changeMusicTitle,
-                                  currentSong: currentSong,
-                                  albumArt: albumArts[albumArtIndex],
-                                ),
-                              ),
-                            );
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(
+                            //     builder: (context) => MusicPlayerPage(
+                            //       audioPlayer: audioPlayer,
+                            //       deviceMusicList: deviceMusicList,
+                            //       loadDeviceMusicFile: loadDeviceMusicFile,
+                            //       getDeviceAudioFiles: getDeviceAudioFiles,
+                            //       changeMusicTitle: changeMusicTitle,
+                            //       currentSong: currentSong,
+                            //       albumArt: albumArts[albumArtIndex],
+                            //     ),
+                            //   ),
+                            // );
+                            isPlaylist == true
+                                ? () {}
+                                : Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MusicPlayerPage(
+                                        musicData: currentPlayingSong,
+                                        isPlaylist: isPlaylist,
+                                        streamMusic: streamMusic,
+                                        pauseOrPlay: pauseOrPlay,
+                                        nextInPlaylist: nextInPlaylist,
+                                        previousInPlaylist: previousInPlaylist,
+                                        assetsAudioPlayer: assetsAudioPlayer,
+                                        isMusicPlaying: isMusicPlaying,
+                                        justDisplay: true,
+                                      ),
+                                    ),
+                                  );
                           },
                           child: Hero(
-                            tag: "musicAlbumArt",
+                            tag: currentPlayingSong["albumArt"],
                             child: SmallPFP(
-                              netpic: albumArts[albumArtIndex],
-                              size: 40.0,
+                              netpic: currentPlayingSong["albumArt"] ??
+                                  albumArts[albumArtIndex],
+                              size: 42.0,
                             ),
                           ),
                         ),
-                        SizedBox(width: 10.0),
+                        SizedBox(width: 5.0),
                         Container(
                           height: 50.0,
-                          width: 100.0,
+                          width: 90.0,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -633,14 +795,19 @@ class _HomePageState extends State<HomePage>
                               Container(
                                 width: 120.0,
                                 height: 30.0,
+                                padding: EdgeInsets.only(top: 4.0),
                                 child: Marquee(
-                                  text: currentSong,
+                                  text: currentPlayingSong["title"] ??
+                                      currentPlaylistSong.toString().substring(
+                                          0,
+                                          currentPlaylistSong.lastIndexOf(".")),
+
                                   style: TextStyle(
                                     color: Colors.white,
                                   ),
                                   blankSpace: 80.0,
                                   velocity: 30.0,
-                                  numberOfRounds: 3,
+                                  // numberOfRounds: 10,
                                 ),
                               ),
                               SizedBox(height: 5.0),
@@ -656,7 +823,7 @@ class _HomePageState extends State<HomePage>
                         ),
                         SizedBox(width: 5.0),
                         Container(
-                          padding: EdgeInsets.symmetric(vertical: 2.0),
+                          padding: EdgeInsets.symmetric(vertical: 6.0),
                           decoration: BoxDecoration(
                             // color: Colors.grey[900],
                             color: Color.fromARGB(255, 18, 18, 18),
@@ -669,30 +836,59 @@ class _HomePageState extends State<HomePage>
                           ),
                           child: Row(
                             children: [
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.fast_rewind,
+                              GestureDetector(
+                                onTap: () {
+                                  stopMusic();
+                                },
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.only(left: 14.0, right: 2.0),
+                                  child: Icon(
+                                    Icons.stop,
+                                    size: 22.0,
+                                  ),
                                 ),
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  audioPlayer.isPlaying.value
-                                      ? audioPlayer.pause()
-                                      : audioPlayer.play();
+                              GestureDetector(
+                                onTap: () {
+                                  previousInPlaylist();
                                 },
-                                icon: Icon(
-                                  audioPlayer.isPlaying.value
-                                      ? Icons.pause
-                                      : Icons.play_arrow,
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    Icons.fast_rewind,
+                                    size: 22.0,
+                                  ),
                                 ),
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  // audioPlayer.play();
+                              GestureDetector(
+                                onTap: () {
+                                  pauseOrPlay();
+                                  // audioPlayer.isPlaying.value
+                                  //     ? audioPlayer.pause()
+                                  //     : audioPlayer.play();
                                 },
-                                icon: Icon(
-                                  Icons.fast_forward,
+                                child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(
+                                    isMusicPlaying
+                                        ? Icons.pause
+                                        : Icons.play_arrow,
+                                    size: 22.0,
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  nextInPlaylist();
+                                },
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.only(left: 8.0, right: 14.0),
+                                  child: Icon(
+                                    Icons.fast_forward,
+                                    size: 22.0,
+                                  ),
                                 ),
                               ),
                             ],

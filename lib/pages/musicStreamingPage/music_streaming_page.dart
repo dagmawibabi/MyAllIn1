@@ -9,34 +9,40 @@ import 'package:myallin1/pages/musicStreamingPage/artists_container.dart';
 import 'package:myallin1/pages/musicStreamingPage/music_player_page.dart';
 
 class MusicStreamingPage extends StatefulWidget {
-  const MusicStreamingPage({super.key});
+  const MusicStreamingPage({
+    super.key,
+    required this.streamMusic,
+    required this.pauseOrPlay,
+    required this.nextInPlaylist,
+    required this.previousInPlaylist,
+    required this.assetsAudioPlayer,
+    required this.isMusicPlaying,
+  });
+
+  final Function streamMusic;
+  final Function pauseOrPlay;
+  final Function nextInPlaylist;
+  final Function previousInPlaylist;
+  final AssetsAudioPlayer assetsAudioPlayer;
+  final bool isMusicPlaying;
 
   @override
   State<MusicStreamingPage> createState() => _MusicStreamingPageState();
 }
 
 class _MusicStreamingPageState extends State<MusicStreamingPage> {
-  var random = Random();
-  final assetsAudioPlayer = AssetsAudioPlayer();
-  void streamMusic() async {
-    // https://modest-carson-3aa7ad.netlify.app/Latch.mp3
-
-    try {
-      await assetsAudioPlayer.open(
-        Audio.network("https://modest-carson-3aa7ad.netlify.app/Latch.mp3"),
-      );
-    } catch (t) {
-      //mp3 unreachable
-      print("some error");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     List songs = [
       {
         "category": "Top Picks",
         "list": [
+          {
+            "albumArt": "https://i.ytimg.com/vi/T4ib_RJtMFk/sddefault.jpg",
+            "artist": "Dawit Getachew",
+            "title": "Enafkalew",
+            "link": "Singles/Enafkalew.mp3",
+          },
           {
             "albumArt":
                 "https://i.pinimg.com/564x/4c/bf/0d/4cbf0d47d10aece806dd01d5476e68cb.jpg",
@@ -79,16 +85,9 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
         "list": [
           {
             "albumArt":
-                "https://dawitgetachew.org/wp-content/uploads/2022/12/photo_2021-09-13-19.23.04.jpeg",
-            "artist": "Dawit Getachew",
-            "title": "Dive",
-            "link": "https://modest-carson-3aa7ad.netlify.app/Latch.mp3",
-          },
-          {
-            "albumArt":
-                "https://i.pinimg.com/564x/50/2e/d9/502ed91c545ae284c5f73394ca486be4.jpg",
-            "artist": "Billie Eilish",
-            "title": "Almost Gone",
+                "https://i.pinimg.com/564x/01/fb/3b/01fb3bc44975e76849ca5fb01b4f599c.jpg",
+            "artist": "AJR",
+            "title": "Neotheatre",
             "link": "https://modest-carson-3aa7ad.netlify.app/Latch.mp3",
           },
           {
@@ -96,6 +95,13 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
                 "https://worshipleader.com/wp-content/uploads/2022/04/Website-Post-Size-86.png",
             "artist": "Hillsong United",
             "title": "Latch",
+            "link": "https://modest-carson-3aa7ad.netlify.app/Latch.mp3",
+          },
+          {
+            "albumArt":
+                "https://i.pinimg.com/564x/50/2e/d9/502ed91c545ae284c5f73394ca486be4.jpg",
+            "artist": "Billie Eilish",
+            "title": "Almost Gone",
             "link": "https://modest-carson-3aa7ad.netlify.app/Latch.mp3",
           },
           {
@@ -134,6 +140,29 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
               "09. Better Days.mp3",
               "10. Already Gone.mp3",
               "11. Blossom.mp3",
+            ],
+          },
+          {
+            "artist": "Dawit Getachew",
+            "albumArt":
+                "https://dawitgetachew.org/wp-content/uploads/2022/12/photo_2021-09-13-19.23.04.jpeg",
+            "album": "Aminhalew",
+            "songs": [
+              "Abet Fikreh.mp3",
+              "Amelkihalehu.mp3",
+              "Amnihalehu.mp3",
+              "Ante Bicha.mp3",
+              "Ante Kibre Neh.mp3",
+              "Ante Melkam Neh.mp3",
+              "Atsedeken.mp3",
+              "Beki Neh.mp3",
+              "Fiker.mp3",
+              "Oh Nefse.mp3",
+              "Semhin Ebarikalew.mp3",
+              "Tilik Neh.mp3",
+              "Tsegaw Bemnet Adinonal.mp3",
+              "Ye Eyesus Menged.mp3",
+              "Yimetal.mp3",
             ],
           },
           {
@@ -177,25 +206,6 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
               "Wandered Away.mp3",
               "If You Only.mp3",
               "Into the Cold.mp3",
-            ],
-          },
-          {
-            "albumArt":
-                "https://i.pinimg.com/564x/01/fb/3b/01fb3bc44975e76849ca5fb01b4f599c.jpg",
-            "artist": "AJR",
-            "album": "Neotheatre",
-            "songs": [
-              "01. Already Gone.mp3",
-              "02. Something to Someone.mp3",
-              "03. Kiss Me.mp3",
-              "04. Dreamer.mp3",
-              "05. Innocence and Sadness.mp3",
-              "06. Divide.mp3",
-              "07. Homeward.mp3",
-              "08. One Life.mp3",
-              "09. Better Days.mp3",
-              "10. Already Gone.mp3",
-              "11. Blossom.mp3",
             ],
           },
         ]
@@ -301,6 +311,16 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
                                                   MusicPlayerPage(
                                                 musicData: eachSong,
                                                 isPlaylist: false,
+                                                streamMusic: widget.streamMusic,
+                                                pauseOrPlay: widget.pauseOrPlay,
+                                                nextInPlaylist:
+                                                    widget.nextInPlaylist,
+                                                previousInPlaylist:
+                                                    widget.previousInPlaylist,
+                                                assetsAudioPlayer:
+                                                    widget.assetsAudioPlayer,
+                                                isMusicPlaying:
+                                                    widget.isMusicPlaying,
                                               ),
                                             ),
                                           );
@@ -316,6 +336,8 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
                                                 height: 150.0,
                                                 clipBehavior: Clip.hardEdge,
                                                 decoration: BoxDecoration(
+                                                  color: Colors.grey[900]!
+                                                      .withOpacity(0.4),
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                     20.0,
@@ -333,7 +355,10 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
                                                         CircularProgressIndicator(
                                                       value: downloadProgress
                                                           .progress,
-                                                      color: Colors.white,
+                                                      color: Colors.accents[
+                                                          Random().nextInt(Colors
+                                                              .accents
+                                                              .length)], // Colors.white,
                                                       strokeWidth: 1.0,
                                                     ),
                                                   ),
@@ -375,6 +400,18 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
                                                   builder: (builder) =>
                                                       AlbumSongsListPage(
                                                     musicData: eachSong,
+                                                    streamMusic:
+                                                        widget.streamMusic,
+                                                    pauseOrPlay:
+                                                        widget.pauseOrPlay,
+                                                    nextInPlaylist:
+                                                        widget.nextInPlaylist,
+                                                    previousInPlaylist: widget
+                                                        .previousInPlaylist,
+                                                    assetsAudioPlayer: widget
+                                                        .assetsAudioPlayer,
+                                                    isMusicPlaying:
+                                                        widget.isMusicPlaying,
                                                   ),
                                                 ),
                                               );
@@ -392,6 +429,19 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
                                                       MusicPlayerPage(
                                                     musicData: eachSong,
                                                     isPlaylist: false,
+                                                    streamMusic:
+                                                        widget.streamMusic,
+                                                    pauseOrPlay:
+                                                        widget.pauseOrPlay,
+                                                    nextInPlaylist:
+                                                        widget.nextInPlaylist,
+                                                    previousInPlaylist: widget
+                                                        .previousInPlaylist,
+                                                    assetsAudioPlayer: widget
+                                                        .assetsAudioPlayer,
+                                                    isMusicPlaying:
+                                                        widget.isMusicPlaying,
+                                                    // justDisplay: eachSong["title"] == widget.,
                                                   ),
                                                 ),
                                               );
@@ -405,6 +455,8 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
                                                   child: Container(
                                                     width: 150.0,
                                                     height: 150.0,
+                                                    color: Colors.grey[900]!
+                                                        .withOpacity(0.4),
                                                     child: CachedNetworkImage(
                                                       fit: BoxFit.cover,
                                                       imageUrl:
@@ -418,7 +470,10 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
                                                           value:
                                                               downloadProgress
                                                                   .progress,
-                                                          color: Colors.white,
+                                                          color: Colors.accents[
+                                                              Random().nextInt(
+                                                                  Colors.accents
+                                                                      .length)], // Colors.white,
                                                           strokeWidth: 1.0,
                                                         ),
                                                       ),

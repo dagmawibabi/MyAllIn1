@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +25,7 @@ class _ArtistsContainerState extends State<ArtistsContainer> {
           height: 150.0,
           clipBehavior: Clip.hardEdge,
           decoration: BoxDecoration(
+            color: Colors.grey[900]!.withOpacity(0.4),
             borderRadius: BorderRadius.circular(500.0),
           ),
           child: CachedNetworkImage(
@@ -32,7 +35,8 @@ class _ArtistsContainerState extends State<ArtistsContainer> {
                 Center(
               child: CircularProgressIndicator(
                 value: downloadProgress.progress,
-                color: Colors.white,
+                color: Colors.accents[
+                    Random().nextInt(Colors.accents.length)], // Colors.white,
                 strokeWidth: 1.0,
               ),
             ),

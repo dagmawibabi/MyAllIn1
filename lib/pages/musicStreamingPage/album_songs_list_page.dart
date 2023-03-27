@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myallin1/pages/musicStreamingPage/music_player_page.dart';
@@ -8,8 +9,20 @@ class AlbumSongsListPage extends StatefulWidget {
   const AlbumSongsListPage({
     super.key,
     required this.musicData,
+    required this.streamMusic,
+    required this.pauseOrPlay,
+    required this.nextInPlaylist,
+    required this.previousInPlaylist,
+    required this.assetsAudioPlayer,
+    required this.isMusicPlaying,
   });
   final Map musicData;
+  final Function streamMusic;
+  final Function pauseOrPlay;
+  final Function nextInPlaylist;
+  final Function previousInPlaylist;
+  final AssetsAudioPlayer assetsAudioPlayer;
+  final bool isMusicPlaying;
 
   @override
   State<AlbumSongsListPage> createState() => _AlbumSongsListPageState();
@@ -135,6 +148,14 @@ class _AlbumSongsListPageState extends State<AlbumSongsListPage> {
                                       musicData: widget.musicData,
                                       isPlaylist: true,
                                       currentSong: widget.musicData["songs"][0],
+                                      streamMusic: widget.streamMusic,
+                                      pauseOrPlay: widget.pauseOrPlay,
+                                      nextInPlaylist: widget.nextInPlaylist,
+                                      previousInPlaylist:
+                                          widget.previousInPlaylist,
+                                      assetsAudioPlayer:
+                                          widget.assetsAudioPlayer,
+                                      isMusicPlaying: widget.isMusicPlaying,
                                     ),
                                   ),
                                 );
@@ -144,7 +165,7 @@ class _AlbumSongsListPageState extends State<AlbumSongsListPage> {
                                 margin:
                                     EdgeInsets.only(bottom: 3.0, right: 2.0),
                                 decoration: BoxDecoration(
-                                  color: Color.fromARGB(255, 49, 222, 14),
+                                  color: Color.fromARGB(255, 53, 189, 25),
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(200.0),
                                   ),
@@ -165,13 +186,13 @@ class _AlbumSongsListPageState extends State<AlbumSongsListPage> {
 
                       // Songs List
                       Container(
-                        height: MediaQuery.of(context).size.height * 0.45,
+                        height: MediaQuery.of(context).size.height * 0.44,
                         clipBehavior: Clip.hardEdge,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20.0),
-                            topRight: Radius.circular(20.0),
-                          ),
+                          // borderRadius: BorderRadius.only(
+                          //   topLeft: Radius.circular(20.0),
+                          //   topRight: Radius.circular(20.0),
+                          // ),
                           gradient: LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
@@ -183,17 +204,21 @@ class _AlbumSongsListPageState extends State<AlbumSongsListPage> {
                           ),
                         ),
                         child: Container(
-                          height: MediaQuery.of(context).size.height * 0.44,
+                          height: MediaQuery.of(context).size.height * 0.43,
                           margin: EdgeInsets.only(top: 2.0),
+                          clipBehavior: Clip.hardEdge,
+                          decoration: BoxDecoration(),
                           child: ListView(
                             children: [
                               Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.44,
                                 decoration: BoxDecoration(
                                   color: Color.fromARGB(255, 18, 18, 18),
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(22.0),
-                                    topRight: Radius.circular(22.0),
-                                  ),
+                                  // borderRadius: BorderRadius.only(
+                                  //   topLeft: Radius.circular(22.0),
+                                  //   topRight: Radius.circular(22.0),
+                                  // ),
 
                                   // gradient: LinearGradient(
                                   //   begin: Alignment.topCenter,
@@ -204,61 +229,119 @@ class _AlbumSongsListPageState extends State<AlbumSongsListPage> {
                                   //   ],
                                   // ),
                                 ),
-                                child: Column(children: [
-                                  for (var eachSong
-                                      in widget.musicData["songs"])
-                                    GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                MusicPlayerPage(
-                                              musicData: widget.musicData,
-                                              isPlaylist: true,
-                                              currentSong: eachSong,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: Container(
-                                        width: double.infinity,
-                                        height: 50.0,
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10.0),
-                                        margin: EdgeInsets.symmetric(
-                                            horizontal: 5.0, vertical: 2.0),
-                                        decoration: BoxDecoration(
-                                          // gradient: LinearGradient(
-                                          //   begin: Alignment.centerLeft,
-                                          //   end: Alignment.centerRight,
-                                          //   colors: [
-                                          //     Colors.black,
-                                          //     Colors.transparent,
-                                          //   ],
-                                          // ),
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10.0),
-                                          ),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Text(
-                                              eachSong.toString().substring(
-                                                  0,
-                                                  eachSong
-                                                      .toString()
-                                                      .lastIndexOf(".")),
-                                              style: TextStyle(
-                                                fontSize: 16.0,
-                                                color: Colors.white,
+                                child: ListView(
+                                  children: [
+                                    Column(
+                                      children: [
+                                        for (var eachSong
+                                            in widget.musicData["songs"])
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MusicPlayerPage(
+                                                    musicData: widget.musicData,
+                                                    isPlaylist: true,
+                                                    currentSong: eachSong,
+                                                    streamMusic:
+                                                        widget.streamMusic,
+                                                    pauseOrPlay:
+                                                        widget.pauseOrPlay,
+                                                    nextInPlaylist:
+                                                        widget.nextInPlaylist,
+                                                    previousInPlaylist: widget
+                                                        .previousInPlaylist,
+                                                    assetsAudioPlayer: widget
+                                                        .assetsAudioPlayer,
+                                                    isMusicPlaying:
+                                                        widget.isMusicPlaying,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
+                                              width: double.infinity,
+                                              height: 50.0,
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 10.0),
+                                              margin: EdgeInsets.symmetric(
+                                                  horizontal: 5.0,
+                                                  vertical: 2.0),
+                                              decoration: BoxDecoration(
+                                                // gradient: LinearGradient(
+                                                //   begin: Alignment.centerLeft,
+                                                //   end: Alignment.centerRight,
+                                                //   colors: [
+                                                //     Colors.black,
+                                                //     Colors.transparent,
+                                                //   ],
+                                                // ),
+                                                // borderRadius: BorderRadius.all(
+                                                //   Radius.circular(10.0),
+                                                // ),
+                                                border: Border(
+                                                  bottom: BorderSide(
+                                                    color: Colors.grey[900]!
+                                                        .withOpacity(0.2),
+                                                  ),
+                                                ),
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    eachSong
+                                                        .toString()
+                                                        .substring(
+                                                            0,
+                                                            eachSong
+                                                                .toString()
+                                                                .lastIndexOf(
+                                                                    ".")),
+                                                    style: TextStyle(
+                                                      fontSize: 16.0,
+                                                      color: widget.musicData[
+                                                                      "title"]
+                                                                  .toString()
+                                                                  .toLowerCase() ==
+                                                              eachSong
+                                                                  .toString()
+                                                                  .toLowerCase()
+                                                          ? Colors.greenAccent
+                                                          : Colors.white,
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.play_arrow,
+                                                        color: widget.musicData[
+                                                                        "title"]
+                                                                    .toString()
+                                                                    .toLowerCase() ==
+                                                                eachSong
+                                                                    .toString()
+                                                                    .toLowerCase()
+                                                            ? Colors.greenAccent
+                                                            : Colors.white,
+                                                      ),
+                                                      // Icon(
+                                                      //   Icons.more_vert_outlined,
+                                                      // ),
+                                                    ],
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                      ),
+                                          ),
+                                      ],
                                     ),
-                                ]),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
