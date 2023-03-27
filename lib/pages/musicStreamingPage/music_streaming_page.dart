@@ -228,32 +228,31 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
             "link": "Singles/Cherry Wine.mp3",
           },
           {
-            "albumArt":
-                "https://i.pinimg.com/564x/66/c7/a0/66c7a0bb70d5e5dc9ce72ae6f736787a.jpg",
+            "albumArt": "https://i.ytimg.com/vi/AfKd7aGCL7U/maxresdefault.jpg",
             "artist": "Boyce Avenue",
-            "title": "Flowers",
-            "link": "https://modest-carson-3aa7ad.netlify.app/Latch.mp3",
+            "title": "Here Comes the Sun",
+            "link": "Singles/Here Comes the Sun.mp3",
           },
           {
             "albumArt":
                 "https://i.pinimg.com/564x/b1/35/ac/b135acaf2410c48b8829ff7c14612258.jpg",
             "artist": "M83",
             "title": "Wait",
-            "link": "https://modest-carson-3aa7ad.netlify.app/Latch.mp3",
+            "link": "Singles/Wait.mp3",
           },
           {
             "albumArt":
                 "https://i.pinimg.com/564x/d5/cd/7f/d5cd7f2b5cdb99a9545c1eb443b39eee.jpg",
             "artist": "Hans Zimmer",
-            "title": "Interstellar",
-            "link": "https://modest-carson-3aa7ad.netlify.app/Latch.mp3",
+            "title": "Cornfield Chase",
+            "link": "Singles/Cornfield Chase.mp3",
           },
           {
             "albumArt":
-                "https://i.pinimg.com/564x/0c/83/23/0c8323cb26424ebd3b278d57f1f0e72d.jpg",
+                "https://static.wikia.nocookie.net/justin-bieber/images/c/c3/My_World.jpg/revision/latest?cb=20190604183838",
             "artist": "Justin Bieber",
             "title": "Love Me",
-            "link": "https://modest-carson-3aa7ad.netlify.app/Latch.mp3",
+            "link": "Singles/Love Me.mp3",
           },
         ]
       },
@@ -345,6 +344,8 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
                                                 ),
                                                 child: CachedNetworkImage(
                                                   fit: BoxFit.cover,
+                                                  alignment:
+                                                      Alignment.topCenter,
                                                   imageUrl:
                                                       eachSong["albumArt"]!,
                                                   progressIndicatorBuilder:

@@ -160,6 +160,14 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    // print("=================================================");
+    // print(widget.musicData);
+    // print(widget.currentSong);
+    // print("isPlaylist: " + widget.isPlaylist.toString());
+
+    // print("justDisplay: " + widget.justDisplay.toString());
+    // print("isMusicPlaying: " + widget.isMusicPlaying.toString());
+    // print("=================================================");
     playlist = widget.isPlaylist == true ? widget.musicData["songs"] : [];
     playlistIndex = widget.isPlaylist == true
         ? widget.musicData["songs"].indexOf(widget.currentSong)

@@ -297,10 +297,11 @@ class _HomePageState extends State<HomePage>
   bool isPlaylist = false;
   bool isMusicStopped = true;
   Map currentPlayingSong = {};
-  String currentPlaylistSong = "";
+  String currentPlaylistSong = " Song Title ";
   List<Audio> playlist = [];
   List playlistStrings = [];
   List entireMusicData = [];
+  dynamic playlistMusicData;
 
   void streamMusic(isPlaylist, musicData, currentSongIndex) async {
     currentPlayingSong = musicData;
@@ -313,6 +314,7 @@ class _HomePageState extends State<HomePage>
     // https://modest-carson-3aa7ad.netlify.app/Latch.mp3
     try {
       if (isPlaylist == false) {
+        playlistIndex = -1;
         await assetsAudioPlayer.open(
           Audio.network(
             musicRoot + musicData["link"],
@@ -320,11 +322,10 @@ class _HomePageState extends State<HomePage>
           autoStart: true,
         );
       } else {
-        print("========================== here");
         playlist = [];
         playlistStrings = musicData["songs"];
+        playlistMusicData = musicData;
         // entireMusicData = musicData;
-        print("========================== here2");
         for (var eachSong in musicData["songs"]) {
           playlist.add(
             Audio.network(
@@ -337,7 +338,6 @@ class _HomePageState extends State<HomePage>
             ),
           );
         }
-        print("========================== here3");
 
         await assetsAudioPlayer.open(
           Playlist(
@@ -347,17 +347,12 @@ class _HomePageState extends State<HomePage>
           autoStart: true,
         );
 
-        print("========================== here4");
-
         isPlaylist = true;
         playlistIndex = currentSongIndex;
-        currentPlaylistSong = musicData["songs"][currentSongIndex].toString();
-        print(playlistIndex.toString() +
-            " ========== " +
-            currentPlaylistSong +
-            " ======== " +
-            currentSongIndex.toString());
 
+        currentPlaylistSong = musicData["songs"][currentSongIndex].toString();
+
+        setState(() {});
         setState(() {});
         await assetsAudioPlayer.playlistPlayAtIndex(playlistIndex);
       }
@@ -742,6 +737,19 @@ class _HomePageState extends State<HomePage>
                         SizedBox(width: 6.0),
                         GestureDetector(
                           onTap: () {
+                            // print(
+                            //     "=================================================x");
+                            // print(playlistMusicData);
+                            // print(currentPlayingSong);
+                            // print(currentSong);
+                            // print(playlistMusicData["songs"][playlistIndex]);
+                            // print("isPlaylist: " + isPlaylist.toString());
+
+                            // print(
+                            //     "isMusicPlaying: " + isMusicPlaying.toString());
+                            // print(
+                            //     "=================================================x");
+
                             // Navigator.push(
                             //   context,
                             //   MaterialPageRoute(
@@ -756,24 +764,34 @@ class _HomePageState extends State<HomePage>
                             //     ),
                             //   ),
                             // );
-                            isPlaylist == true
-                                ? () {}
-                                : Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MusicPlayerPage(
-                                        musicData: currentPlayingSong,
-                                        isPlaylist: isPlaylist,
-                                        streamMusic: streamMusic,
-                                        pauseOrPlay: pauseOrPlay,
-                                        nextInPlaylist: nextInPlaylist,
-                                        previousInPlaylist: previousInPlaylist,
-                                        assetsAudioPlayer: assetsAudioPlayer,
-                                        isMusicPlaying: isMusicPlaying,
-                                        justDisplay: true,
-                                      ),
-                                    ),
-                                  );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MusicPlayerPage(
+                                  musicData: playlistIndex != -1
+                                      ? playlistMusicData
+                                      : currentPlayingSong,
+                                  currentSong: playlistIndex != -1
+                                      ? playlistMusicData["songs"]
+                                          [playlistIndex]
+                                      : currentSong,
+
+                                  // isPlaylist == true
+                                  //     ? playlistMusicData[playlistIndex]
+                                  //     : currentPlayingSong["title"],
+                                  isPlaylist: playlistIndex == -1
+                                      ? false
+                                      : true, // isPlaylist,
+                                  streamMusic: streamMusic,
+                                  pauseOrPlay: pauseOrPlay,
+                                  nextInPlaylist: nextInPlaylist,
+                                  previousInPlaylist: previousInPlaylist,
+                                  assetsAudioPlayer: assetsAudioPlayer,
+                                  isMusicPlaying: isMusicPlaying,
+                                  justDisplay: true,
+                                ),
+                              ),
+                            );
                           },
                           child: Hero(
                             tag: currentPlayingSong["albumArt"],
