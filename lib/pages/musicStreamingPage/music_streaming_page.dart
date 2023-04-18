@@ -257,6 +257,55 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
         ]
       },
     ];
+
+    List podcasts = [
+      {
+        "title": "AASTU Nights",
+        "coverArt":
+            "https://www.dagmawibabi.com/userdata/media/AASTUNights.jpg",
+        "episodes": [
+          "Orientation",
+          "Missing Professors",
+        ],
+        "producer": "",
+      },
+      {
+        "title": "Welcome to Night Vale",
+        "coverArt":
+            "https://images.squarespace-cdn.com/content/v1/51e7119ae4b01c2e6a200e01/1424727843284-J00SH31WZZMAUM7Q2O0D/image-asset.png?format=750w",
+        "episodes": [],
+        "producer": "",
+      },
+      {
+        "title": "Lex Fridman Podcast",
+        "coverArt":
+            "https://upload.wikimedia.org/wikipedia/commons/5/50/Lex_Fridman_teaching_at_MIT_in_2018.png",
+        "episodes": [],
+        "producer": "",
+      },
+      {
+        "title": "Waveform",
+        "coverArt":
+            "https://podcasts.voxmedia.com/perch/resources/21vmpn011waveformsocial3000x3000.png",
+        "episodes": [],
+        "producer": "",
+      },
+      {
+        "title": "The Alexandria Archives",
+        "coverArt":
+            "https://is4-ssl.mzstatic.com/image/thumb/Podcasts115/v4/91/ea/f3/91eaf3c6-c90f-435f-01e8-fc49fadd466c/mza_13449284485635254292.jpg/1200x1200bb.jpg",
+        "episodes": [],
+        "producer": "",
+      },
+      {
+        "title": "DUST",
+        "coverArt":
+            "https://i.scdn.co/image/ab6765630000ba8a11233c4063f9c7b92e39c7aa",
+        "episodes": [],
+        "producer": "",
+      },
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Philomena Music"),
@@ -511,7 +560,109 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
                 ],
               ),
             ),
-          SizedBox(height: 20.0),
+          SizedBox(height: 10.0),
+
+          // Podcasts
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 15.0,
+              vertical: 10.0,
+            ),
+            child: Text(
+              "Podcasts",
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          // List of podcasts
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 15.0,
+              vertical: 10.0,
+            ),
+            child: Container(
+              height: 230.0,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  for (var eachPodcast in podcasts)
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Podcast Cover Art
+                          Container(
+                            width: 180.0,
+                            height: 180.0,
+                            clipBehavior: Clip.hardEdge,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[900]!.withOpacity(0.4),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  10.0,
+                                ),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black,
+                                  blurRadius: 10.0,
+                                  spreadRadius: 2.0,
+                                ),
+                              ],
+                            ),
+                            child: CachedNetworkImage(
+                              fit: BoxFit.cover,
+                              imageUrl: eachPodcast["coverArt"]!,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) => Center(
+                                child: CircularProgressIndicator(
+                                  value: downloadProgress.progress,
+                                  // color: randomContainerColor, // Colors.white,
+                                  color: Colors.white,
+                                  strokeWidth: 1.0,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Icon(
+                                Icons.error_outline,
+                              ),
+                            ),
+                          ),
+                          // Podcast Title
+                          SizedBox(height: 5.0),
+                          Container(
+                            width: 180.0,
+                            child: Text(
+                              eachPodcast["title"]!,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 2.0),
+                          // Podcast Episodes Number
+                          Text(
+                            "Episodes: " +
+                                eachPodcast["episodes"].length.toString(),
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: Colors.grey[500],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+
+          SizedBox(height: 150.0),
         ],
       ),
     );

@@ -2,13 +2,23 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:myallin1/model/userProfile.dart';
 import 'package:myallin1/pages/homepage/homepage.dart';
 import 'package:myallin1/pages/notificationpage/notificationpage.dart';
 import 'package:myallin1/pages/repostslistpage/reposts_list_page.dart';
 import 'package:myallin1/pages/signuppage/loginsignup.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() {
+void main() async {
+  // Hive
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(UserProfileAdapter());
+
+  // await Hive.openBox<UserProfile>("UserProfiles");
+
   runApp(MyApp());
 }
 

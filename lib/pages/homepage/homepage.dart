@@ -5,7 +5,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/main.dart';
 import 'package:myallin1/pages/bottomsheets/accounts_list_bottom_sheet.dart';
@@ -42,6 +44,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   // Globals
+  Dio dio = Dio();
   String baseURL = Config.baseUrl;
   late TabController tabController;
   int pageIndex = 1;
@@ -215,11 +218,18 @@ class _HomePageState extends State<HomePage>
   }
 
   // New Upload
+  bool isPosting = false;
   void newUpload(newPostObject, image, imageName, isImage) async {
+    isPosting = true;
+    setState(() {});
     var route =
         isImage == true ? "$baseURL/upload/images" : "$baseURL/upload/videos";
     var url = Uri.parse(route);
     var jsonFormat = jsonEncode(newPostObject);
+
+    print("---------------------------");
+    print(newPostObject);
+    print("---------------------------");
 
     var request = http.MultipartRequest("POST", url);
     request.fields["fullname"] = newPostObject["fullname"];
@@ -238,6 +248,49 @@ class _HomePageState extends State<HomePage>
 
     request.files.add(picture);
     await request.send();
+
+    // FormData formData = FormData.fromMap({
+    //   "file": await MultipartFile.fromBytes(image, filename: imageName),
+    //   "fullname": newPostObject["fullname"],
+    //   "username": newPostObject["username"],
+    //   "content": newPostObject["content"],
+    //   "gore": newPostObject["gore"].toString(),
+    //   "hidden": newPostObject["hidden"].toString(),
+    //   "spoiler": newPostObject["spoiler"].toString(),
+    //   "nsfw": newPostObject["nsfw"].toString(),
+    // });
+
+    // print(imageName);
+    // print(formData);
+    // dynamic response = await dio.post(route, data: formData);
+    // print(response);
+
+    // Add image, fullname and age to FormData
+    // final formData = FormData();
+    // // var isUploadingImage = isImage == true ? "image" : "video";
+    // final file = await MultipartFile.fromFile(
+    //   image,
+    //   filename: imageName,
+    // );
+    // formData.files.add(MapEntry("image", file));
+    // formData.fields.add(MapEntry("fullname", newPostObject["fullname"]));
+    // formData.fields.add(MapEntry("username", newPostObject["username"]));
+    // formData.fields.add(MapEntry("content", newPostObject["content"]));
+    // formData.fields.add(MapEntry("gore", newPostObject["gore"].toString()));
+    // formData.fields.add(MapEntry("hidden", newPostObject["hidden"].toString()));
+    // formData.fields
+    //     .add(MapEntry("spoiler", newPostObject["spoiler"].toString()));
+    // formData.fields.add(MapEntry("nsfw", newPostObject["nsfw"].toString()));
+
+    // try {
+    //   final response = await dio.post(route, data: formData);
+    //   print(response.data);
+    // } catch (e) {
+    //   print(e);
+    // }
+
+    isPosting = false;
+
     getFeed();
     setState(() {});
   }
@@ -501,6 +554,7 @@ class _HomePageState extends State<HomePage>
     // TODO: implement dispose
     super.dispose();
     audioPlayer.dispose();
+    Hive.close();
   }
 
   // initState
@@ -565,21 +619,7 @@ class _HomePageState extends State<HomePage>
                 isMusicStopped = !isMusicStopped;
                 setState(() {});
               },
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => MusicStreamingPage(
-                      streamMusic: streamMusic,
-                      pauseOrPlay: pauseOrPlay,
-                      nextInPlaylist: nextInPlaylist,
-                      previousInPlaylist: previousInPlaylist,
-                      assetsAudioPlayer: assetsAudioPlayer,
-                      isMusicPlaying: isMusicPlaying,
-                    ),
-                  ),
-                );
-              },
+              onTap: () {},
               child: Text(
                 "Philomena",
               ),
@@ -587,12 +627,45 @@ class _HomePageState extends State<HomePage>
           ],
         ),
         actions: [
+          isPosting == true
+              ? Container(
+                  width: 80.0,
+                  height: 20.0,
+                  // color: Colors.amber,
+                  padding:
+                      EdgeInsets.symmetric(vertical: 15.0, horizontal: 26.0),
+                  child: CircularProgressIndicator(
+                    color: Colors.grey[400]!,
+                    strokeWidth: 2.0,
+                  ),
+                )
+              : Container(),
           IconButton(
             onPressed: () async {
               getFeed();
             },
             icon: Icon(
               Icons.refresh_outlined,
+            ),
+          ),
+          IconButton(
+            onPressed: () async {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MusicStreamingPage(
+                    streamMusic: streamMusic,
+                    pauseOrPlay: pauseOrPlay,
+                    nextInPlaylist: nextInPlaylist,
+                    previousInPlaylist: previousInPlaylist,
+                    assetsAudioPlayer: assetsAudioPlayer,
+                    isMusicPlaying: isMusicPlaying,
+                  ),
+                ),
+              );
+            },
+            icon: Icon(
+              Ionicons.musical_notes_outline,
             ),
           ),
           IconButton(

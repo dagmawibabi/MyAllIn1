@@ -29,6 +29,8 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController passwordController = TextEditingController();
 
   bool savedLogins = false;
+  bool rememberLogin = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -94,11 +96,46 @@ class _LoginPageState extends State<LoginPage> {
           RoundedButton(
             text: "Login",
             clickFunction: () => {
-              widget.loginAccount(usernameController.text.toString().trim(),
-                  passwordController.text.toString()),
+              widget.loginAccount(
+                usernameController.text.toString().trim(),
+                passwordController.text.toString(),
+                rememberLogin,
+              ),
             },
           ),
           SizedBox(height: 0.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  rememberLogin = !rememberLogin;
+                  setState(() {});
+                },
+                child: Icon(
+                  rememberLogin == true
+                      ? Icons.check_box_outlined
+                      : Icons.check_box_outline_blank_rounded,
+                  color: Colors.yellowAccent,
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  rememberLogin = !rememberLogin;
+                  setState(() {});
+                },
+                child: Text(
+                  "Keep me logged in",
+                  style: TextStyle(
+                    color: Colors.yellowAccent,
+                    fontWeight: rememberLogin == true
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
+                ),
+              ),
+            ],
+          ),
           GestureDetector(
             onLongPress: () {
               savedLogins = !savedLogins;
@@ -161,7 +198,8 @@ class _LoginPageState extends State<LoginPage> {
                           "Dagmawi Babi",
                         ),
                         onPressed: () {
-                          widget.loginAccount("dagmawibabi", "dagmawibabi");
+                          widget.loginAccount(
+                              "dagmawibabi", "dagmawibabi", rememberLogin);
                         },
                       ),
                       ElevatedButton(
@@ -177,7 +215,7 @@ class _LoginPageState extends State<LoginPage> {
                           "Anne Leone",
                         ),
                         onPressed: () {
-                          widget.loginAccount("anne", "anne");
+                          widget.loginAccount("anne", "anne", rememberLogin);
                         },
                       ),
                     ],

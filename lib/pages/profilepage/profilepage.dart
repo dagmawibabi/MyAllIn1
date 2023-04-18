@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:myallin1/config/config.dart';
 import 'package:myallin1/pages/bottomsheets/accounts_list_bottom_sheet.dart';
@@ -80,6 +81,16 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  void logout() async {
+    Box userProfileBox = await Hive.openBox("UserProfiles");
+    await userProfileBox.delete("loggedInUser");
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => LoginSignup()),
+      (route) => false,
+    );
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -114,11 +125,7 @@ class _ProfilePageState extends State<ProfilePage> {
           IconButton(
             onPressed: () {
               // Navigator.popAndPushNamed(context, "loginSignup");
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => LoginSignup()),
-                (route) => false,
-              );
+              logout();
             },
             icon: Icon(
               Ionicons.log_out_outline,

@@ -54,8 +54,13 @@ class _NewPostPageState extends State<NewPostPage> {
 
     if (imageFromGallery == true) {
       // Pick an image
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? image = await _picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 100,
+        requestFullMetadata: true,
+      );
       imageFile = await image?.readAsBytes();
+      // imageFile = image?.path;
       imageName = image?.name;
       imageSelected = true;
       videoSelected = false;
@@ -383,56 +388,56 @@ class _NewPostPageState extends State<NewPostPage> {
             ],
           ), // Images
           SizedBox(height: 15.0),
-          imageSelected == true
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Stack(
-                      alignment: Alignment.topRight,
-                      children: [
-                        Container(
-                          clipBehavior: Clip.hardEdge,
-                          margin: EdgeInsets.only(left: 20.0, right: 15.0),
-                          padding: EdgeInsets.all(10.0),
-                          width: 350.0,
-                          height: 350.0,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900]!.withOpacity(0.2),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(20.0),
-                            ),
-                          ),
-                          child: Image.memory(
-                            imageFile,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(100.0),
-                            ),
-                          ),
-                          child: IconButton(
-                            onPressed: () {
-                              // imageSelected = !imageSelected;
-                              imageSelected = false;
-                              videoSelected = false;
+          // imageSelected == true
+          //     ? Row(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           Stack(
+          //             alignment: Alignment.topRight,
+          //             children: [
+          //               Container(
+          //                 clipBehavior: Clip.hardEdge,
+          //                 margin: EdgeInsets.only(left: 20.0, right: 15.0),
+          //                 padding: EdgeInsets.all(10.0),
+          //                 width: 350.0,
+          //                 height: 350.0,
+          //                 decoration: BoxDecoration(
+          //                   color: Colors.grey[900]!.withOpacity(0.2),
+          //                   borderRadius: BorderRadius.all(
+          //                     Radius.circular(20.0),
+          //                   ),
+          //                 ),
+          //                 child: Image.memory(
+          //                   imageFile,
+          //                   fit: BoxFit.contain,
+          //                 ),
+          //               ),
+          //               Container(
+          //                 decoration: BoxDecoration(
+          //                   color: Colors.black,
+          //                   borderRadius: BorderRadius.all(
+          //                     Radius.circular(100.0),
+          //                   ),
+          //                 ),
+          //                 child: IconButton(
+          //                   onPressed: () {
+          //                     // imageSelected = !imageSelected;
+          //                     imageSelected = false;
+          //                     videoSelected = false;
 
-                              imageFile = null;
-                              setState(() {});
-                            },
-                            icon: Icon(
-                              Icons.remove_circle_outline,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                )
-              : Container(),
+          //                     imageFile = null;
+          //                     setState(() {});
+          //                   },
+          //                   icon: Icon(
+          //                     Icons.remove_circle_outline,
+          //                   ),
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //         ],
+          //       )
+          //     : Container(),
 
           videoSelected == true
               ? Row(
