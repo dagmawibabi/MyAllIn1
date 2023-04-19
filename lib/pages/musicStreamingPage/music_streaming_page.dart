@@ -7,6 +7,7 @@ import 'package:myallin1/pages/musicStreamingPage/album_songs_list_page.dart';
 import 'package:myallin1/pages/musicStreamingPage/albums_container.dart';
 import 'package:myallin1/pages/musicStreamingPage/artists_container.dart';
 import 'package:myallin1/pages/musicStreamingPage/music_player_page.dart';
+import 'package:myallin1/pages/musicStreamingPage/podcast_details_page.dart';
 
 class MusicStreamingPage extends StatefulWidget {
   const MusicStreamingPage({
@@ -267,42 +268,89 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
           "Orientation",
           "Missing Professors",
         ],
-        "producer": "",
+        "producer": "Dream Intelligence",
+        "description":
+            "AASTU Nights. A funny horror podcast that feels like you're listening to the morning announcements of school. Where your host, that goes by the name THE HOST, talks about the latest news and events that are happening in AASTU. ",
       },
       {
         "title": "Welcome to Night Vale",
         "coverArt":
             "https://images.squarespace-cdn.com/content/v1/51e7119ae4b01c2e6a200e01/1424727843284-J00SH31WZZMAUM7Q2O0D/image-asset.png?format=750w",
-        "episodes": [],
-        "producer": "",
+        "episodes": [
+          "Pilot",
+          "A Story About You",
+          "The Faceless Old Woman",
+          "Glow Cloud",
+          "The Man In The Tan Jacket",
+          "The Sandstorm"
+        ],
+        "producer": "Night Vale Presents",
+        "description":
+            "Welcome to Night Vale is a twice-monthly podcast in the style of community updates for the small desert town of Night Vale, featuring local weather, news, announcements from the Sheriff's Secret Police, mysterious lights in the night sky, dark hooded figures with unknowable powers, and cultural events. ",
       },
       {
         "title": "Lex Fridman Podcast",
         "coverArt":
             "https://upload.wikimedia.org/wikipedia/commons/5/50/Lex_Fridman_teaching_at_MIT_in_2018.png",
-        "episodes": [],
-        "producer": "",
+        "episodes": [
+          "Sam Altman: OpenAI",
+          "Guido Van Rossum: Python",
+          "Jordan Peterson",
+          "Elon Musk: Neural Link",
+          "Bill Gates: Farming",
+        ],
+        "producer": "Lex Fridman",
+        "description":
+            "Conversations about the nature of intelligence, consciousness, love, and power. ",
       },
       {
         "title": "Waveform",
         "coverArt":
             "https://podcasts.voxmedia.com/perch/resources/21vmpn011waveformsocial3000x3000.png",
-        "episodes": [],
-        "producer": "",
+        "episodes": [
+          "Nothing Ear",
+          "IPhone 15",
+          "Rivian R1S",
+          "ChatGPT",
+          "Galaxy S13",
+          "Google Pixel",
+        ],
+        "producer": "MKBHD",
+        "description":
+            "A tech podcast for the gadget lovers and tech heads among us from the mind of Marques Brownlee, better known as MKBHD. MKBHD has made a name for himself on YouTube reviewing everything from the newest smartphones to cameras to electric cars. ",
       },
       {
         "title": "The Alexandria Archives",
         "coverArt":
             "https://is4-ssl.mzstatic.com/image/thumb/Podcasts115/v4/91/ea/f3/91eaf3c6-c90f-435f-01e8-fc49fadd466c/mza_13449284485635254292.jpg/1200x1200bb.jpg",
-        "episodes": [],
-        "producer": "",
+        "episodes": [
+          "Service Call",
+          "House Painting On Halloween",
+          "The Tunnels",
+          "Echoes of Laughter",
+          "Househunting",
+          "Christmas with Kurz",
+          "Initiation Night",
+        ],
+        "producer": "Nicole Jorge",
+        "description": "The South's Answer to Miskatonic University.",
       },
       {
         "title": "DUST",
         "coverArt":
             "https://i.scdn.co/image/ab6765630000ba8a11233c4063f9c7b92e39c7aa",
-        "episodes": [],
-        "producer": "",
+        "episodes": [
+          "Horizons",
+          "Genborn",
+          "Pendulum",
+          "Sanctity",
+          "Flight 008",
+          "Seat 13F",
+          "Chrysalis",
+        ],
+        "producer": "Gunpowder & Sky",
+        "description":
+            "DUST is the premier destination for immersive science fiction audio stories.",
       },
     ];
 
@@ -589,72 +637,84 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
                 scrollDirection: Axis.horizontal,
                 children: [
                   for (var eachPodcast in podcasts)
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Podcast Cover Art
-                          Container(
-                            width: 180.0,
-                            height: 180.0,
-                            clipBehavior: Clip.hardEdge,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[900]!.withOpacity(0.4),
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                  10.0,
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PodcastDetailsPage(
+                              podcastObject: eachPodcast,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Podcast Cover Art
+                            Container(
+                              width: 180.0,
+                              height: 180.0,
+                              clipBehavior: Clip.hardEdge,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[900]!.withOpacity(0.4),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    10.0,
+                                  ),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    blurRadius: 10.0,
+                                    spreadRadius: 2.0,
+                                  ),
+                                ],
+                              ),
+                              child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: eachPodcast["coverArt"]!,
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) => Center(
+                                  child: CircularProgressIndicator(
+                                    value: downloadProgress.progress,
+                                    // color: randomContainerColor, // Colors.white,
+                                    color: Colors.white,
+                                    strokeWidth: 1.0,
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Icon(
+                                  Icons.error_outline,
                                 ),
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black,
-                                  blurRadius: 10.0,
-                                  spreadRadius: 2.0,
-                                ),
-                              ],
                             ),
-                            child: CachedNetworkImage(
-                              fit: BoxFit.cover,
-                              imageUrl: eachPodcast["coverArt"]!,
-                              progressIndicatorBuilder:
-                                  (context, url, downloadProgress) => Center(
-                                child: CircularProgressIndicator(
-                                  value: downloadProgress.progress,
-                                  // color: randomContainerColor, // Colors.white,
+                            // Podcast Title
+                            SizedBox(height: 5.0),
+                            Container(
+                              width: 180.0,
+                              child: Text(
+                                eachPodcast["title"]!,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 15.0,
                                   color: Colors.white,
-                                  strokeWidth: 1.0,
                                 ),
                               ),
-                              errorWidget: (context, url, error) => Icon(
-                                Icons.error_outline,
-                              ),
                             ),
-                          ),
-                          // Podcast Title
-                          SizedBox(height: 5.0),
-                          Container(
-                            width: 180.0,
-                            child: Text(
-                              eachPodcast["title"]!,
-                              overflow: TextOverflow.ellipsis,
+                            SizedBox(height: 2.0),
+                            // Podcast Episodes Number
+                            Text(
+                              "Episodes: " +
+                                  eachPodcast["episodes"].length.toString(),
                               style: TextStyle(
-                                fontSize: 15.0,
-                                color: Colors.white,
+                                fontSize: 14.0,
+                                color: Colors.grey[500],
                               ),
                             ),
-                          ),
-                          SizedBox(height: 2.0),
-                          // Podcast Episodes Number
-                          Text(
-                            "Episodes: " +
-                                eachPodcast["episodes"].length.toString(),
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.grey[500],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                 ],
