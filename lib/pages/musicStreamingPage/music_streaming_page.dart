@@ -265,8 +265,8 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
         "coverArt":
             "https://www.dagmawibabi.com/userdata/media/AASTUNights.jpg",
         "episodes": [
-          "Orientation",
-          "Missing Professors",
+          "EP 1 - Orientation.mp3",
+          "EP 2 - Missing Professors.mp3",
         ],
         "producer": "Dream Intelligence",
         "description":
@@ -277,12 +277,11 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
         "coverArt":
             "https://images.squarespace-cdn.com/content/v1/51e7119ae4b01c2e6a200e01/1424727843284-J00SH31WZZMAUM7Q2O0D/image-asset.png?format=750w",
         "episodes": [
-          "Pilot",
-          "A Story About You",
-          "The Faceless Old Woman",
-          "Glow Cloud",
-          "The Man In The Tan Jacket",
-          "The Sandstorm"
+          "1 - Pilot.mp3",
+          "2 - Glow Cloud.mp3",
+          "3 - A Story About You.mp3",
+          "4 - The Man in the Tan Jacket.mp3",
+          "5 - Faceless Old Woman.mp3",
         ],
         "producer": "Night Vale Presents",
         "description":
@@ -308,12 +307,10 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
         "coverArt":
             "https://podcasts.voxmedia.com/perch/resources/21vmpn011waveformsocial3000x3000.png",
         "episodes": [
-          "Nothing Ear",
-          "IPhone 15",
-          "Rivian R1S",
-          "ChatGPT",
-          "Galaxy S13",
-          "Google Pixel",
+          "Introduction.mp3",
+          "Porsche vs Tesla.mp3",
+          "YouTube, Twitter and Apple.mp3",
+          "Samsung Galaxy Note 10.mp3",
         ],
         "producer": "MKBHD",
         "description":
@@ -644,6 +641,13 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
                           MaterialPageRoute(
                             builder: (context) => PodcastDetailsPage(
                               podcastObject: eachPodcast,
+                              musicData: eachPodcast,
+                              streamMusic: widget.streamMusic,
+                              pauseOrPlay: widget.pauseOrPlay,
+                              nextInPlaylist: widget.nextInPlaylist,
+                              previousInPlaylist: widget.previousInPlaylist,
+                              assetsAudioPlayer: widget.assetsAudioPlayer,
+                              isMusicPlaying: widget.isMusicPlaying,
                             ),
                           ),
                         );
@@ -654,39 +658,43 @@ class _MusicStreamingPageState extends State<MusicStreamingPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // Podcast Cover Art
-                            Container(
-                              width: 180.0,
-                              height: 180.0,
-                              clipBehavior: Clip.hardEdge,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[900]!.withOpacity(0.4),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                    10.0,
+                            Hero(
+                              tag: eachPodcast["coverArt"]!,
+                              child: Container(
+                                width: 180.0,
+                                height: 180.0,
+                                clipBehavior: Clip.hardEdge,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[900]!.withOpacity(0.4),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(
+                                      10.0,
+                                    ),
                                   ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black,
+                                      blurRadius: 10.0,
+                                      spreadRadius: 2.0,
+                                    ),
+                                  ],
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black,
-                                    blurRadius: 10.0,
-                                    spreadRadius: 2.0,
+                                child: CachedNetworkImage(
+                                  fit: BoxFit.cover,
+                                  imageUrl: eachPodcast["coverArt"]!,
+                                  progressIndicatorBuilder:
+                                      (context, url, downloadProgress) =>
+                                          Center(
+                                    child: CircularProgressIndicator(
+                                      value: downloadProgress.progress,
+                                      // color: randomContainerColor, // Colors.white,
+                                      color: Colors.white,
+                                      strokeWidth: 1.0,
+                                    ),
                                   ),
-                                ],
-                              ),
-                              child: CachedNetworkImage(
-                                fit: BoxFit.cover,
-                                imageUrl: eachPodcast["coverArt"]!,
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) => Center(
-                                  child: CircularProgressIndicator(
-                                    value: downloadProgress.progress,
-                                    // color: randomContainerColor, // Colors.white,
-                                    color: Colors.white,
-                                    strokeWidth: 1.0,
+                                  errorWidget: (context, url, error) => Icon(
+                                    Icons.error_outline,
                                   ),
-                                ),
-                                errorWidget: (context, url, error) => Icon(
-                                  Icons.error_outline,
                                 ),
                               ),
                             ),

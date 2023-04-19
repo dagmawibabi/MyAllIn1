@@ -124,7 +124,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
 
   void getImagePalette() async {
     ImageProvider imageProvider = NetworkImage(
-      widget.musicData["albumArt"],
+      widget.musicData["albumArt"] ?? widget.musicData["coverArt"],
     );
     PaletteGenerator paletteGenerator =
         await PaletteGenerator.fromImageProvider(imageProvider);
@@ -168,9 +168,13 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
     // print("justDisplay: " + widget.justDisplay.toString());
     // print("isMusicPlaying: " + widget.isMusicPlaying.toString());
     // print("=================================================");
-    playlist = widget.isPlaylist == true ? widget.musicData["songs"] : [];
+    playlist = widget.isPlaylist == true
+        ? (widget.musicData["songs"] ?? widget.musicData["episodes"])
+        : [];
     playlistIndex = widget.isPlaylist == true
-        ? widget.musicData["songs"].indexOf(widget.currentSong)
+        ? widget.musicData["songs"] == null
+            ? widget.musicData["episodes"].indexOf(widget.currentSong)
+            : widget.musicData["songs"].indexOf(widget.currentSong)
         : 0;
     getImagePalette();
     // widget.justDisplay == true ? () {} : widget.assetsAudioPlayer.stop();
@@ -198,7 +202,7 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
           ),
           image: DecorationImage(
             image: NetworkImage(
-              widget.musicData["albumArt"],
+              widget.musicData["albumArt"] ?? widget.musicData["coverArt"],
             ),
             fit: BoxFit.cover,
             opacity: 0.4,
@@ -243,7 +247,8 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
 
               // Album Art
               Hero(
-                tag: widget.musicData["albumArt"],
+                tag: widget.musicData["albumArt"] ??
+                    widget.musicData["coverArt"],
                 child: Container(
                   width: double.infinity,
                   height: 380.0,
@@ -257,7 +262,8 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                   ),
                   child: CachedNetworkImage(
                     fit: BoxFit.cover,
-                    imageUrl: widget.musicData["albumArt"],
+                    imageUrl: widget.musicData["albumArt"] ??
+                        widget.musicData["coverArt"],
                     progressIndicatorBuilder:
                         (context, url, downloadProgress) => Center(
                       child: CircularProgressIndicator(
@@ -316,7 +322,8 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                         Container(
                           width: 300.0,
                           child: Text(
-                            widget.musicData["artist"],
+                            widget.musicData["artist"] ??
+                                widget.musicData["title"].toString(),
                             style: TextStyle(
                               color: Colors.grey[400],
                               overflow: TextOverflow.ellipsis,
@@ -446,16 +453,41 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                       children: [
                         widget.isPlaylist == false
                             ? Container()
-                            : IconButton(
-                                onPressed: () async {
-                                  previousInPlaylist();
-                                  widget.previousInPlaylist();
-                                },
-                                icon: Icon(
-                                  Icons.skip_previous,
-                                  size: 40.0,
-                                ),
-                              ),
+                            : widget.musicData["albumArt"] == null
+                                ? Row(
+                                    children: [
+                                      IconButton(
+                                        onPressed: () async {
+                                          previousInPlaylist();
+                                          widget.previousInPlaylist();
+                                        },
+                                        icon: Icon(
+                                          Icons.skip_previous,
+                                          size: 30.0,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () async {
+                                          nextInPlaylist();
+                                          widget.nextInPlaylist();
+                                        },
+                                        icon: Icon(
+                                          Icons.replay_10,
+                                          size: 40.0,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : IconButton(
+                                    onPressed: () async {
+                                      previousInPlaylist();
+                                      widget.previousInPlaylist();
+                                    },
+                                    icon: Icon(
+                                      Icons.skip_previous,
+                                      size: 40.0,
+                                    ),
+                                  ),
                         SizedBox(width: 8.0),
                         widget.assetsAudioPlayer.builderCurrentPosition(
                           builder: (context, duration) =>
@@ -503,16 +535,41 @@ class _MusicPlayerPageState extends State<MusicPlayerPage> {
                         ),
                         widget.isPlaylist == false
                             ? Container()
-                            : IconButton(
-                                onPressed: () async {
-                                  nextInPlaylist();
-                                  widget.nextInPlaylist();
-                                },
-                                icon: Icon(
-                                  Icons.skip_next,
-                                  size: 40.0,
-                                ),
-                              ),
+                            : widget.musicData["albumArt"] == null
+                                ? Row(
+                                    children: [
+                                      IconButton(
+                                        onPressed: () async {
+                                          nextInPlaylist();
+                                          widget.nextInPlaylist();
+                                        },
+                                        icon: Icon(
+                                          Icons.forward_30,
+                                          size: 40.0,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: () async {
+                                          nextInPlaylist();
+                                          widget.nextInPlaylist();
+                                        },
+                                        icon: Icon(
+                                          Icons.skip_next,
+                                          size: 30.0,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : IconButton(
+                                    onPressed: () async {
+                                      nextInPlaylist();
+                                      widget.nextInPlaylist();
+                                    },
+                                    icon: Icon(
+                                      Icons.skip_next,
+                                      size: 40.0,
+                                    ),
+                                  ),
                       ],
                     ),
                     IconButton(

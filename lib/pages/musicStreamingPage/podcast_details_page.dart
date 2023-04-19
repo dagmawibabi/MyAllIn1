@@ -1,14 +1,30 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:myallin1/pages/musicStreamingPage/music_player_page.dart';
 import 'package:palette_generator/palette_generator.dart';
 
 class PodcastDetailsPage extends StatefulWidget {
   const PodcastDetailsPage({
     super.key,
     required this.podcastObject,
+    required this.musicData,
+    required this.streamMusic,
+    required this.pauseOrPlay,
+    required this.nextInPlaylist,
+    required this.previousInPlaylist,
+    required this.assetsAudioPlayer,
+    required this.isMusicPlaying,
   });
 
   final Map podcastObject;
+  final Map musicData;
+  final Function streamMusic;
+  final Function pauseOrPlay;
+  final Function nextInPlaylist;
+  final Function previousInPlaylist;
+  final AssetsAudioPlayer assetsAudioPlayer;
+  final bool isMusicPlaying;
 
   @override
   State<PodcastDetailsPage> createState() => _PodcastDetailsPageState();
@@ -73,48 +89,56 @@ class _PodcastDetailsPageState extends State<PodcastDetailsPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
-                    margin: EdgeInsets.only(left: 24.0),
-                    child: Icon(
-                      Icons.arrow_back,
+                    margin: EdgeInsets.only(left: 10.0),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.arrow_back,
+                      ),
                     ),
                   ),
                 ],
               ),
-              SizedBox(height: 20.0),
+              SizedBox(height: 10.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(
-                    width: 180.0,
-                    height: 180.0,
-                    clipBehavior: Clip.hardEdge,
-                    decoration: BoxDecoration(
-                      // color: Colors.grey[700]!.withOpacity(0.01),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10.0),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 50.0,
-                          spreadRadius: 0.5,
+                  Hero(
+                    tag: widget.podcastObject["coverArt"]!,
+                    child: Container(
+                      width: 180.0,
+                      height: 180.0,
+                      clipBehavior: Clip.hardEdge,
+                      decoration: BoxDecoration(
+                        // color: Colors.grey[700]!.withOpacity(0.01),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0),
                         ),
-                      ],
-                    ),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      imageUrl: widget.podcastObject["coverArt"]!,
-                      progressIndicatorBuilder:
-                          (context, url, downloadProgress) => Center(
-                        child: CircularProgressIndicator(
-                          value: downloadProgress.progress,
-                          // color: randomContainerColor, // Colors.white,
-                          color: Colors.white,
-                          strokeWidth: 1.0,
-                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 50.0,
+                            spreadRadius: 0.5,
+                          ),
+                        ],
                       ),
-                      errorWidget: (context, url, error) => Icon(
-                        Icons.error_outline,
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: widget.podcastObject["coverArt"]!,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) => Center(
+                          child: CircularProgressIndicator(
+                            value: downloadProgress.progress,
+                            // color: randomContainerColor, // Colors.white,
+                            color: Colors.white,
+                            strokeWidth: 1.0,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Icon(
+                          Icons.error_outline,
+                        ),
                       ),
                     ),
                   ),
@@ -217,7 +241,7 @@ class _PodcastDetailsPageState extends State<PodcastDetailsPage> {
               // Episodes
               SizedBox(height: 20.0),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.0),
+                padding: EdgeInsets.symmetric(horizontal: 15.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -253,147 +277,170 @@ class _PodcastDetailsPageState extends State<PodcastDetailsPage> {
                   children: [
                     // Each Episode
                     for (var eachEpisode in widget.podcastObject["episodes"])
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                            vertical: 5.0, horizontal: 10.0),
-                        padding: EdgeInsets.only(
-                          left: 10.0,
-                          right: 10.0,
-                          top: 10.0,
-                          bottom: 0.0,
-                        ),
-                        decoration: BoxDecoration(
-                          // color: Colors.blue,
-                          color: Colors.grey[900]!.withOpacity(0.5),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10.0),
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      width: 45.0,
-                                      height: 45.0,
-                                      clipBehavior: Clip.hardEdge,
-                                      decoration: BoxDecoration(
-                                        // color: Colors.grey[700]!.withOpacity(0.01),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(5.0),
-                                        ),
-                                      ),
-                                      child: CachedNetworkImage(
-                                        fit: BoxFit.cover,
-                                        imageUrl:
-                                            widget.podcastObject["coverArt"]!,
-                                        progressIndicatorBuilder:
-                                            (context, url, downloadProgress) =>
-                                                Center(
-                                          child: CircularProgressIndicator(
-                                            value: downloadProgress.progress,
-                                            // color: randomContainerColor, // Colors.white,
-                                            color: Colors.white,
-                                            strokeWidth: 1.0,
-                                          ),
-                                        ),
-                                        errorWidget: (context, url, error) =>
-                                            Icon(
-                                          Icons.error_outline,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 10.0),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          child: Text(
-                                            eachEpisode.toString(),
-                                            style: TextStyle(
-                                              // fontSize: 18.0,
-                                              color: Colors.white,
-                                              // fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(height: 5.0),
-                                        Container(
-                                          child: Text(
-                                            "July 12, 2024" + " • " + "16 mins",
-                                            style: TextStyle(
-                                              fontSize: 12.0,
-                                              color: Colors.grey[500]!,
-                                              // fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Container(
-                                  padding: EdgeInsets.all(4.0),
-                                  margin:
-                                      EdgeInsets.only(bottom: 3.0, right: 2.0),
-                                  decoration: BoxDecoration(
-                                    // color: Color.fromARGB(255, 53, 189, 25),
-                                    border: Border.all(
-                                      color: Color.fromARGB(255, 53, 189, 25),
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(200.0),
-                                    ),
-                                  ),
-                                  child: Icon(
-                                    Icons.play_arrow,
-                                    color: Color.fromARGB(255, 53, 189, 25),
-                                    // size: 30.0,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 10.0),
-                            Text(
-                              widget.podcastObject["description"],
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12.0,
-                                height: 1.4,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MusicPlayerPage(
+                                musicData: widget.podcastObject,
+                                isPlaylist: true,
+                                currentSong: eachEpisode.toString(),
+                                streamMusic: widget.streamMusic,
+                                pauseOrPlay: widget.pauseOrPlay,
+                                nextInPlaylist: widget.nextInPlaylist,
+                                previousInPlaylist: widget.previousInPlaylist,
+                                assetsAudioPlayer: widget.assetsAudioPlayer,
+                                isMusicPlaying: widget.isMusicPlaying,
                               ),
                             ),
-                            // SizedBox(height: 10.0),
-                            Row(
-                              children: [
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.downloading_outlined,
-                                    size: 22.0,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.share_outlined,
-                                    size: 22.0,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.more_vert_outlined,
-                                    size: 22.0,
-                                  ),
-                                ),
-                              ],
+                          );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 10.0),
+                          padding: EdgeInsets.only(
+                            left: 10.0,
+                            right: 10.0,
+                            top: 10.0,
+                            bottom: 0.0,
+                          ),
+                          decoration: BoxDecoration(
+                            // color: Colors.blue,
+                            color: Colors.grey[900]!.withOpacity(0.5),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10.0),
                             ),
-                          ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        width: 45.0,
+                                        height: 45.0,
+                                        clipBehavior: Clip.hardEdge,
+                                        decoration: BoxDecoration(
+                                          // color: Colors.grey[700]!.withOpacity(0.01),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(5.0),
+                                          ),
+                                        ),
+                                        child: CachedNetworkImage(
+                                          fit: BoxFit.cover,
+                                          imageUrl:
+                                              widget.podcastObject["coverArt"]!,
+                                          progressIndicatorBuilder: (context,
+                                                  url, downloadProgress) =>
+                                              Center(
+                                            child: CircularProgressIndicator(
+                                              value: downloadProgress.progress,
+                                              // color: randomContainerColor, // Colors.white,
+                                              color: Colors.white,
+                                              strokeWidth: 1.0,
+                                            ),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              Icon(
+                                            Icons.error_outline,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10.0),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            child: Text(
+                                              eachEpisode.toString(),
+                                              style: TextStyle(
+                                                // fontSize: 18.0,
+                                                color: Colors.white,
+                                                // fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 5.0),
+                                          Container(
+                                            child: Text(
+                                              "July 12, 2024" +
+                                                  " • " +
+                                                  "16 mins",
+                                              style: TextStyle(
+                                                fontSize: 12.0,
+                                                color: Colors.grey[500]!,
+                                                // fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.all(4.0),
+                                    margin: EdgeInsets.only(
+                                        bottom: 3.0, right: 2.0),
+                                    decoration: BoxDecoration(
+                                      // color: Color.fromARGB(255, 53, 189, 25),
+                                      border: Border.all(
+                                        color: Color.fromARGB(255, 53, 189, 25),
+                                      ),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(200.0),
+                                      ),
+                                    ),
+                                    child: Icon(
+                                      Icons.play_arrow,
+                                      color: Color.fromARGB(255, 53, 189, 25),
+                                      // size: 30.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 10.0),
+                              Text(
+                                widget.podcastObject["description"],
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12.0,
+                                  height: 1.4,
+                                ),
+                              ),
+                              // SizedBox(height: 10.0),
+                              Row(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.downloading_outlined,
+                                      size: 22.0,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.share_outlined,
+                                      size: 22.0,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.more_vert_outlined,
+                                      size: 22.0,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     // Space

@@ -345,6 +345,7 @@ class _HomePageState extends State<HomePage>
   // Music Streaming
   AssetsAudioPlayer assetsAudioPlayer = AssetsAudioPlayer();
   String musicRoot = Config.musicLibraryRoot + "/";
+  String podcastRoot = Config.podcastLibraryRoot;
   int playlistIndex = 0;
   // List playlist = [];
   bool isPlaylist = false;
@@ -371,25 +372,40 @@ class _HomePageState extends State<HomePage>
         await assetsAudioPlayer.open(
           Audio.network(
             musicRoot + musicData["link"],
+            // podcastRoot + musicData["title"] + musicData[""];
           ),
           autoStart: true,
         );
       } else {
+        print("podcast");
         playlist = [];
-        playlistStrings = musicData["songs"];
+        playlistStrings = musicData["songs"] ?? musicData["episodes"];
         playlistMusicData = musicData;
         // entireMusicData = musicData;
-        for (var eachSong in musicData["songs"]) {
-          playlist.add(
-            Audio.network(
-              musicRoot +
-                  musicData["artist"] +
-                  "/" +
-                  musicData["album"] +
-                  "/" +
-                  eachSong,
-            ),
-          );
+        if (musicData["songs"] != null) {
+          print("podcast podcast 1");
+
+          for (var eachSong in musicData["songs"]) {
+            playlist.add(
+              Audio.network(
+                musicRoot +
+                    musicData["artist"] +
+                    "/" +
+                    musicData["album"] +
+                    "/" +
+                    eachSong,
+              ),
+            );
+          }
+        } else {
+          print("podcast podcast");
+          for (var eachEpisode in musicData["episodes"]) {
+            playlist.add(
+              Audio.network(
+                podcastRoot + musicData["title"] + "/" + eachEpisode,
+              ),
+            );
+          }
         }
 
         await assetsAudioPlayer.open(
@@ -413,6 +429,8 @@ class _HomePageState extends State<HomePage>
       isMusicStopped = false;
       // pauseOrPlay();
     } catch (t) {
+      print(t);
+      print(podcastRoot + musicData["title"] + "/" + musicData["episodes"][0]);
       print("some error");
       isMusicPlaying = false;
       isMusicStopped = true;
@@ -704,7 +722,7 @@ class _HomePageState extends State<HomePage>
           tabs: [
             Tab(
               // icon: Icon(Icons.directions_transit),
-              text: "Search",
+              text: "Chats",
             ),
             Tab(
               // icon: Icon(Icons.directions_car),
@@ -712,7 +730,7 @@ class _HomePageState extends State<HomePage>
             ),
             Tab(
               // icon: Icon(Icons.directions_transit),
-              text: "Chats",
+              text: "Search",
             ),
           ],
         ),
@@ -720,11 +738,8 @@ class _HomePageState extends State<HomePage>
       body: TabBarView(
         controller: tabController,
         children: [
-          // Search
-          SearchPage(
-            currentUser: currentUser,
-            searchFocusNode: searchFocusNode,
-          ),
+          // Chats
+          ChatPage(currentUser: currentUser),
           // Posts
           feedLoading
               ? Column(
@@ -758,8 +773,11 @@ class _HomePageState extends State<HomePage>
                   weatherData: weatherData,
                   weatherLoading: weatherLoading,
                 ),
-          // Chats
-          ChatPage(currentUser: currentUser),
+          // Search
+          SearchPage(
+            currentUser: currentUser,
+            searchFocusNode: searchFocusNode,
+          ),
         ],
       ),
       floatingActionButton: Container(
@@ -1009,7 +1027,7 @@ class _HomePageState extends State<HomePage>
                     //   },
                     // ),
                     if (pageIndex == 0) {
-                      searchFocusNode.requestFocus();
+                      availableChatsList();
                     } else if (pageIndex == 1) {
                       Navigator.push(
                         context,
@@ -1022,17 +1040,17 @@ class _HomePageState extends State<HomePage>
                         ),
                       );
                     } else if (pageIndex == 2) {
-                      availableChatsList();
+                      searchFocusNode.requestFocus();
                     }
                   },
                   child: Container(
                     padding: EdgeInsets.only(bottom: 6.0),
                     child: Icon(
                       pageIndex == 0
-                          ? Ionicons.search_outline
+                          ? Ionicons.person_add_outline
                           : pageIndex == 1
                               ? Ionicons.pencil_outline
-                              : Ionicons.person_add_outline,
+                              : Ionicons.search_outline,
                     ),
                   ),
                 ),

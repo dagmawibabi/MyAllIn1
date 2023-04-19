@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:myallin1/config/config.dart';
@@ -35,22 +36,35 @@ class _LoginSignupState extends State<LoginSignup> {
     var url = Uri.parse(route);
     var loginObject = {"username": username, "password": password};
     var jsonFormat = jsonEncode(loginObject);
-    var result = await http.post(
-      url,
-      headers: {"Content-Type": "application/json"},
-      body: jsonFormat,
+
+    // var result = await http.post(
+    //   url,
+    //   headers: {"Content-Type": "application/json"},
+    //   body: jsonFormat,
+    // );
+    Dio dio = Dio();
+    final result = await dio.post(
+      route,
+      data: {
+        'username': username,
+        'password': password,
+      },
     );
+
     usernameError = false;
     passwordError = false;
 
-    if (result.body == "Username Not Found") {
+    if (result == "Username Not Found") {
       usernameError = true;
       setState(() {});
-    } else if (result.body == "Wrong Account Password") {
+    } else if (result == "Wrong Account Password") {
       passwordError = true;
       setState(() {});
     } else {
-      var currentUser = jsonDecode(result.body);
+      var currentUser = jsonDecode(result.toString());
+      // print(currentUser);
+      // var currentUser = result;
+
       if (rememberLogin == true) {
         saveLoggedInUser(currentUser);
       }
